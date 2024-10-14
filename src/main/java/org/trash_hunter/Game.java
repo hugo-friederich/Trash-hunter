@@ -82,4 +82,7 @@ public class Game {
             }
         }
     }
+    public void hello(){
+
+    }
 }

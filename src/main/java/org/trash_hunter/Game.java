@@ -55,6 +55,8 @@ public class Game {
         if (myDiver.getY() > backgroundImage.getHeight() - myDiver.getHeight()) {myDiver.setY(backgroundImage.getHeight()-myDiver.getWidth());}  // collision avec le bord bas de la scene
         if (myDiver.getY() < 0) {myDiver.setY(0);}  // collision avec le bord haut de la scene
     }
+
+    // changer la méthode pour éviter une complexité trop élevé
     public CollisionResult checkCollisionDiverTrash() {
         int i=0;
         for (Trash bottle:trashset) {

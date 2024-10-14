@@ -44,57 +44,42 @@ public class Game {
         if(checkCollisionDiverTrash()){
             this.score+=1;
         }
+        addNewTrash();
     }
     public Diver getDiver(){return this.myDiver;}
-    public boolean isFinished() {return this.score>1000;}
+    public boolean isFinished() {return false;}
     public void checkCollisionWithPanel(){
         if (myDiver.getX() > backgroundImage.getWidth() - myDiver.getWidth()) {myDiver.setX(0);}  // collision avec le bord droit de la scene
         if (myDiver.getX() < 0) {myDiver.setX(backgroundImage.getWidth()-myDiver.getWidth());}  // collision avec le bord gauche de la scene
         if (myDiver.getY() > backgroundImage.getHeight() - myDiver.getHeight()) {myDiver.setY(backgroundImage.getHeight()-myDiver.getWidth());}  // collision avec le bord bas de la scene
         if (myDiver.getY() < 0) {myDiver.setY(0);}  // collision avec le bord haut de la scene
     }
-
-    //à modifier pour avoir des trash et non que bouteilles
     public boolean checkCollisionDiverTrash() {
         Boolean result = false;
         for (Trash bottle:trashset) {
             if (bottle.getX() < myDiver.x + myDiver.getWidth() &&
                     bottle.getX() + bottle.getWidth() > myDiver.x &&
                     bottle.getY() < myDiver.y + myDiver.getHeight() &&
-                    bottle.getY() + bottle.getHeight() > myDiver.y)
-            {result=true;}
+                    bottle.getY() + bottle.getHeight() > myDiver.y) {
+                result=true;
+                bottle.setVisible(false);
+            }
         }
         return (result);
     }
 
-
     private void initTrashes() {
         for (int i = 0; i < this.trashset.length; i++) {
-            this.trashset[i] = new org.trash_hunter.trashes.Bottle(this.random.nextInt(1200), this.random.nextInt(800));
+            this.trashset[i] = new Bottle(this.random.nextInt(1440), this.random.nextInt(780));
         }
     }
-/*
+
     public void addNewTrash() {
-        for (org.trash_hunter.trashes.Trash trash : trashes) {
+        for (Trash trash : this.trashset) {
             if (!trash.isVisible()) {
-                trash.resetPosition(1200, 800);
+                trash.resetPosition(1440, 780);
                 break;
             }
         }
     }
-    public boolean checkCollisionWithTrash() {
-        boolean result=false;
-        for (org.trash_hunter.trashes.Trash trash : trashes) {
-            if ((trash.getX() >= myDiver.getX() + myDiver.getWidth())
-                    || (trash.getX() + trash.getWidth() <= myDiver.getX())
-                    || (trash.getY() >= myDiver.getY() + myDiver.getHeight())
-                    || (trash.getY() + trash.getHeight() <= myDiver.getY()))
-            {result = false;}
-            else {result=true;}
-        }
-        return(result);
-    }
-
- */
-
 }

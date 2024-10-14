@@ -35,6 +35,9 @@ public class Trash {
     public double getY(){return (this.y);}
     public int getWidth(){return this.width;}
     public int getHeight(){return this.height;}
+    public int getNbPoints(){
+        return (this.nbPoints);
+    }
     public boolean isVisible() {
         return isVisible;
     }

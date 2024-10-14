@@ -41,8 +41,9 @@ public class Game {
     public void update(){
         this.myDiver.update();
         checkCollisionWithPanel();
-        if(checkCollisionDiverTrash()){
-            this.score+=1;
+        CollisionResult collisionResult = checkCollisionDiverTrash();
+        if(collisionResult.getCollision()){
+            this.score += trashset[collisionResult.getIndex()].getNbPoints();
         }
         addNewTrash();
     }
@@ -54,18 +55,19 @@ public class Game {
         if (myDiver.getY() > backgroundImage.getHeight() - myDiver.getHeight()) {myDiver.setY(backgroundImage.getHeight()-myDiver.getWidth());}  // collision avec le bord bas de la scene
         if (myDiver.getY() < 0) {myDiver.setY(0);}  // collision avec le bord haut de la scene
     }
-    public boolean checkCollisionDiverTrash() {
-        Boolean result = false;
+    public CollisionResult checkCollisionDiverTrash() {
+        int i=0;
         for (Trash bottle:trashset) {
             if (bottle.getX() < myDiver.x + myDiver.getWidth() &&
                     bottle.getX() + bottle.getWidth() > myDiver.x &&
                     bottle.getY() < myDiver.y + myDiver.getHeight() &&
                     bottle.getY() + bottle.getHeight() > myDiver.y) {
-                result=true;
                 bottle.setVisible(false);
+                return new CollisionResult(true,i);
             }
+            i++;
         }
-        return (result);
+        return (new CollisionResult(false,-1));
     }
 
     private void initTrashes() {
@@ -81,8 +83,5 @@ public class Game {
                 break;
             }
         }
-    }
-    public void hello(){
-
     }
 }

@@ -14,11 +14,10 @@ import java.util.logging.Logger;
 
 public class Game {
     private BufferedImage backgroundImage;
-    private Boolean isVisible;
     private int score;
-    private Diver myDiver;
-    private Trash[] trashset = new Trash[10];
-    private Random random = new Random();
+    final private Diver myDiver;
+    private Trash[] trashset;
+    private Random random;
 
     public Game(){
         try{
@@ -28,6 +27,8 @@ public class Game {
         }
         this.score=0;
         this.myDiver=new Diver();
+        this.trashset=new Trash[10];
+        this.random=new Random();
         initTrashes();
     }
     public void rending(Graphics2D contexte){
@@ -41,7 +42,7 @@ public class Game {
     public void update(){
         this.myDiver.update();
         checkCollisionWithPanel();
-        CollisionResult collisionResult = checkCollisionDiverTrash();
+        CollisionResult collisionResult = checkSimpleCollisionDiverTrash();
         if(collisionResult.getCollision()){
             this.score += trashset[collisionResult.getIndex()].getNbPoints();
         }
@@ -56,22 +57,37 @@ public class Game {
         if (myDiver.getY() < 0) {myDiver.setY(0);}  // collision avec le bord haut de la scene
     }
 
-    // changer la méthode pour éviter une complexité trop élevé
-    public CollisionResult checkCollisionDiverTrash() {
-        int i=0;
-        for (Trash bottle:trashset) {
-            if (bottle.getX() < myDiver.x + myDiver.getWidth() &&
-                    bottle.getX() + bottle.getWidth() > myDiver.x &&
-                    bottle.getY() < myDiver.y + myDiver.getHeight() &&
-                    bottle.getY() + bottle.getHeight() > myDiver.y) {
-                bottle.setVisible(false);
-                return new CollisionResult(true,i);
+    /** Vérifie les collisions entre le plongeur et les déchets de la manière la plus simple.
+     * Ainsi, pour chaque déchet dans l'ensemble, elle teste s'il y a une collision.
+     * Si une collision est détectée, le déchet devient invisible et la méthode
+     * renvoie un résultat de collision avec un indicateur de succès et l'index du déchet.
+     * Si aucune collision n'est détectée, elle renvoie un résultat de collision avec
+     * un indicateur d'échec et -1 comme index.
+     * @return CollisionResult
+     */
+    public CollisionResult checkSimpleCollisionDiverTrash() {
+        for (int i = 0; i < trashset.length; i++) {
+            Trash trash = trashset[i];
+            if (isColliding(trash, myDiver)) {
+                trash.setVisible(false);
+                return new CollisionResult(true, i);
             }
-            i++;
         }
-        return (new CollisionResult(false,-1));
+        return new CollisionResult(false, -1);
     }
 
+    private boolean isColliding(Trash bottle, Diver diver) {
+        return bottle.getX() < diver.x + diver.getWidth() &&
+                bottle.getX() + bottle.getWidth() > diver.x &&
+                bottle.getY() < diver.y + diver.getHeight() &&
+                bottle.getY() + bottle.getHeight() > diver.y;
+    }
+
+    /**
+     * Initialise l'ensemble des déchets.
+     * A améliorer : Doit initialiser l'enesemble avec tous les objets disponibles dans des
+     * proportions prédéfinis
+     */
     private void initTrashes() {
         for (int i = 0; i < this.trashset.length; i++) {
             this.trashset[i] = new Bottle(this.random.nextInt(1440), this.random.nextInt(780));

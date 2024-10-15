@@ -14,7 +14,6 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener {
     private JLabel jLabel1;
     private Game game;
     private Timer timer;
-    
 
     public GamePanel() {
         //init de la fenetre

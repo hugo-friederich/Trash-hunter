@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class Bottle extends Trash {
-    public Bottle(int x, int y){
+    public Bottle(double x, double y){
         super(x, y);
         super.nbPoints= 1;
         try {

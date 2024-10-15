@@ -10,7 +10,7 @@ public class Trash {
     protected BufferedImage sprite;
     protected boolean isVisible = true;
     protected long creationTime;
-    public Trash(int x,int y){
+    public Trash(double x,double y){
         this.x=x;
         this.y=y;
     }

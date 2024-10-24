@@ -2,7 +2,6 @@ import org.junit.Test;
 import org.trash_hunter.trashes.Bottle;
 import org.trash_hunter.Game;
 
-import java.io.IOException;
 
 import static org.junit.Assert.*;
 

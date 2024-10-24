@@ -93,6 +93,12 @@ public class Game {
             this.trashset[i] = new Bottle(this.random.nextInt(1440), this.random.nextInt(780));
         }
     }
+    public static boolean checkCollisionBetweenTrashes (Trash trash1,Trash trash2) {
+        return(trash2.getX() <= trash1.getX() + trash1.getWidth() +10 &&
+                trash1.getX() <= trash2.getX() + trash2.getWidth() +10 &&
+                trash1.getY() <= trash2.getY() + trash2.getHeight() +10 &&
+                trash2.getY() <= trash1.getY() + trash1.getHeight() +10);
+    }
 
     public void addNewTrash() {
         for (Trash trash : this.trashset) {

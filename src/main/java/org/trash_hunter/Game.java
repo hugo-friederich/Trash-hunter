@@ -49,7 +49,7 @@ public class Game {
         addNewTrash();
     }
     public Diver getDiver(){return this.myDiver;}
-    public boolean isFinished() {return false;}
+    public boolean isFinished() {return false;} //le jeu n'a pas de fin
     public void checkCollisionWithPanel(){
         if (myDiver.getX() > backgroundImage.getWidth() - myDiver.getWidth()) {myDiver.setX(0);}  // collision avec le bord droit de la scene
         if (myDiver.getX() < 0) {myDiver.setX(backgroundImage.getWidth()-myDiver.getWidth());}  // collision avec le bord gauche de la scene
@@ -92,6 +92,19 @@ public class Game {
         for (int i = 0; i < this.trashset.length; i++) {
             this.trashset[i] = new Bottle(this.random.nextInt(1440), this.random.nextInt(780));
         }
+    }
+
+    /**
+     * Renvoie true si il y a collision entre deux déchets
+     * @param trash1
+     * @param trash2
+     * @return
+     */
+    public static boolean checkCollisionBetweenTrashes (Trash trash1,Trash trash2) {
+        return(trash2.getX() <= trash1.getX() + trash1.getWidth() +10 &&
+                trash1.getX() <= trash2.getX() + trash2.getWidth() +10 &&
+                trash1.getY() <= trash2.getY() + trash2.getHeight() +10 &&
+                trash2.getY() <= trash1.getY() + trash1.getHeight() +10);
     }
 
     public void addNewTrash() {

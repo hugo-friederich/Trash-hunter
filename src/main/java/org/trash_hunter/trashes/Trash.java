@@ -13,7 +13,7 @@ public class Trash {
     protected int width, height;                //largeur, hauteur
     protected int nbPoints;                     //nomnbre de points rapportés
     protected BufferedImage sprite;             //image du déchet
-    protected boolean isVisible = true;         //déchet visible ou non
+    private boolean visible = true;         //déchet visible ou non
     protected long creationTime;                //temps passé après création
     protected int recupTime;                         //temps de récupération en ms
     protected Couple appearanceRangeX;          //plage de valeur d'apparition des déchets sur x
@@ -29,7 +29,7 @@ public class Trash {
         this(0,0);
     }
     public void rendering (Graphics2D contexte){
-        if(this.isVisible){
+        if(this.visible){
             contexte.drawImage(this.sprite,(int)x,(int)y,null);
         }
     }
@@ -42,10 +42,10 @@ public class Trash {
         this.x = rdm.nextDouble(this.appearanceRangeX.inf,this.appearanceRangeX.sup+0.5);
         this.y = rdm.nextDouble(this.appearanceRangeY.inf,this.appearanceRangeY.sup+0.5);
         creationTime = System.currentTimeMillis();
-        isVisible = true;
+        visible = true;
     }
     public void setVisible(boolean visible) {
-        isVisible = visible;
+        this.visible = visible;
     }
     public boolean isExpired() {
         return System.currentTimeMillis() - creationTime > 1000000;
@@ -58,7 +58,7 @@ public class Trash {
     public int getWidth(){return this.width;}
     public int getHeight(){return this.height;}
     public int getNbPoints(){return (this.nbPoints);}
-    public boolean isVisible() {return isVisible;}
+    public boolean isVisible() {return visible;}
     public String toString (){
         return this.name;
     }

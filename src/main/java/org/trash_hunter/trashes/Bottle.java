@@ -1,5 +1,7 @@
 package org.trash_hunter.trashes;
 
+import org.trash_hunter.tools.Couple;
+
 import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.util.Objects;
@@ -9,7 +11,7 @@ public class Bottle extends Trash {
         super(x, y);
         super.nbPoints= 1;
         super.name ="Bottle";
-        super.time = 1;           //récupération quasi instantanée
+        super.recupTime = 1;           //récupération quasi instantanée
         try {
             super.sprite = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("bottle9x25.png")));
         } catch (IOException e) {
@@ -17,5 +19,8 @@ public class Bottle extends Trash {
         }
         super.width=super.sprite.getWidth();
         super.height=super.sprite.getHeight();
+        super.appearanceRangeY = new Couple(0,700-this.height);
     }
+
+
 }

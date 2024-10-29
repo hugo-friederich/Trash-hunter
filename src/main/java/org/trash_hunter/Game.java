@@ -47,8 +47,9 @@ public class Game {
         }
         addNewTrash();
     }
-    public Diver getDiver(){return this.myDiver;}
     public boolean isFinished() {return false;} //le jeu n'a pas de fin
+
+    //Gestion des ollisions
     public void checkCollisionWithPanel(){
         if (myDiver.getX() > backgroundImage.getWidth() - myDiver.getWidth()) {myDiver.setX(0);}  // collision avec le bord droit de la scene
         if (myDiver.getX() < 0) {myDiver.setX(backgroundImage.getWidth()-myDiver.getWidth());}  // collision avec le bord gauche de la scene
@@ -83,40 +84,6 @@ public class Game {
     }
 
     /**
-     * Initialise l'ensemble des déchets avec une certaine proportion et une sélection aléatoire de
-     * l'objet en fonction de sa taille
-     * Nb total de déchets : 30 (15 petits,10 moyens, 5 gros)
-     */
-    public void initTrashes() {
-        for (int i = 0; i < this.trashset.length; i++) {
-            int randomNumber = randomNbr.nextInt(1,3);
-            int x = randomNbr.nextInt(1440);
-            int y;
-
-            if (i <= 15) {
-                if (randomNumber == 1) {
-                    trashset[i] = new Bottle(x, randomNbr.nextInt(780));
-                } else if (randomNumber == 2) {
-                    trashset[i] = new Can(x, randomNbr.nextInt(780));
-                }
-            } else if (i <= 25) {
-                if (randomNumber == 1) {
-                    trashset[i] = new PlasticBag(x, randomNbr.nextInt(300));
-                } else if (randomNumber == 2) {
-                    trashset[i] = new Tire(x, randomNbr.nextInt(300));
-                }
-            } else {
-                y = randomNbr.nextInt(500, 780);
-                if (randomNumber == 1) {
-                    trashset[i] = new OilContainer(x, y);
-                } else if (randomNumber == 2) {
-                    trashset[i] = new Boat(x, y);
-                }
-            }
-        }
-    }
-
-    /**
      * Renvoie true si il y a collision entre deux déchets
      * @param trash1 premier déchet
      * @param trash2 second déchet
@@ -129,16 +96,61 @@ public class Game {
                 trash2.getY() <= trash1.getY() + trash1.getHeight() +10);
     }
 
+    /**
+     * Initialise l'ensemble des déchets avec une certaine proportion et une sélection aléatoire de
+     * l'objet en fonction de sa taille
+     * Nb total de déchets : 30 (15 petits,10 moyens, 5 gros)
+     */
+
+    //Gestion des déchets
+    public void initTrashes() {
+        for (int i = 0; i < this.trashset.length; i++) {
+            int randomNumber = randomNbr.nextInt(1,3);     //choisis un nombre entre 1 et 2 aléatoirement
+            if (i <= 15) {
+                if (randomNumber == 1) {
+                    Bottle bottle = new Bottle();
+                    bottle.resetPosition();
+                    trashset[i] = bottle;
+                } else if (randomNumber == 2) {
+                    Can can = new Can();
+                    can.resetPosition();
+                    trashset[i] = can;
+                }
+            } else if (i <= 25) {
+                if (randomNumber == 1) {
+                    PlasticBag plasticBag = new PlasticBag();
+                    plasticBag.resetPosition();
+                    trashset[i] = plasticBag;
+                } else if (randomNumber == 2) {
+                    Tire tire = new Tire();
+                    tire.resetPosition();
+                    trashset[i] = tire;
+                }
+            } else {
+                if (randomNumber == 1) {
+                    OilContainer oilContainer = new OilContainer();
+                    oilContainer.resetPosition();
+                    trashset[i] = oilContainer;
+                } else if (randomNumber == 2) {
+                    Boat boat = new Boat();
+                    boat.resetPosition();
+                    trashset[i] = boat;
+                }
+            }
+        }
+    }
     public void addNewTrash() {
         for (Trash trash : this.trashset) {
-            if (!trash.isVisible()) {
-                trash.resetPosition(1440, 780);
+            if (!trash.isVisible()||trash.isExpired()) {
+                trash.resetPosition();
                 break;
             }
         }
     }
 
+    //Getters and Setters
     public Trash[] getTrashset(){
         return this.trashset;
     }
+    public Diver getDiver(){return this.myDiver;}
 }

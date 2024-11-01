@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 import java.util.logging.Level;
@@ -16,6 +17,7 @@ public class Game {
     private int score;
     final private Diver myDiver;
     private final Trash[] trashset;
+    private final ArrayList<Rectangle> imageBounds = new ArrayList<>();
     private final Random randomNbr;
 
     public Game(){

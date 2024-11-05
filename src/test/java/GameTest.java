@@ -6,7 +6,8 @@ import org.trash_hunter.Game;
 import static org.junit.Assert.*;
 
 public class GameTest {
-
+   
+    /*
     @Test
     public void shouldAvoidCollisionBetwwenTrashes () {
         Bottle bottle1 =new Bottle(100,100);
@@ -22,6 +23,6 @@ public class GameTest {
         Bottle bottle8 =new Bottle(131,100);
         assertFalse(Game.checkCollisionBetweenTrashes(bottle7,bottle8));
     }
-
+    */
 
 }

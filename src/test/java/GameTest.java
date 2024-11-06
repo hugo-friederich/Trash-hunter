@@ -24,6 +24,6 @@ public class GameTest {
         Bottle bottle8 =new Bottle(131,100);
         assertFalse(Game.checkCollisionBetweenTrashes(bottle7,bottle8));
     }
-
+    */
 
 }

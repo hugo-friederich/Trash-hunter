@@ -24,5 +24,6 @@ public class Boat extends Trash{
     }
     public Boat (){
         this(0,0);
+        
     }
 }

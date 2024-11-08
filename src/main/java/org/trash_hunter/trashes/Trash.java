@@ -15,7 +15,7 @@ public class Trash {
     protected BufferedImage sprite;             //image du déchet
     private boolean visible = true;         //déchet visible ou non
     protected long creationTime;                //temps passé après création
-    protected int recupTime;                         //temps de récupération en ms
+    protected int reaparitionTime;                         //temps de récupération en ms
     protected Couple appearanceRangeX;          //plage de valeur d'apparition des déchets sur x
     protected Couple appearanceRangeY;          //plage de valeur d'apparition des déchets sur Y
     private Random rdm;                         //objet alléatoire

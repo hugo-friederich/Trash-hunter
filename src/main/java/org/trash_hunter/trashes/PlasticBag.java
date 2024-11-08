@@ -18,7 +18,7 @@ public class PlasticBag extends Trash {
         height=super.sprite.getHeight();
         nbPoints= 5;
         name="Plastic Bag";
-        recupTime = 2000;       //temps de récupération en ms
+        reaparitionTime = 2000;       //temps de récupération en ms
         appearanceRangeY = new Couple(300,700-this.height);
     }
     public PlasticBag (){this(0,0);}

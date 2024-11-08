@@ -18,7 +18,7 @@ public class Can extends Trash {
         height=super.sprite.getHeight();
         nbPoints= 1;
         name="Can";
-        recupTime = 1;          // récupération quasi instantanée
+        reaparitionTime = 1;          // récupération quasi instantanée
         appearanceRangeY = new Couple(0,700-this.height);
     }
     public Can (){this(0,0);}

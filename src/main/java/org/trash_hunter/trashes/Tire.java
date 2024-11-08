@@ -18,7 +18,7 @@ public class Tire extends Trash{
         height=super.sprite.getHeight();
         nbPoints= 5;
         name="tire";
-        recupTime = 5000;       //temps de récupération en ms
+        reaparitionTime = 5000;       //temps de récupération en ms
         appearanceRangeY = new Couple(780-this.height,780-this.height);
     }
     public Tire (){this(0,0);}

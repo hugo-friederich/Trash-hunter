@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 
 public class Game {
     private BufferedImage backgroundImage;
-    private int score;
     final private Diver myDiver;
     private final Trash[] trashset;
     private final ArrayList<Rectangle> imageBounds = new ArrayList<>();
@@ -26,15 +25,15 @@ public class Game {
         }catch (IOException ex){
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE,null,ex);
         }
-        this.score=0;
         this.myDiver=new Diver();
+        this.myDiver.setScore(0);
         this.trashset=new Trash[30];
         this.randomNbr=new Random();
         initTrashes();
     }
     public void rending(Graphics2D contexte){
         contexte.drawImage(this.backgroundImage,0,0,null);
-        contexte.drawString("Score : "+ score,10,20);
+        contexte.drawString("Score : "+ this.myDiver.getScore(),10,20);
         this.myDiver.rendering(contexte);
         for (Trash trash:this.trashset) {
             trash.rendering(contexte);
@@ -45,7 +44,7 @@ public class Game {
         checkCollisionWithPanel();
         CollisionResult collisionResult = checkSimpleCollisionDiverTrash();
         if(collisionResult.getCollision()){
-            this.score += trashset[collisionResult.getIndex()].getNbPoints();
+            this.myDiver.setScore(this.myDiver.getScore()+trashset[collisionResult.getIndex()].getNbPoints());
         }
         addNewTrash();
     }
@@ -79,10 +78,10 @@ public class Game {
     }
 
     private boolean isColliding(Trash bottle, Diver diver) {
-        return bottle.getX() < diver.x + diver.getWidth() &&
-                bottle.getX() + bottle.getWidth() > diver.x &&
-                bottle.getY() < diver.y + diver.getHeight() &&
-                bottle.getY() + bottle.getHeight() > diver.y;
+        return bottle.getX() < diver.getX() + diver.getWidth() &&
+                bottle.getX() + bottle.getWidth() > diver.getX() &&
+                bottle.getY() < diver.getY() + diver.getHeight() &&
+                bottle.getY() + bottle.getHeight() > diver.getY();
     }
 
     /**

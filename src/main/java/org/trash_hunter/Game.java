@@ -45,6 +45,7 @@ public class Game {
         CollisionResult collisionResult = checkSimpleCollisionDiverTrash();
         if(collisionResult.getCollision()){
             this.myDiver.setScore(this.myDiver.getScore()+trashset[collisionResult.getIndex()].getNbPoints());
+            this.myDiver.updateScoreHistory();
         }
         addNewTrash();
     }
@@ -53,8 +54,8 @@ public class Game {
     //Gestion des ollisions
     public void checkCollisionWithPanel(){
         if (myDiver.getX() > backgroundImage.getWidth() - myDiver.getWidth()) {myDiver.setX(0);}  // collision avec le bord droit de la scene
-        if (myDiver.getX() < 0) {myDiver.setX(backgroundImage.getWidth()-myDiver.getWidth());}  // collision avec le bord gauche de la scene
-        if (myDiver.getY() > backgroundImage.getHeight() - myDiver.getHeight()) {myDiver.setY(backgroundImage.getHeight()-myDiver.getWidth());}  // collision avec le bord bas de la scene
+        if (myDiver.getX() < 0) {myDiver.setX((float)backgroundImage.getWidth()-(float)myDiver.getWidth());}  // collision avec le bord gauche de la scene
+        if (myDiver.getY() > backgroundImage.getHeight() - myDiver.getHeight()) {myDiver.setY((float)backgroundImage.getHeight()-(float)myDiver.getWidth());}  // collision avec le bord bas de la scene
         if (myDiver.getY() < 0) {myDiver.setY(0);}  // collision avec le bord haut de la scene
     }
 

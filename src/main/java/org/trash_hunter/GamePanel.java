@@ -83,7 +83,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener {
         this.game.update();
         this.game.rending(contexte);
         this.jLabel1.repaint();
-        if (this.game.isFinished()){
+        if (this.game.isFinished()) {
             this.timer.stop();
         }
     }

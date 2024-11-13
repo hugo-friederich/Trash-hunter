@@ -1,4 +1,4 @@
-package org.trash_hunter.tools;
+package org.trash_hunter.util;
 
 import java.util.Random;
 

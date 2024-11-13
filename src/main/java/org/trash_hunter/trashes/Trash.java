@@ -1,6 +1,6 @@
 package org.trash_hunter.trashes;
 
-import org.trash_hunter.tools.Couple;
+import org.trash_hunter.util.Couple;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

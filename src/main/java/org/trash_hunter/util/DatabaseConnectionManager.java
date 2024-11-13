@@ -1,4 +1,4 @@
-package org.trash_hunter;
+package org.trash_hunter.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

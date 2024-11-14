@@ -5,35 +5,13 @@
  */
 package org.trash_hunter.util;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.sql.*;
 
 /**
  *
  * @author guillaume.laurent
  */
 public class OutilsJDBC {
-
-    static public String MD5(String md5) {
-        try {
-            java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
-            byte[] array = md.digest(md5.getBytes());
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < array.length; ++i) {
-                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1, 3));
-            }
-            return sb.toString();
-        } catch (java.security.NoSuchAlgorithmException e) {
-        }
-        return null;
-    }
-
     static public Timestamp maintenant() {
         return new Timestamp(System.currentTimeMillis());
     }

@@ -1,9 +1,9 @@
 package org.trash_hunter.util;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -26,7 +26,9 @@ public final class SingletonJDBC {
     private SingletonJDBC() {
         super();
         try {
-            this.connexion = DriverManager.getConnection("jdbc:mariadb://nemrod.ens2m.fr:3306/tp_jdbc", "etudiant", "YTDTvj9TR3CDYCmP");
+            DriverManager.registerDriver(new org.mariadb.jdbc.Driver());
+            DatabaseConnectionManager databaseConnectionManager = new DatabaseConnectionManager("nemrod.ens2m.fr:3306","2024-2025_s1_vs1_tp2_Trash_Hunter","etudiant", "YTDTvj9TR3CDYCmP");
+            this.connexion = databaseConnectionManager.getConnection();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
             System.exit(-1);
@@ -34,7 +36,7 @@ public final class SingletonJDBC {
     }
 
     // Méthode renvoyant l'instance de la classe Singleton
-    public final static SingletonJDBC getInstance() {
+    public static SingletonJDBC getInstance() {
 
         if (SingletonJDBC.instance == null) {
             // Le mot-clé synchronized sur ce bloc empêche toute instanciation

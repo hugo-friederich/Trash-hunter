@@ -1,6 +1,7 @@
 package org.trash_hunter;
 
 import org.trash_hunter.util.DataTransferObject;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;

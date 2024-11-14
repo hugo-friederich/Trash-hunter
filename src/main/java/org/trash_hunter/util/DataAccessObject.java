@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import java.util.Stack;
 
 public abstract class DataAccessObject<T extends DataTransferObject> {
     protected final Connection connection;

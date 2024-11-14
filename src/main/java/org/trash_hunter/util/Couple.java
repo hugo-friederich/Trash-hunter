@@ -1,7 +1,5 @@
 package org.trash_hunter.util;
 
-import java.util.Random;
-
 public class Couple {
     public int inf;
     public int sup;

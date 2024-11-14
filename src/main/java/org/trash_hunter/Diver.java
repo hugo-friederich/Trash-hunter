@@ -208,6 +208,20 @@ public class Diver implements DataTransferObject {
 
     @Override
     public long getId() {
-        return 0;
+        return this.id;
+    }
+
+    public String toString() {
+        return "Diver{" +
+                ", x=" + x +
+                ", y=" + y +
+                ", pseudo='" + pseudo + '\'' +
+                ", score=" + score +
+                ", scoreMax=" + scoreMax +
+                ", id=" + id +
+                ", color='" + color + '\'' +
+                ", date=" + date +
+                ", game_time=" + game_time +
+                '}';
     }
 }

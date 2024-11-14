@@ -19,18 +19,5 @@ public abstract class DataAccessObject<T extends DataTransferObject> {
     public abstract T update(T dto);
     public abstract T create(T dto);
     public abstract void delete(long id);
-    protected  int getLastVal(String sequence){
-        int key=0;
-        String sql=LAST_VAL+sequence;
-        try(Statement statement=connection.createStatement()) {
-            ResultSet resultSet=statement.executeQuery(sql);
-            while (resultSet.next()){
-                key=resultSet.getInt(1);
-            }
-            return  key;
-        }catch (SQLException e){
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-    }
+
 }

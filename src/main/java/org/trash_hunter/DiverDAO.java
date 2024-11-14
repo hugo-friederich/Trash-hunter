@@ -92,16 +92,16 @@ public class DiverDAO extends DataAccessObject<Diver> {
     }
 
     @Override
-    public Diver create(Diver dto) {
+    public Diver create(Diver newDiver) {
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setFloat(1, dto.getX());
-            preparedStatement.setFloat(2, dto.getY());
-            preparedStatement.setString(3, dto.getPseudo());
-            preparedStatement.setInt(4, dto.getScore());
-            preparedStatement.setInt(5, dto.getScoreMax());
-            preparedStatement.setDate(6, new java.sql.Date(dto.getDate().getTime()));
-            preparedStatement.setTime(7, new java.sql.Time(dto.getGame_time().getTime()));
-            preparedStatement.setString(8, dto.getColor());
+            preparedStatement.setFloat(1, newDiver.getX());
+            preparedStatement.setFloat(2, newDiver.getY());
+            preparedStatement.setString(3, newDiver.getPseudo());
+            preparedStatement.setInt(4, newDiver.getScore());
+            preparedStatement.setInt(5, newDiver.getScoreMax());
+            preparedStatement.setDate(6, new java.sql.Date(newDiver.getDate().getTime()));
+            preparedStatement.setTime(7, new java.sql.Time(newDiver.getGame_time().getTime()));
+            preparedStatement.setString(8, newDiver.getColor());
 
             // Exécute la mise à jour et obtient les clés générées
             int affectedRows = preparedStatement.executeUpdate();
@@ -112,7 +112,7 @@ public class DiverDAO extends DataAccessObject<Diver> {
             // Récupère les clés générées
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    dto.setId(generatedKeys.getLong(1)); // Assigne l'ID généré à l'objet diver
+                    newDiver.setId(generatedKeys.getLong(1)); // Assigne l'ID généré à l'objet diver
                 } else {
                     throw new SQLException("Creating diver failed, no ID obtained.");
                 }
@@ -121,7 +121,7 @@ public class DiverDAO extends DataAccessObject<Diver> {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        return dto; // Retourne l'objet diver avec l'ID généré
+        return newDiver; // Retourne l'objet diver avec l'ID généré
     }
 
     @Override

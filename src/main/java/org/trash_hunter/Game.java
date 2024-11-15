@@ -19,10 +19,12 @@ import java.util.logging.Logger;
 public class Game {
     private BufferedImage backgroundImage;
     final private Diver myDiver;
+    private DiverDAO updatedDiver;
     private final Trash[] trashset;
     private final ArrayList<Rectangle> imageBounds = new ArrayList<>();
     private final Random randomNbr;
     private Connection connection;
+
 
     public Game() throws SQLException {
         try{
@@ -33,6 +35,9 @@ public class Game {
         this.myDiver=new Diver();
         //ouvrir fenêtre pour que l'utilisateur écrive son pseudo et la couleur souahité
         initializeDatabaseConnection();
+        this.updatedDiver = new DiverDAO(connection);
+        this.updatedDiver.create(myDiver);
+
         this.myDiver.setScore(0);
         this.trashset=new Trash[30];
         this.randomNbr=new Random();
@@ -48,6 +53,7 @@ public class Game {
     }
     public void update(){
         this.myDiver.update();
+        this.updatedDiver.update(this.myDiver,this.myDiver.getId());
         checkCollisionWithPanel();
         CollisionResult collisionResult = checkSimpleCollisionDiverTrash();
         if(collisionResult.getCollision()){

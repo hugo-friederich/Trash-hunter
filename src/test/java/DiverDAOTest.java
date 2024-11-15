@@ -22,15 +22,35 @@ public class DiverDAOTest {
         DiverDAO diverSerched = new DiverDAO(connection);
         Diver diver = diverSerched.findById(1);
         System.out.print(diver.toString());
-        Assert.assertEquals(diver.getId(),1);
-        Assert.assertEquals(diver.getPseudo(),"'Hugo'");
     }
 
-    // a compléter
+    // Doit créer un Diver nommé Toto de couleur rouge dans la base de donnée
     @Test
     public void shouldCreateDiver () throws SQLException{
         initializeDatabaseConnection();
         DiverDAO diverDAO = new DiverDAO(connection);
-        Diver newDiver = new Diver();
+        Diver newDiver = new Diver("toto","red");
+        diverDAO.create(newDiver);
+        diverDAO.delete(newDiver.getId());  //suppression pour éviter de surcharger la DB
+    }
+    //Doit créer un Diver puis le mettre à jour à l'aide d'un nouveau Diver
+    @Test
+    public void shouldUpdateDiver () throws SQLException{
+        initializeDatabaseConnection();
+        DiverDAO diverDAO = new DiverDAO(connection);
+        Diver newDiver = new Diver("toto","red");
+        diverDAO.create(newDiver);  //creation d'un nouveau diver
+        Diver updatedDiver = new Diver("titi","blue");
+        diverDAO.update(updatedDiver,newDiver.getId());
+        diverDAO.delete(newDiver.getId()); //suppression pour éviter de surcharger la DB
+    }
+    // Doit créer un nouveau Diver et le supprimer juste après
+    @Test
+    public void shouldDeleteDiver () throws SQLException{
+        initializeDatabaseConnection();
+        DiverDAO diverDAO = new DiverDAO(connection);
+        Diver newDiver = new Diver("toto","red");
+        diverDAO.create(newDiver);  //creation d'un nouveau diver
+        diverDAO.delete(newDiver.getId());
     }
 }

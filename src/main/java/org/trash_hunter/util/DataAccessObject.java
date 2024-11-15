@@ -1,9 +1,6 @@
 package org.trash_hunter.util;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
 public abstract class DataAccessObject<T extends DataTransferObject> {
@@ -16,7 +13,7 @@ public abstract class DataAccessObject<T extends DataTransferObject> {
     }
     public abstract  T findById(long id);
     public abstract List<T> findAll();
-    public abstract T update(T dto);
+    public abstract void update(T dto,long id);
     public abstract void create(T dto);
     public abstract void delete(long id);
 

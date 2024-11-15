@@ -11,9 +11,9 @@ import java.util.List;
 
 public class DiverDAO extends DataAccessObject<Diver> {
 
-    private static final String INSERT = "INSERT INTO Diver (x, y, pseudo, score, score_max, creation_date, game_time, color) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String INSERT = "INSERT INTO Diver (x, y, pseudo, score, score_max, color) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String GET_ONE = "SELECT id, x, y, pseudo, score, score_max, creation_date, game_time, color FROM Diver WHERE id = ?";
-    private static final String UPDATE = "UPDATE Diver SET x = ?, y = ?, pseudo = ?, score = ?, score_max = ?, creation_date = ?, game_time = ?, color = ? WHERE id = ?";
+    private static final String UPDATE = "UPDATE Diver SET x = ?, y = ?, pseudo = ?, score = ?, score_max = ?, color = ? WHERE id = ?";
     private static final String DELETE = "DELETE FROM Diver WHERE id = ?";
     private static final String GET_ALL = "SELECT id, x, y, pseudo, score, score_max, creation_date, game_time, color FROM Diver";
 
@@ -72,23 +72,20 @@ public class DiverDAO extends DataAccessObject<Diver> {
     }
 
     @Override
-    public Diver update(Diver dto) {
+    public void update(Diver diverUpdated,long id) {
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(UPDATE)) {
-            preparedStatement.setFloat(1, dto.getX());
-            preparedStatement.setFloat(2, dto.getY());
-            preparedStatement.setString(3, dto.getPseudo());
-            preparedStatement.setInt(4, dto.getScore());
-            preparedStatement.setInt(5, dto.getScoreMax());
-            preparedStatement.setDate(6, new java.sql.Date(dto.getDate().getTime()));
-            preparedStatement.setTime(7, new java.sql.Time(dto.getGame_time().getTime()));
-            preparedStatement.setString(8, dto.getColor());
-            preparedStatement.setLong(9, dto.getId());
+            preparedStatement.setFloat(1, diverUpdated.getX());
+            preparedStatement.setFloat(2, diverUpdated.getY());
+            preparedStatement.setString(3, diverUpdated.getPseudo());
+            preparedStatement.setInt(4, diverUpdated.getScore());
+            preparedStatement.setInt(5, diverUpdated.getScoreMax());
+            preparedStatement.setString(6, diverUpdated.getColor());
+            preparedStatement.setLong(7, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        return dto;
     }
 
     @Override
@@ -99,9 +96,7 @@ public class DiverDAO extends DataAccessObject<Diver> {
             preparedStatement.setString(3, newDiver.getPseudo());
             preparedStatement.setInt(4, newDiver.getScore());
             preparedStatement.setInt(5, newDiver.getScoreMax());
-            preparedStatement.setDate(6, new java.sql.Date(newDiver.getDate().getTime()));
-            preparedStatement.setTime(7, new java.sql.Time(newDiver.getGame_time().getTime()));
-            preparedStatement.setString(8, newDiver.getColor());
+            preparedStatement.setString(6, newDiver.getColor());
 
             // Exécute la mise à jour et obtient les clés générées
             int affectedRows = preparedStatement.executeUpdate();

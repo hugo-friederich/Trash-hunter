@@ -32,14 +32,24 @@ public class Diver implements DataTransferObject {
         } catch (IOException e) {
             throw new RuntimeException("Erreur lors du chargement de l'image : " + e.getMessage(), e);
         }
-        this.id=0;    // l'identifiant est auto-incrémenté
-        this.x=300;   // coordonées du "spawn" = (300,300)
-        this.y=300;
-        this.pseudo=pseudo;
-        score=0;
-        scoreMax=0;
-        this.color=color;
-        run();
+        this.id = 0;    // l'identifiant est auto-incrémenté
+        this.x = 720;   // coordonées du "spawn" = (300,300)
+        this.y = 390;
+        this.speed = 20;
+        this.pseudo = pseudo;
+        score = 0;
+        scoreMax = 0;
+        this.color = color;
+        this.date = new Date(0);
+        this.game_time = new Time(0);
+        this.left = false;
+        this.right = false;
+        this.up = false;
+        this.down = false;
+        this.width=50;
+        this.height=50;
+        //this.width = this.sprite.getWidth();
+        //this.height = this.getHeight();
     }
 
     //Définition du constructeur par défaut (pseudo : Bob, color : blue)
@@ -62,19 +72,6 @@ public class Diver implements DataTransferObject {
     }
     public void rendering (Graphics2D contexte){
         contexte.drawImage(this.sprite,(int)x,(int)y,null);
-    }
-
-    public void run() {
-        this.x = 170;
-        this.y = 300;
-        this.left = false;
-        this.right = false;
-        this.up = false;
-        this.down = false;
-        this.width = 50;
-        this.height = 50;
-        this.speed = 10;
-
     }
 
     public BufferedImage getSprite() {

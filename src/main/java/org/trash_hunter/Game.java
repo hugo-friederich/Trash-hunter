@@ -1,11 +1,15 @@
 package org.trash_hunter;
 
 import org.trash_hunter.trashes.*;
+import org.trash_hunter.util.DatabaseConnectionManager;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
@@ -18,14 +22,17 @@ public class Game {
     private final Trash[] trashset;
     private final ArrayList<Rectangle> imageBounds = new ArrayList<>();
     private final Random randomNbr;
+    private Connection connection;
 
-    public Game(){
+    public Game() throws SQLException {
         try{
             this.backgroundImage= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("fond_marin_1440x780.png")));
         }catch (IOException ex){
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE,null,ex);
         }
         this.myDiver=new Diver();
+        //ouvrir fenêtre pour que l'utilisateur écrive son pseudo et la couleur souahité
+        initializeDatabaseConnection();
         this.myDiver.setScore(0);
         this.trashset=new Trash[30];
         this.randomNbr=new Random();
@@ -148,6 +155,11 @@ public class Game {
                 break;
             }
         }
+    }
+    private void initializeDatabaseConnection() throws SQLException {
+        DriverManager.registerDriver(new org.mariadb.jdbc.Driver());
+        DatabaseConnectionManager databaseConnectionManager = new DatabaseConnectionManager("nemrod.ens2m.fr:3306", "2024-2025_s1_vs1_tp2_Trash_Hunter", "etudiant", "YTDTvj9TR3CDYCmP");
+        connection = databaseConnectionManager.getConnection();
     }
 
     //Getters and Setters

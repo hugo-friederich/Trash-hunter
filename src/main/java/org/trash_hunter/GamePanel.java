@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-
+import java.sql.SQLException;
 
 
 public class GamePanel extends JFrame implements KeyListener, ActionListener {
@@ -17,7 +17,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener {
     private Game game;
     private Timer timer;
 
-    public GamePanel() {
+    public GamePanel() throws SQLException {
         //init de la fenetre
         this.setSize(1440,780);
         this.setResizable(false);
@@ -44,7 +44,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener {
         //Ajout du listener
         this.addKeyListener(this);
     }
-    public static void main (String[]args){
+    public static void main (String[]args) throws SQLException {
         GamePanel panel=new GamePanel();
         panel.setVisible(true);
     }

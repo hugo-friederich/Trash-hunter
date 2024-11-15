@@ -25,4 +25,12 @@ public class DiverDAOTest {
         Assert.assertEquals(diver.getId(),1);
         Assert.assertEquals(diver.getPseudo(),"'Hugo'");
     }
+
+    // a compléter
+    @Test
+    public void shouldCreateDiver () throws SQLException{
+        initializeDatabaseConnection();
+        DiverDAO diverDAO = new DiverDAO(connection);
+        Diver newDiver = new Diver();
+    }
 }

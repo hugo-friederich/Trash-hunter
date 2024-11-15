@@ -92,7 +92,7 @@ public class DiverDAO extends DataAccessObject<Diver> {
     }
 
     @Override
-    public Diver create(Diver newDiver) {
+    public void create(Diver newDiver) {
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setFloat(1, newDiver.getX());
             preparedStatement.setFloat(2, newDiver.getY());
@@ -112,7 +112,7 @@ public class DiverDAO extends DataAccessObject<Diver> {
             // Récupère les clés générées
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    newDiver.setId(generatedKeys.getLong(1)); // Assigne l'ID généré à l'objet diver
+                    newDiver.setId(generatedKeys.getLong(1)); // Assigne l'ID généré au nouveau Diver
                 } else {
                     throw new SQLException("Creating diver failed, no ID obtained.");
                 }
@@ -121,7 +121,6 @@ public class DiverDAO extends DataAccessObject<Diver> {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        return newDiver; // Retourne l'objet diver avec l'ID généré
     }
 
     @Override

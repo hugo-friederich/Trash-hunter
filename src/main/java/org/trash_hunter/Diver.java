@@ -26,14 +26,25 @@ public class Diver implements DataTransferObject {
     private Date date;
     private Time game_time;
 
-    public Diver() {
+    public Diver (String pseudo,String color){
         try {
             this.sprite = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("plongeur.png")));
         } catch (IOException e) {
             throw new RuntimeException("Erreur lors du chargement de l'image : " + e.getMessage(), e);
         }
-        this.scoreMax=0;
+        this.id=0;    // l'identifiant est auto-incrémenté
+        this.x=300;   // coordonées du "spawn" = (300,300)
+        this.y=300;
+        this.pseudo=pseudo;
+        score=0;
+        scoreMax=0;
+        this.color=color;
         run();
+    }
+
+    //Définition du constructeur par défaut (pseudo : Bob, color : blue)
+    public Diver (){
+        this("Bob","blue");
     }
     public void update(){
         if (this.left) {x -= this.speed;}
@@ -213,12 +224,12 @@ public class Diver implements DataTransferObject {
 
     public String toString() {
         return "Diver{" +
+                ", id=" + id +
                 ", x=" + x +
                 ", y=" + y +
                 ", pseudo='" + pseudo + '\'' +
                 ", score=" + score +
                 ", scoreMax=" + scoreMax +
-                ", id=" + id +
                 ", color='" + color + '\'' +
                 ", date=" + date +
                 ", game_time=" + game_time +

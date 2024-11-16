@@ -53,4 +53,11 @@ public class DiverDAOTest {
         diverDAO.create(newDiver);  //creation d'un nouveau diver
         diverDAO.delete(newDiver.getId());
     }
+    @Test
+    public void shouldFindAll () throws SQLException{
+        initializeDatabaseConnection();
+        DiverDAO diverDAO = new DiverDAO(connection);
+        System.out.print(diverDAO.findAll().toString());
+    }
+
 }

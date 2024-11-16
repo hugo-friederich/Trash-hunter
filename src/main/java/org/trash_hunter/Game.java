@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import java.util.logging.Level;
@@ -19,7 +20,8 @@ import java.util.logging.Logger;
 public class Game {
     private BufferedImage backgroundImage;
     final private Diver myDiver;
-    private DiverDAO updatedDiver;
+    private DiverDAO diverDAO;
+    private List <Diver> divers;
     private final Trash[] trashset;
     private final ArrayList<Rectangle> imageBounds = new ArrayList<>();
     private final Random randomNbr;
@@ -35,8 +37,8 @@ public class Game {
         this.myDiver=new Diver();
         //ouvrir fenêtre pour que l'utilisateur écrive son pseudo et la couleur souahité
         initializeDatabaseConnection();
-        this.updatedDiver = new DiverDAO(connection);
-        this.updatedDiver.create(myDiver);
+        this.diverDAO = new DiverDAO(connection);
+        this.diverDAO.create(myDiver);
 
         this.myDiver.setScore(0);
         this.trashset=new Trash[30];
@@ -47,13 +49,17 @@ public class Game {
         contexte.drawImage(this.backgroundImage,0,0,null);
         contexte.drawString("Score : "+ this.myDiver.getScore(),10,20);
         this.myDiver.rendering(contexte);
-        for (Trash trash:this.trashset) {
+        for (Diver otherDivers : divers){
+            otherDivers.rendering(contexte);
+        }
+        for (Trash trash : this.trashset) {
             trash.rendering(contexte);
         }
     }
     public void update(){
         this.myDiver.update();
-        this.updatedDiver.update(this.myDiver,this.myDiver.getId());
+        this.diverDAO.update(this.myDiver,this.myDiver.getId());
+        this.divers= diverDAO.findAll();
         checkCollisionWithPanel();
         CollisionResult collisionResult = checkSimpleCollisionDiverTrash();
         if(collisionResult.getCollision()){

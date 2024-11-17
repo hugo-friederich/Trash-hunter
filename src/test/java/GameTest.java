@@ -1,10 +1,3 @@
-import org.junit.Test;
-import org.trash_hunter.trashes.Bottle;
-import org.trash_hunter.Game;
-
-
-import static org.junit.Assert.*;
-
 public class GameTest {
    
     /*

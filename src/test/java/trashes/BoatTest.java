@@ -2,7 +2,6 @@ package trashes;
 
 import org.junit.Test;
 import org.trash_hunter.trashes.Boat;
-import org.trash_hunter.trashes.Bottle;
 
 import java.io.IOException;
 

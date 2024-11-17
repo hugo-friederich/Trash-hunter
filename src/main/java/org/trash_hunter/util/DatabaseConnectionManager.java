@@ -5,6 +5,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ * Classe identique a DataBaseConnection mais moins optimisé
+ */
 public class DatabaseConnectionManager {
     private final String url;
     private final Properties properties;

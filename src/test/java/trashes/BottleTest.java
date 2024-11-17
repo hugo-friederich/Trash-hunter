@@ -2,8 +2,10 @@ package trashes;
 
 import org.junit.Test;
 import org.trash_hunter.trashes.Bottle;
-import static org.junit.Assert.*;
+
 import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
 
 public class BottleTest {
     @Test

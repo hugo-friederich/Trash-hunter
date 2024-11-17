@@ -1,27 +1,26 @@
-import org.junit.Assert;
 import org.junit.Test;
 import org.trash_hunter.Diver;
 import org.trash_hunter.DiverDAO;
-import org.trash_hunter.util.DatabaseConnectionManager;
+import org.trash_hunter.util.DatabaseConnection;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DiverDAOTest {
     private Connection connection;
     private void initializeDatabaseConnection() throws SQLException {
-        DriverManager.registerDriver(new org.mariadb.jdbc.Driver());
-        DatabaseConnectionManager databaseConnectionManager = new DatabaseConnectionManager("nemrod.ens2m.fr:3306", "2024-2025_s1_vs1_tp2_Trash_Hunter", "etudiant", "YTDTvj9TR3CDYCmP");
-        connection = databaseConnectionManager.getConnection();
+        connection = DatabaseConnection.getConnection();
     }
 
     @Test
     public void shouldSelectDiverById () throws SQLException{
         initializeDatabaseConnection();
         DiverDAO diverSerched = new DiverDAO(connection);
-        Diver diver = diverSerched.findById(1);
+        Diver newDiver = new Diver();
+        diverSerched.create(newDiver);
+        Diver diver = diverSerched.findById(newDiver.getId());
         System.out.print(diver.toString());
+        diverSerched.delete(newDiver.getId());
     }
 
     // Doit créer un Diver nommé Toto de couleur rouge dans la base de donnée
@@ -46,10 +45,10 @@ public class DiverDAOTest {
     }
     // Doit créer un nouveau Diver et le supprimer juste après
     @Test
-    public void shouldDeleteDiver () throws SQLException{
+    public void shouldDeleteDiver () throws SQLException {
         initializeDatabaseConnection();
         DiverDAO diverDAO = new DiverDAO(connection);
-        Diver newDiver = new Diver("toto","red");
+        Diver newDiver = new Diver("toto", "red");
         diverDAO.create(newDiver);  //creation d'un nouveau diver
         diverDAO.delete(newDiver.getId());
     }

@@ -1,16 +1,15 @@
 package org.trash_hunter;
 
+import org.trash_hunter.util.DatabaseConnection;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.sql.SQLException;
 
 
-public class GamePanel extends JFrame implements KeyListener, ActionListener {
+public class GamePanel extends JFrame implements KeyListener, ActionListener, WindowListener {
     private BufferedImage backgroundImage;
     private Graphics2D contexte;
     private JLabel jLabel1;
@@ -28,14 +27,13 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener {
         this.setContentPane(this.jLabel1);
         this.pack();
 
-        //Creation du buffer pour l'affichage du jeu et recuperation du contexte graphique
-        this.backgroundImage=new BufferedImage(this.jLabel1.getWidth(),
-                this.jLabel1.getHeight(),BufferedImage.TYPE_INT_ARGB);
-        this.jLabel1.setIcon(new ImageIcon(backgroundImage));
-        this.contexte=this.backgroundImage.createGraphics();
-
         //Creation du jeu
         this.game=new Game();
+
+        // Création du buffer pour l'affichage du jeu et récupération du contexte graphique
+        this.backgroundImage = new BufferedImage(1440, 780, BufferedImage.TYPE_INT_ARGB);
+        this.jLabel1.setIcon(new ImageIcon(backgroundImage));
+        this.contexte = this.backgroundImage.createGraphics();
 
         //Creation  du Timer qui appelle this.actionPerformed() tous les 40 ms
         this.timer=new Timer(20,this);
@@ -43,6 +41,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener {
 
         //Ajout du listener
         this.addKeyListener(this);
+        this.addWindowListener(this);
     }
     public static void main (String[]args) throws SQLException {
         GamePanel panel=new GamePanel();
@@ -86,5 +85,42 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener {
         if (this.game.isFinished()) {
             this.timer.stop();
         }
+    }
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        //Action à venir effectuer avant la fermeture de la fenêtre
+        this.game.getDiverDAO().delete(this.game.getDiver().getId());
+        DatabaseConnection.close();  // Arrête la conncetion à la base de donnée
+        this.dispose(); //Ferme la fenêtre
+
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+
     }
 }

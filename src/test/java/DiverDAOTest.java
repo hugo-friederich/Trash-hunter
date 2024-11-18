@@ -58,5 +58,11 @@ public class DiverDAOTest {
         DiverDAO diverDAO = new DiverDAO(connection);
         System.out.print(diverDAO.findAll().toString());
     }
+    @Test
+    public void shouldFindAllPseudo () throws SQLException{
+        initializeDatabaseConnection();
+        DiverDAO diverDAO=new DiverDAO(connection);
+        System.out.print(diverDAO.findAllPseudo());
+    }
 
 }

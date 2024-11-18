@@ -13,8 +13,11 @@ public abstract class DataAccessObject<T extends DataTransferObject> {
     }
     public abstract  T findById(long id);
     public abstract List<T> findAll();
+    public abstract List <String> findAllPseudo();
     public abstract void update(T dto,long id);
     public abstract void create(T dto);
     public abstract void delete(long id);
+    public abstract void addToBestScores(T dto);
+
 
 }

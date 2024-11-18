@@ -95,9 +95,9 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     public void windowClosing(WindowEvent e) {
         //Action à venir effectuer avant la fermeture de la fenêtre
         this.game.getDiverDAO().delete(this.game.getDiver().getId());
+        this.game.getDiverDAO().addToBestScores(this.game.getDiver());
         DatabaseConnection.close();  // Arrête la conncetion à la base de donnée
         this.dispose(); //Ferme la fenêtre
-
     }
 
     @Override

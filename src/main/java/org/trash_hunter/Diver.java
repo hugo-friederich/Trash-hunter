@@ -35,7 +35,7 @@ public class Diver implements DataTransferObject {
         this.id = 0;    // l'identifiant est auto-incrémenté
         this.x = 720;   // coordonées du "spawn" = (300,300)
         this.y = 390;
-        this.speed = 10;
+        this.speed = 15;
         this.pseudo = pseudo;
         score = 0;
         scoreMax = 0;

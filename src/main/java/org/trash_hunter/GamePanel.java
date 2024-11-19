@@ -1,6 +1,7 @@
 package org.trash_hunter;
 
 import org.trash_hunter.util.DatabaseConnection;
+import org.trash_hunter.windows.Start_window;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,6 +28,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
         this.setContentPane(this.jLabel1);
         this.pack();
 
+
         //Creation du jeu
         this.game=new Game();
 
@@ -45,7 +47,9 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     }
     public static void main (String[]args) throws SQLException {
         GamePanel panel=new GamePanel();
+        Start_window startWindow = new Start_window();
         panel.setVisible(true);
+        startWindow.setVisible(true);
     }
 
     @Override
@@ -95,7 +99,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     public void windowClosing(WindowEvent e) {
         //Action à venir effectuer avant la fermeture de la fenêtre
         this.game.getDiverDAO().delete(this.game.getDiver().getId());
-        this.game.getDiverDAO().addToBestScores(this.game.getDiver());
+        //this.game.getDiverDAO().addToBestScores(this.game.getDiver());
         DatabaseConnection.close();  // Arrête la conncetion à la base de donnée
         this.dispose(); //Ferme la fenêtre
     }

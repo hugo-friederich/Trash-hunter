@@ -2,7 +2,7 @@ package org.trash_hunter;
 
 import org.trash_hunter.trashes.*;
 import org.trash_hunter.util.DatabaseConnection;
-
+import javax.swing.*;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -34,7 +34,6 @@ public class Game {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE,null,ex);
         }
         this.myDiver=new Diver();
-        //ouvrir fenêtre pour que l'utilisateur écrive son pseudo et la couleur souahité
         initializeDatabaseConnection();
         this.diverDAO = new DiverDAO(connection);
         this.diverDAO.create(myDiver);
@@ -42,12 +41,17 @@ public class Game {
         this.myDiver.setScore(0);
         this.trashset=new Trash[30];
         this.randomNbr=new Random();
+        // Créer une fenêtre de dialogue pour le pseudo
+        //String pseudo = JOptionPane.showInputDialog(null, "Veuillez entrer votre pseudo :");
+        //this.myDiver.setPseudo(pseudo);
+        // Créer une fenêtre de dialogue pour la couleur
+        //String color = JOptionPane.showInputDialog(null, "Veuillez sélectionner la couleur de votre plongeur:");
+        //this.myDiver.setColor(color);
         initTrashes();
     }
     public void rending(Graphics2D contexte){
         contexte.drawImage(this.backgroundImage,0,0,null);
         contexte.drawString("Score : "+ this.myDiver.getScore(),10,20);
-        this.myDiver.rendering(contexte);
         for (Diver otherDivers : divers){
             otherDivers.rendering(contexte);
         }
@@ -166,6 +170,7 @@ public class Game {
                 break;
             }
         }
+
     }
     private void initializeDatabaseConnection() throws SQLException {
         connection = DatabaseConnection.getConnection();

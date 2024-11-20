@@ -60,6 +60,15 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
             this.game.getDiver().setLeft(true);
         } else if (evt.getKeyCode() == 68 || evt.getKeyCode()== KeyEvent.VK_RIGHT) {
             this.game.getDiver().setRight(true);
+        } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {  // Ajout de la touche Échap
+            int choix = JOptionPane.showConfirmDialog(this,
+                    "Voulez-vous vraiment quitter le jeu ?",
+                    "Quitter le jeu",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (choix == JOptionPane.YES_OPTION) {
+                System.exit(0);
+            }
         }
     }
 
@@ -73,6 +82,8 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
             this.game.getDiver().setLeft(false);
         } else if (evt.getKeyCode() == 68 || evt.getKeyCode()== KeyEvent.VK_RIGHT) {
             this.game.getDiver().setRight(false);
+        } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {  // Ajout de la touche Échap
+        this.dispose();  // Ferme la fenêtre
         }
     }
 

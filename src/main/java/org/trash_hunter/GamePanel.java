@@ -16,13 +16,12 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     private JLabel jLabel1;
     private Game game;
     private Timer timer;
-    private Diver myDiver;
 
     public GamePanel(String pseudo,String color) throws SQLException {
         //init de la fenetre
         this.setSize(1440,780);
         this.setResizable(false);
-        this.setTitle("org.trash_hunter.trashes.Trash Hunter");
+        this.setTitle("Trash Hunter");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.jLabel1 = new JLabel();
         this.jLabel1.setPreferredSize(new Dimension(1440,780));

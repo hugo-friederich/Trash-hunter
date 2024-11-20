@@ -4,14 +4,19 @@ import org.trash_hunter.DiverDAO;
 import org.trash_hunter.GamePanel;
 import org.trash_hunter.util.DatabaseConnection;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 public class Start_window extends JFrame implements WindowListener {
     private JPanel startPanel;
@@ -21,6 +26,8 @@ public class Start_window extends JFrame implements WindowListener {
     private JButton validateButton;
     private JComboBox comboBox1;
     private JButton exitButton;
+    private JLabel imageLogo;
+    private JLabel Title;
     private boolean isclosed = false;
     private static String pseudo;
     private static String color;
@@ -32,7 +39,7 @@ public class Start_window extends JFrame implements WindowListener {
         setContentPane(startPanel);
         setTitle("Trash Hunter");
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        setSize(300,400);                     //taille de la fenêtre
+        setSize(350,400);                     //taille de la fenêtre
         setLocationRelativeTo(null);
         setVisible(true);
         diverDAO = new DiverDAO(DatabaseConnection.getConnection());
@@ -120,4 +127,18 @@ public class Start_window extends JFrame implements WindowListener {
 
     }
 
+    private void createUIComponents() {
+        try {
+            InputStream imageStream = getClass().getClassLoader().getResourceAsStream("plongeur.png");
+            if (imageStream == null) {
+                throw new IOException("Image non trouvée : plongeur.png");
+            }
+
+            // Chargez l'image du plongeur
+            Icon logo = new ImageIcon(ImageIO.read(imageStream));
+            imageLogo = new JLabel(logo);
+        } catch (IOException e) {
+            throw new RuntimeException("Erreur lors du chargement de l'image : " + e.getMessage(), e);
+        }
+    }
 }

@@ -2,6 +2,8 @@ package org.trash_hunter;
 
 import org.trash_hunter.trashes.*;
 import org.trash_hunter.util.DatabaseConnection;
+import org.trash_hunter.windows.Start_window;
+
 import javax.swing.*;
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -16,6 +18,8 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
+
 public class Game {
     private BufferedImage backgroundImage;
     final private Diver myDiver;
@@ -24,7 +28,6 @@ public class Game {
     private final Trash[] trashset;
     private final ArrayList<Rectangle> imageBounds = new ArrayList<>();
     private final Random randomNbr;
-    private Connection connection;
 
 
     public Game() throws SQLException {
@@ -34,19 +37,14 @@ public class Game {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE,null,ex);
         }
         this.myDiver=new Diver();
-        initializeDatabaseConnection();
-        this.diverDAO = new DiverDAO(connection);
+        this.diverDAO = new DiverDAO(DatabaseConnection.getConnection());
         this.diverDAO.create(myDiver);
 
         this.myDiver.setScore(0);
         this.trashset=new Trash[30];
         this.randomNbr=new Random();
-        // Créer une fenêtre de dialogue pour le pseudo
-        //String pseudo = JOptionPane.showInputDialog(null, "Veuillez entrer votre pseudo :");
-        //this.myDiver.setPseudo(pseudo);
-        // Créer une fenêtre de dialogue pour la couleur
-        //String color = JOptionPane.showInputDialog(null, "Veuillez sélectionner la couleur de votre plongeur:");
-        //this.myDiver.setColor(color);
+        this.myDiver.setPseudo(Start_window.getPseudo());  // a revoir
+        this.myDiver.setColor(Start_window.getColor());
         initTrashes();
     }
     public void rending(Graphics2D contexte){
@@ -172,10 +170,6 @@ public class Game {
         }
 
     }
-    private void initializeDatabaseConnection() throws SQLException {
-        connection = DatabaseConnection.getConnection();
-    }
-
     //Getters and Setters
     public Trash[] getTrashset(){
         return this.trashset;

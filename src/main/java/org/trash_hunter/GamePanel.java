@@ -26,16 +26,16 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
         this.jLabel1 = new JLabel();
         this.jLabel1.setPreferredSize(new Dimension(1440,780));
         this.setContentPane(this.jLabel1);
+        //this.setFocusableWindowState(false);  // Empêche l'interraction avec la fenêtre
         this.pack();
-
-
-        //Creation du jeu
-        this.game=new Game();
 
         // Création du buffer pour l'affichage du jeu et récupération du contexte graphique
         this.backgroundImage = new BufferedImage(1440, 780, BufferedImage.TYPE_INT_ARGB);
         this.jLabel1.setIcon(new ImageIcon(backgroundImage));
         this.contexte = this.backgroundImage.createGraphics();
+
+        //Creation du jeu
+        this.game = new Game();
 
         //Creation  du Timer qui appelle this.actionPerformed() tous les 40 ms
         this.timer=new Timer(20,this);
@@ -47,8 +47,8 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     }
     public static void main (String[]args) throws SQLException {
         GamePanel panel=new GamePanel();
-        Start_window startWindow = new Start_window();
         panel.setVisible(true);
+        Start_window startWindow = new Start_window(panel);
         startWindow.setVisible(true);
     }
 
@@ -99,7 +99,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     public void windowClosing(WindowEvent e) {
         //Action à venir effectuer avant la fermeture de la fenêtre
         this.game.getDiverDAO().delete(this.game.getDiver().getId());
-        //this.game.getDiverDAO().addToBestScores(this.game.getDiver());
+        this.game.getDiverDAO().addToBestScores(this.game.getDiver());
         DatabaseConnection.close();  // Arrête la conncetion à la base de donnée
         this.dispose(); //Ferme la fenêtre
     }

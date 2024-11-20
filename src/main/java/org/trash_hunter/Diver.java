@@ -25,6 +25,7 @@ public class Diver implements DataTransferObject {
     private String color;
     private Date date;
     private Time game_time;
+    public static String [] colorList;
 
     public Diver (String pseudo,String color){
         try {
@@ -48,6 +49,7 @@ public class Diver implements DataTransferObject {
         this.down = false;
         this.width=50;
         this.height=50;
+        colorList = new String [] {"Red", "Blue","Green","Yellow","Orange"};
         //this.width = this.sprite.getWidth();
         //this.height = this.getHeight();
     }

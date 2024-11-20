@@ -16,8 +16,9 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     private JLabel jLabel1;
     private Game game;
     private Timer timer;
+    private Diver myDiver;
 
-    public GamePanel() throws SQLException {
+    public GamePanel(String pseudo,String color) throws SQLException {
         //init de la fenetre
         this.setSize(1440,780);
         this.setResizable(false);
@@ -35,7 +36,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
         this.contexte = this.backgroundImage.createGraphics();
 
         //Creation du jeu
-        this.game = new Game();
+        this.game = new Game(pseudo,color);
 
         //Creation  du Timer qui appelle this.actionPerformed() tous les 40 ms
         this.timer=new Timer(20,this);
@@ -46,10 +47,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
         this.addWindowListener(this);
     }
     public static void main (String[]args) throws SQLException {
-        GamePanel panel=new GamePanel();
-        panel.setVisible(true);
-        Start_window startWindow = new Start_window(panel);
-        startWindow.setVisible(true);
+        Start_window startWindow = new Start_window();   //Le GamePanel se lance dans ActionPerformed de la classe Start_window
     }
 
     @Override

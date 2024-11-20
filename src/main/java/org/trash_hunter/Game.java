@@ -28,24 +28,23 @@ public class Game {
     private final Trash[] trashset;
     private final ArrayList<Rectangle> imageBounds = new ArrayList<>();
     private final Random randomNbr;
-
-
-    public Game() throws SQLException {
+    public Game (String pseudo,String color) throws SQLException {
         try{
             this.backgroundImage= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("fond_marin_1440x780.png")));
         }catch (IOException ex){
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE,null,ex);
         }
-        this.myDiver=new Diver();
+        this.myDiver = new Diver(pseudo,color);
         this.diverDAO = new DiverDAO(DatabaseConnection.getConnection());
         this.diverDAO.create(myDiver);
-
-        this.myDiver.setScore(0);
         this.trashset=new Trash[30];
         this.randomNbr=new Random();
-        this.myDiver.setPseudo(Start_window.getPseudo());  // a revoir
-        this.myDiver.setColor(Start_window.getColor());
+
         initTrashes();
+
+    }
+    public Game() throws SQLException {
+        this("Bob","Blue");
     }
     public void rending(Graphics2D contexte){
         contexte.drawImage(this.backgroundImage,0,0,null);

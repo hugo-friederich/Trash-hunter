@@ -18,7 +18,7 @@ public class Bottle extends Trash {
         height=super.sprite.getHeight();
         nbPoints= 1;
         name ="Bottle";
-        reaparitionTime = 1;           //récupération quasi instantanée
+        repatriationTime = 1;           //récupération quasi instantanée
         appearanceRangeY = new Couple(0,700-this.height);
     }
     public Bottle (){this(0,0);}

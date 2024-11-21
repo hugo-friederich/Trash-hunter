@@ -19,7 +19,7 @@ public class Boat extends Trash{
         height=super.sprite.getHeight();
         nbPoints = 10;
         name = "Boat";
-        reaparitionTime = 5000;        //temps de récupération en ms
+        repatriationTime = 5000;        //temps de récupération en ms
         appearanceRangeY = new Couple(780-this.height,780-this.height);
     }
     public Boat (){

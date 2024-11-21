@@ -2,16 +2,12 @@ package org.trash_hunter;
 
 import org.trash_hunter.trashes.*;
 import org.trash_hunter.util.DatabaseConnection;
-import org.trash_hunter.windows.Start_window;
 
-import javax.swing.*;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -24,22 +20,26 @@ public class Game {
     private BufferedImage backgroundImage;
     final private Diver myDiver;
     private DiverDAO diverDAO;
+    private TrashDAO trashDAO;
     private List <Diver> divers;
-    private final Trash[] trashset;
-    private final ArrayList<Rectangle> imageBounds = new ArrayList<>();
     private final Random randomNbr;
+    private int nbTrashes;
     public Game (String pseudo,String color) throws SQLException {
         try{
             this.backgroundImage= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("fond_marin_1440x780.png")));
         }catch (IOException ex){
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE,null,ex);
         }
+        //Creation du joueur ainsi que de l'instance lui permetant de communiquer à la BDD
         this.myDiver = new Diver(pseudo,color);
         this.diverDAO = new DiverDAO(DatabaseConnection.getConnection());
         this.diverDAO.create(myDiver);
-        this.trashset=new Trash[30];
-        this.randomNbr=new Random();
 
+        //Initialisation des déchets dans la base de donnée
+        this.nbTrashes = 30;
+        this.trashDAO = new TrashDAO(DatabaseConnection.getConnection());
+        List <Trash> trashsets = TrashDAO.findAll();
+        this.randomNbr=new Random();
         initTrashes();
 
     }
@@ -66,7 +66,7 @@ public class Game {
             this.myDiver.setScore(this.myDiver.getScore()+trashset[collisionResult.getIndex()].getNbPoints());
             this.myDiver.updateScoreHistory();
         }
-        addNewTrash();
+        updateTrash();
     }
     public boolean isFinished() {return false;} //le jeu n'a pas de fin
 
@@ -124,43 +124,44 @@ public class Game {
      */
 
     //Gestion des déchets
-    public void initTrashes() {
-        for (int i = 0; i < this.trashset.length; i++) {
+    public void initTrashes() throws SQLException {
+        for (int i = 0; i < this.nbTrashes; i++) {
             int randomNumber = randomNbr.nextInt(1,3);     //choisis un nombre entre 1 et 2 aléatoirement
             if (i <= 15) {
                 if (randomNumber == 1) {
                     Bottle bottle = new Bottle();
                     bottle.resetPosition();
-                    trashset[i] = bottle;
+                    trashDAO.create(bottle);
                 } else if (randomNumber == 2) {
                     Can can = new Can();
                     can.resetPosition();
-                    trashset[i] = can;
+                    trashDAO.create(can);
                 }
             } else if (i <= 25) {
                 if (randomNumber == 1) {
                     PlasticBag plasticBag = new PlasticBag();
                     plasticBag.resetPosition();
-                    trashset[i] = plasticBag;
+                    trashDAO.create(plasticBag);
                 } else if (randomNumber == 2) {
                     Tire tire = new Tire();
                     tire.resetPosition();
-                    trashset[i] = tire;
+                    trashDAO.create(tire);
                 }
             } else {
                 if (randomNumber == 1) {
                     OilContainer oilContainer = new OilContainer();
                     oilContainer.resetPosition();
-                    trashset[i] = oilContainer;
+                    trashDAO.create(oilContainer);
                 } else if (randomNumber == 2) {
                     Boat boat = new Boat();
                     boat.resetPosition();
-                    trashset[i] = boat;
+                    trashDAO.create(boat);
                 }
             }
         }
     }
-    public void addNewTrash() {
+    public void updateTrash() {
+
         for (Trash trash : this.trashset) {
             if (!trash.isVisible()||trash.isExpired()) {
                 trash.resetPosition();

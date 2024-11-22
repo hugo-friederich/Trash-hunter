@@ -8,30 +8,34 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class Trash implements DataTransferObject {
-    protected int id;
+    protected int id;                           //identifiant unique au déchet
+
     protected String name;                      //nom commun
 
     protected double x,y;                       //coordonnées
     protected int width, height;                //largeur, hauteur
     protected int nbPoints;                     //nomnbre de points rapportés
     protected BufferedImage sprite;             //image du déchet
-    private boolean visible = true;         //déchet visible ou non
+    private int visible = 1;                    //déchet visible ou non
     protected long creationTime;                //temps passé après création
-    protected int repatriationTime;                         //temps de récupération en ms
-    protected Couple appearanceRangeX;          //plage de valeur d'apparition des déchets sur x
-    protected Couple appearanceRangeY;          //plage de valeur d'apparition des déchets sur Y
+    protected int repatriationTime;             //temps de récupération en ms
+    protected int appearanceRangeXInf;          //valeur inf plage d'apparition sur x
+    protected int appearanceRangeXSup;          //valeur sup plage d'apparition sur x
+    protected int appearanceRangeYInf;          //valeur inf plage d'apparition sur y
+    protected int appearanceRangeYSup;          //valeur sup plage d'apparition sur y
 
     public Trash(double x,double y){
         this.x=x;
         this.y=y;
-        this.appearanceRangeX = new Couple(0,1440-this.width);
+        this.appearanceRangeXInf = 0;
+        this.appearanceRangeXSup = 1440-width;
     }
     // constructeur par défault
     public Trash (){
         this(0,0);
     }
     public void rendering (Graphics2D contexte){
-        if(this.visible){
+        if(this.visible==1){
             contexte.drawImage(this.sprite,(int)x,(int)y,null);
         }
     }
@@ -39,15 +43,15 @@ public class Trash implements DataTransferObject {
     /**
      * Permet de réinitialiser la position d'un déchet après qu'il ai été rendu invisible
      */
-    public void resetPosition() {
+    public void updatePosition() {
         //objet alléatoire
         Random rdm = new Random();
-        this.x = rdm.nextDouble(this.appearanceRangeX.inf,this.appearanceRangeX.sup+0.5);
-        this.y = rdm.nextDouble(this.appearanceRangeY.inf,this.appearanceRangeY.sup+0.5);
+        this.x = rdm.nextDouble(this.appearanceRangeXInf,this.appearanceRangeXSup+0.5);
+        this.y = rdm.nextDouble(this.appearanceRangeYInf,this.appearanceRangeYSup+0.5);
         creationTime = System.currentTimeMillis();
-        visible = true;
+        visible = 1;
     }
-    public void setVisible(boolean visible) {
+    public void setVisible(int visible) {
         this.visible = visible;
     }
     public boolean isExpired() {
@@ -101,7 +105,7 @@ public class Trash implements DataTransferObject {
         this.sprite = sprite;
     }
 
-    public boolean isVisible() {
+    public int isVisible() {
         return visible;
     }
 
@@ -121,22 +125,6 @@ public class Trash implements DataTransferObject {
         this.repatriationTime = repatriationTime;
     }
 
-    public Couple getAppearanceRangeX() {
-        return appearanceRangeX;
-    }
-
-    public void setAppearanceRangeX(Couple appearanceRangeX) {
-        this.appearanceRangeX = appearanceRangeX;
-    }
-
-    public Couple getAppearanceRangeY() {
-        return appearanceRangeY;
-    }
-
-    public void setAppearanceRangeY(Couple appearanceRangeY) {
-        this.appearanceRangeY = appearanceRangeY;
-    }
-
     public long getId() {
         return id;
     }
@@ -144,6 +132,39 @@ public class Trash implements DataTransferObject {
     public void setId(int id) {
         this.id = id;
     }
+
+    public int getAppearanceRangeYInf() {
+        return appearanceRangeYInf;
+    }
+
+    public void setAppearanceRangeYInf(int appearanceRangeYInf) {
+        this.appearanceRangeYInf = appearanceRangeYInf;
+    }
+
+    public int getAppearanceRangeYSup() {
+        return appearanceRangeYSup;
+    }
+
+    public void setAppearanceRangeYSup(int appearanceRangeYSup) {
+        this.appearanceRangeYSup = appearanceRangeYSup;
+    }
+
+    public int getAppearanceRangeXInf() {
+        return appearanceRangeXInf;
+    }
+
+    public void setAppearanceRangeXInf(int appearanceRangeXInf) {
+        this.appearanceRangeXInf = appearanceRangeXInf;
+    }
+
+    public int getAppearanceRangeXSup() {
+        return appearanceRangeXSup;
+    }
+
+    public void setAppearanceRangeXSup(int appearanceRangeXSup) {
+        this.appearanceRangeXSup = appearanceRangeXSup;
+    }
+
 
     public String toString (){
         return this.name;

@@ -19,7 +19,8 @@ public class Bottle extends Trash {
         nbPoints= 1;
         name ="Bottle";
         repatriationTime = 1;           //récupération quasi instantanée
-        appearanceRangeY = new Couple(0,700-this.height);
+        appearanceRangeYInf = 0;
+        appearanceRangeYSup= 700-this.height;
     }
     public Bottle (){this(0,0);}
 

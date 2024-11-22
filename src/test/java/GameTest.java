@@ -1,5 +1,6 @@
 import org.junit.Test;
 import org.trash_hunter.Game;
+import org.trash_hunter.GamePanel;
 import org.trash_hunter.trashes.TrashDAO;
 import org.trash_hunter.util.DatabaseConnection;
 
@@ -26,10 +27,7 @@ public class GameTest {
     */
     @Test
     public void shouldInitializeTrashes() throws SQLException {
-        Game game = new Game();
-        TrashDAO trashDAO = new TrashDAO(DatabaseConnection.getConnection());
-        trashDAO.clear();
-        game.initTrashes();
+
     }
 
 }

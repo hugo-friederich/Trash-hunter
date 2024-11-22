@@ -12,20 +12,20 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Diver implements DataTransferObject {
-    private BufferedImage sprite;
-    private float x, y;
-    private String pseudo;
-    private int score;
-    private ArrayList<Integer> scoreHistory = new ArrayList<>();
-    private int scoreMax;
-    private int width, height;
-    private int speed;
-    private boolean left, right, up, down;
-    private long id;
-    private String color;
-    private Date date;
-    private Time game_time;
-    public static String [] colorList;
+    private BufferedImage sprite;                                       //image du plongeur
+    private float x, y;                                                 //coordonées
+    private String pseudo;                                              //pseudo plongueur
+    private int score;                                                  //score actuel
+    private ArrayList<Integer> scoreHistory = new ArrayList<>();        //historique des scores
+    private int scoreMax;                                               //score maximum
+    private int width, height;                                          //largeur et hauteur image
+    private int speed;                                                  //vitesse de déplacement (px/s)
+    private boolean left, right, up, down;                              //données de déplacement
+    private long id;                                                    //identifiant unique
+    private String color;                                               //couleur sélectionné
+    private Date date;                                                  //date de création
+    private Time game_time;                                             //horaire création
+    public static String [] colorList;                                  //liste des couleurs du perso
 
     public Diver (String pseudo,String color){
         try {
@@ -50,8 +50,6 @@ public class Diver implements DataTransferObject {
         this.width=50;
         this.height=50;
         colorList = new String [] {"Red", "Blue","Green","Yellow","Orange"};
-        //this.width = this.sprite.getWidth();
-        //this.height = this.getHeight();
     }
 
     //Définition du constructeur par défaut (pseudo : Bob, color : blue)

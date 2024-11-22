@@ -19,7 +19,8 @@ public class Can extends Trash {
         nbPoints= 1;
         name="Can";
         repatriationTime = 1;          // récupération quasi instantanée
-        appearanceRangeY = new Couple(0,700-this.height);
+        appearanceRangeYInf = 0;
+        appearanceRangeYSup= 700-this.height;
     }
     public Can (){this(0,0);}
 }

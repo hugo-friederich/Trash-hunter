@@ -96,7 +96,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
-        this.game.rending(contexte);
+        this.game.rendering(contexte);
         this.jLabel1.repaint();
         if (this.game.isFinished()) {
             this.timer.stop();
@@ -138,5 +138,9 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     @Override
     public void windowDeactivated(WindowEvent e) {
 
+    }
+
+    public Graphics2D getContexte() {
+        return contexte;
     }
 }

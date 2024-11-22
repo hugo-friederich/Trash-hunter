@@ -10,7 +10,7 @@ public class TrashTest {
     @Test
     public void shouldResetTrashes (){
         Bottle bottle = new Bottle(100,100);
-        bottle.resetPosition();
+        bottle.updatePosition();
         assertTrue(bottle.getX()<1440 &&
                 bottle.getX()>0 &&
                 bottle.getY()<700-bottle.getHeight()&&

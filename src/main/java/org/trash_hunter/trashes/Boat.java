@@ -20,7 +20,8 @@ public class Boat extends Trash{
         nbPoints = 10;
         name = "Boat";
         repatriationTime = 5000;        //temps de récupération en ms
-        appearanceRangeY = new Couple(780-this.height,780-this.height);
+        appearanceRangeYInf = 780-this.height;
+        appearanceRangeYSup= 780-this.height;
     }
     public Boat (){
         this(0,0);

@@ -11,12 +11,12 @@ import java.util.List;
 
 public class TrashDAO extends DataAccessObject<Trash> {
     //Requêtes pour la table Diver
-    private static final String INSERT = "INSERT INTO Trashes (name,x,y,nbPoints) VALUES (?, ?, ?, ?)";
-    private static final String GET_ONE = "SELECT name,x,y,nbPoints FROM Trashes WHERE id = ?";
-    private static final String UPDATE = "UPDATE Trashes SET x=?,y=? WHERE id = ?";
+    private static final String INSERT = "INSERT INTO Trashes (visible,name,x,y,nbPoints,appearanceRangeYInf,appearanceRangeYSup) VALUES (?, ?, ?, ?,?,?,?)";
+    private static final String GET_ONE = "SELECT visible,id,name,x,y,nbPoints,appearanceRangeYInf,appearanceRangeYSup FROM Trashes WHERE id = ?";
+    private static final String UPDATE = "UPDATE Trashes SET visible=?,x=?,y=? WHERE id = ?";
     private static final String DELETE = "DELETE FROM Trashes WHERE id = ?";
-    private static final String GET_ALL = "SELECT name,x,y,nbPoints FROM Trashes";
-    private static final String TRUNCATE_TABLE = "TRUNCATE TABLE `2024-2025_s1_vs1_tp2_Trash_Hunter`.`Trashes`";
+    private static final String GET_ALL = "SELECT id,visible,name,x,y,nbPoints,appearanceRangeYinf,appearanceRangeYSup FROM Trashes";
+    private static final String TRUNCATE_TABLE = "TRUNCATE TABLE Trashes";
     public TrashDAO(Connection connection) {
         super(connection);
     }
@@ -29,10 +29,13 @@ public class TrashDAO extends DataAccessObject<Trash> {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 trash = new Trash();
+                trash.setVisible(resultSet.getInt("visible"));
                 trash.setName(resultSet.getString("name"));
                 trash.setX(resultSet.getFloat("x"));
                 trash.setY(resultSet.getFloat("y"));
                 trash.setNbPoints(resultSet.getInt("nbPoints"));
+                trash.setAppearanceRangeYInf(resultSet.getInt("appearanceRangeYInf"));
+                trash.setAppearanceRangeYSup(resultSet.getInt("appearanceRangeYSup"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -49,10 +52,13 @@ public class TrashDAO extends DataAccessObject<Trash> {
             while (resultSet.next()) {
                 Trash trash = new Trash();
                 trash.setId(resultSet.getInt("id"));
+                trash.setVisible(resultSet.getInt("visible"));
                 trash.setName(resultSet.getString("name"));
                 trash.setX(resultSet.getFloat("x"));
                 trash.setY(resultSet.getFloat("y"));
                 trash.setNbPoints(resultSet.getInt("nbPoints"));
+                trash.setAppearanceRangeYInf(resultSet.getInt("appearanceRangeYInf"));
+                trash.setAppearanceRangeYSup(resultSet.getInt("appearanceRangeYSup"));
 
                 trashset.add(trash);
             }
@@ -71,8 +77,9 @@ public class TrashDAO extends DataAccessObject<Trash> {
     @Override
     public void update(Trash trashUpdated,long id) {
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(UPDATE)) {
-            preparedStatement.setDouble(1, trashUpdated.getX());
-            preparedStatement.setDouble(2, trashUpdated.getY());
+            preparedStatement.setInt(1,trashUpdated.isVisible());
+            preparedStatement.setDouble(2, trashUpdated.getX());
+            preparedStatement.setDouble(3, trashUpdated.getY());
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -82,15 +89,18 @@ public class TrashDAO extends DataAccessObject<Trash> {
     @Override
     public void create(Trash newtrash) {
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, newtrash.getName());
-            preparedStatement.setDouble(2, newtrash.getX());
-            preparedStatement.setDouble(3, newtrash.getY());
-            preparedStatement.setInt(4, newtrash.getNbPoints());
+            preparedStatement.setInt(1,newtrash.isVisible());
+            preparedStatement.setString(2, newtrash.getName());
+            preparedStatement.setDouble(3, newtrash.getX());
+            preparedStatement.setDouble(4, newtrash.getY());
+            preparedStatement.setInt(5, newtrash.getNbPoints());
+            preparedStatement.setInt(6, newtrash.getAppearanceRangeYInf());
+            preparedStatement.setInt(7, newtrash.getAppearanceRangeYSup());
 
             // Exécute la mise à jour et obtient les clés générées
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0) {
-                throw new SQLException("Creating diver failed, no rows affected.");
+                throw new SQLException("Creating trash failed, no rows affected.");
             }
 
             // Récupère les clés générées
@@ -98,7 +108,7 @@ public class TrashDAO extends DataAccessObject<Trash> {
                 if (generatedKeys.next()) {
                     newtrash.setId(generatedKeys.getInt(1)); // Assigne l'ID généré au nouveau Diver
                 } else {
-                    throw new SQLException("Creating diver failed, no ID obtained.");
+                    throw new SQLException("Creating trash failed, no ID obtained.");
                 }
             }
         } catch (SQLException e) {

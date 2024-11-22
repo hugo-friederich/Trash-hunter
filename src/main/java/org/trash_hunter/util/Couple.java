@@ -9,4 +9,20 @@ public class Couple {
         this.sup=sup;
         this.size=sup-inf;
     }
+
+    public int getInf() {
+        return inf;
+    }
+
+    public void setInf(int inf) {
+        this.inf = inf;
+    }
+
+    public int getSup() {
+        return sup;
+    }
+
+    public void setSup(int sup) {
+        this.sup = sup;
+    }
 }

@@ -22,6 +22,7 @@ public class Game {
     private DiverDAO diverDAO;
     private TrashDAO trashDAO;
     private List <Diver> divers;
+    private List <Trash> trashset;
     private final Random randomNbr;
     private int nbTrashes;
     public Game (String pseudo,String color) throws SQLException {
@@ -38,9 +39,8 @@ public class Game {
         //Initialisation des déchets dans la base de donnée
         this.nbTrashes = 30;
         this.trashDAO = new TrashDAO(DatabaseConnection.getConnection());
-        List <Trash> trashsets = TrashDAO.findAll();
         this.randomNbr=new Random();
-        initTrashes();
+
 
     }
     public Game() throws SQLException {
@@ -56,14 +56,21 @@ public class Game {
             trash.rendering(contexte);
         }
     }
-    public void update(){
+    public void update() throws SQLException {
         this.myDiver.update();
         this.diverDAO.update(this.myDiver,this.myDiver.getId());
         this.divers= diverDAO.findAll();
+
+        //Le premier joueur initialise les déchets
+        if(this.divers.isEmpty()){
+            this.trashDAO.clear();
+            initTrashes();
+        }
+
         checkCollisionWithPanel();
         CollisionResult collisionResult = checkSimpleCollisionDiverTrash();
         if(collisionResult.getCollision()){
-            this.myDiver.setScore(this.myDiver.getScore()+trashset[collisionResult.getIndex()].getNbPoints());
+            this.myDiver.setScore(this.myDiver.getScore()+trashset.get(collisionResult.getIndex()).getNbPoints());
             this.myDiver.updateScoreHistory();
         }
         updateTrash();
@@ -87,8 +94,8 @@ public class Game {
      * @return CollisionResult
      */
     public CollisionResult checkSimpleCollisionDiverTrash() {
-        for (int i = 0; i < trashset.length; i++) {
-            Trash trash = trashset[i];
+        for (int i = 0; i < trashset.size(); i++) {
+            Trash trash = trashset.get(i);
             if (isColliding(trash, myDiver)) {
                 trash.setVisible(false);
                 return new CollisionResult(true, i);
@@ -171,13 +178,13 @@ public class Game {
 
     }
     //Getters and Setters
-    public Trash[] getTrashset(){
-        return this.trashset;
-    }
     public Diver getDiver(){return this.myDiver;}
 
     public DiverDAO getDiverDAO() {
         return diverDAO;
     }
 
+    public List<Diver> getDivers() {
+        return divers;
+    }
 }

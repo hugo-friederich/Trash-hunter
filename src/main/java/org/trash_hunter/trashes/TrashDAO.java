@@ -16,6 +16,7 @@ public class TrashDAO extends DataAccessObject<Trash> {
     private static final String UPDATE = "UPDATE Trashes SET x=?,y=? WHERE id = ?";
     private static final String DELETE = "DELETE FROM Trashes WHERE id = ?";
     private static final String GET_ALL = "SELECT name,x,y,nbPoints FROM Trashes";
+    private static final String TRUNCATE_TABLE = "TRUNCATE TABLE `2024-2025_s1_vs1_tp2_Trash_Hunter`.`Trashes`";
     public TrashDAO(Connection connection) {
         super(connection);
     }
@@ -42,7 +43,7 @@ public class TrashDAO extends DataAccessObject<Trash> {
 
     @Override
     public List<Trash> findAll() {
-        List<Trash> divers = new ArrayList<>();
+        List<Trash> trashset = new ArrayList<>();
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(GET_ALL)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -53,13 +54,13 @@ public class TrashDAO extends DataAccessObject<Trash> {
                 trash.setY(resultSet.getFloat("y"));
                 trash.setNbPoints(resultSet.getInt("nbPoints"));
 
-                divers.add(trash);
+                trashset.add(trash);
             }
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        return divers;
+        return trashset;
     }
 
     @Override
@@ -112,7 +113,7 @@ public class TrashDAO extends DataAccessObject<Trash> {
             preparedStatement.setLong(1, id);
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0) {
-                throw new SQLException("Deleting diver failed, no rows affected.");
+                throw new SQLException("Deleting trash failed, no rows affected.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -122,5 +123,15 @@ public class TrashDAO extends DataAccessObject<Trash> {
 
     @Override
     public void addToBestScores(Trash newTrash) {
+    }
+
+    @Override
+    public void clear() {
+        try (PreparedStatement preparedStatement = this.connection.prepareStatement(TRUNCATE_TABLE)) {
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 }

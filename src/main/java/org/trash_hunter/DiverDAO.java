@@ -183,4 +183,9 @@ public class DiverDAO extends DataAccessObject<Diver> {
         }
 
     }
+
+    @Override
+    public void clear() {
+
+    }
 }

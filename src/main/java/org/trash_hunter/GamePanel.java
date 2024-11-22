@@ -91,7 +91,11 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        this.game.update();
+        try {
+            this.game.update();
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
         this.game.rending(contexte);
         this.jLabel1.repaint();
         if (this.game.isFinished()) {

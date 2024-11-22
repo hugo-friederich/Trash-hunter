@@ -18,6 +18,7 @@ public abstract class DataAccessObject<T extends DataTransferObject> {
     public abstract void create(T dto);
     public abstract void delete(long id);
     public abstract void addToBestScores(T dto);
+    public abstract void clear();
 
 
 }

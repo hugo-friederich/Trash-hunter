@@ -1,3 +1,10 @@
+import org.junit.Test;
+import org.trash_hunter.Game;
+import org.trash_hunter.trashes.TrashDAO;
+import org.trash_hunter.util.DatabaseConnection;
+
+import java.sql.SQLException;
+
 public class GameTest {
    
     /*
@@ -17,5 +24,12 @@ public class GameTest {
         assertFalse(Game.checkCollisionBetweenTrashes(bottle7,bottle8));
     }
     */
+    @Test
+    public void shouldInitializeTrashes() throws SQLException {
+        Game game = new Game();
+        TrashDAO trashDAO = new TrashDAO(DatabaseConnection.getConnection());
+        trashDAO.clear();
+        game.initTrashes();
+    }
 
 }

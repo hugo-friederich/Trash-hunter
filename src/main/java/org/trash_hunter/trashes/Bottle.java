@@ -14,8 +14,8 @@ public class Bottle extends Trash {
         } catch (IOException e) {
             throw new RuntimeException("Erreur lors du chargement de l'image : " + e.getMessage(), e);
         }
-        width=super.sprite.getWidth();
-        height=super.sprite.getHeight();
+        this.width=9;
+        this.height=25;
         nbPoints= 1;
         name ="Bottle";
         repatriationTime = 1;           //récupération quasi instantanée

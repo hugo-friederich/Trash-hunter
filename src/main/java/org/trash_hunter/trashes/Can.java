@@ -14,8 +14,8 @@ public class Can extends Trash {
         } catch (IOException e) {
             throw new RuntimeException("Erreur lors du chargement de l'image : " + e.getMessage(), e);
         }
-        width=super.sprite.getWidth();
-        height=super.sprite.getHeight();
+        this.width=12;
+        this.height=25;
         nbPoints= 1;
         name="Can";
         repatriationTime = 1;          // récupération quasi instantanée

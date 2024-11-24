@@ -27,6 +27,10 @@ public class Game {
     private final Random randomNbr;
     private int nbTrashes;
     public Game (String pseudo,String color) throws SQLException {
+
+        //création de l'objet permetant de génerer des nombres aléatoires
+        this.randomNbr=new Random();
+
         try{
             this.backgroundImage= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("fond_marin_1440x780.png")));
         }catch (IOException ex){
@@ -41,12 +45,13 @@ public class Game {
         //Initialisation des déchets dans la base de donnée
         this.nbTrashes = 30;
         this.trashDAO = new TrashDAO(DatabaseConnection.getConnection());
-        this.randomNbr=new Random();
+
 
         //Le premier joueur initialise les déchets
         this.trashDAO.clear();
         this.trashset = new ArrayList<>();
         initTrashes();
+
     }
     public Game() throws SQLException {
         this("Bob","Blue");
@@ -66,15 +71,15 @@ public class Game {
         this.myDiver.update();
         this.diverDAO.update(this.myDiver,this.myDiver.getId());
         this.divers= diverDAO.findAll();
+        this.trashset=trashDAO.findAll();
 
         //mise à jour des déchets
-        checkSimpleCollisionDiverTrash();
-        updateTrash();
+        CollisionResult collisionResult = checkSimpleCollisionDiverTrash();
+        updateTrash(collisionResult.getIndex());
 
 
         //Vérifie la collision avec les bords
         checkCollisionWithPanel();
-        updateTrash();
     }
     public boolean isFinished() {return false;} //le jeu n'a pas de fin
 
@@ -141,50 +146,39 @@ public class Game {
                 if (randomNumber == 1) {
                     Bottle bottle = new Bottle();
                     bottle.updatePosition();
-                    trashset.add(bottle);
                     trashDAO.create(bottle);
                 } else if (randomNumber == 2) {
                     Can can = new Can();
                     can.updatePosition();
-                    trashset.add(can);
                     trashDAO.create(can);
                 }
             } else if (i <= 25) {
                 if (randomNumber == 1) {
                     PlasticBag plasticBag = new PlasticBag();
                     plasticBag.updatePosition();
-                    trashset.add(plasticBag);
                     trashDAO.create(plasticBag);
                 } else if (randomNumber == 2) {
                     Tire tire = new Tire();
                     tire.updatePosition();
-                    trashset.add(tire);
                     trashDAO.create(tire);
                 }
             } else {
                 if (randomNumber == 1) {
                     OilContainer oilContainer = new OilContainer();
                     oilContainer.updatePosition();
-                    trashset.add(oilContainer);
                     trashDAO.create(oilContainer);
                 } else if (randomNumber == 2) {
                     Boat boat = new Boat();
                     boat.updatePosition();
-                    trashset.add(boat);
                     trashDAO.create(boat);
                 }
             }
         }
     }
-    public void updateTrash() {
-        for (Trash trash : this.trashset) {
-            if (trash.isVisible()==0||trash.isExpired()) {
-                trash.updatePosition();
-                trashDAO.update(trash,trash.getId());
-                break;
-            }
-        }
-
+    public void updateTrash(int index) {
+        Trash trashCopy=trashset.get(index);
+        trashCopy.updatePosition();
+        trashset.set(index,trashCopy);
     }
     //Getters and Setters
     public Diver getDiver(){return this.myDiver;}

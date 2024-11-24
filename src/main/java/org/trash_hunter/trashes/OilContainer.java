@@ -14,8 +14,8 @@ public class OilContainer extends Trash {
         } catch (IOException e) {
             throw new RuntimeException("Erreur lors du chargement de l'image : " + e.getMessage(), e);
         }
-        width=super.sprite.getWidth();
-        height=super.sprite.getHeight();
+        this.width=40;
+        this.height=60;
         nbPoints = 10;
         name ="OilContainer";
         repatriationTime = 5000;       //temps de récupération en ms

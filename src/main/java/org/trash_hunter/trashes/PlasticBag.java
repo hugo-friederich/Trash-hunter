@@ -14,8 +14,8 @@ public class PlasticBag extends Trash {
         } catch (IOException e) {
             throw new RuntimeException("Erreur lors du chargement de l'image : " + e.getMessage(), e);
         }
-        width=super.sprite.getWidth();
-        height=super.sprite.getHeight();
+        this.width=40;
+        this.height=40;
         nbPoints= 5;
         name="Plastic Bag";
         repatriationTime = 2000;       //temps de récupération en ms

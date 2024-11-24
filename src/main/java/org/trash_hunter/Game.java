@@ -68,18 +68,12 @@ public class Game {
         this.divers= diverDAO.findAll();
 
         //mise à jour des déchets
-        for (Trash trash:trashset){
-            this.trashDAO.update(trash,trash.getId());
-        }
+        checkSimpleCollisionDiverTrash();
+        updateTrash();
 
 
         //Vérifie la collision avec les bords
         checkCollisionWithPanel();
-        CollisionResult collisionResult = checkSimpleCollisionDiverTrash();
-        if(collisionResult.getCollision()){
-            this.myDiver.setScore(this.myDiver.getScore()+trashset.get(collisionResult.getIndex()).getNbPoints());
-            this.myDiver.updateScoreHistory();
-        }
         updateTrash();
     }
     public boolean isFinished() {return false;} //le jeu n'a pas de fin
@@ -104,6 +98,8 @@ public class Game {
         for (int i = 0; i < trashset.size(); i++) {
             Trash trash = trashset.get(i);
             if (isColliding(trash, myDiver)) {
+                this.myDiver.setScore(this.myDiver.getScore()+trashset.get(i).getNbPoints());
+                this.myDiver.updateScoreHistory();
                 trash.setVisible(0);
                 return new CollisionResult(true, i);
             }
@@ -181,10 +177,10 @@ public class Game {
         }
     }
     public void updateTrash() {
-
         for (Trash trash : this.trashset) {
             if (trash.isVisible()==0||trash.isExpired()) {
                 trash.updatePosition();
+                trashDAO.update(trash,trash.getId());
                 break;
             }
         }

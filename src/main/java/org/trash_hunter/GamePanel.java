@@ -46,7 +46,9 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
         this.addWindowListener(this);
     }
     public static void main (String[]args) throws SQLException {
-        Start_window startWindow = new Start_window();   //Le GamePanel se lance dans ActionPerformed de la classe Start_window
+        //Start_window startWindow = new Start_window();   //Le GamePanel se lance dans ActionPerformed de la classe Start_window
+        GamePanel gamePanel= new GamePanel("Bob","red");
+        gamePanel.setVisible(true);
     }
 
     @Override

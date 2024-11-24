@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Trash_hunter_v1">
+    <output-path>$PROJECT_DIR$/out/artifacts/Trash_hunter_v1</output-path>
+    <root id="archive" name="Trash_hunter_v1.jar" />
+  </artifact>
+</component>

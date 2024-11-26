@@ -55,4 +55,10 @@ public class TrashTest {
         assertEquals(tire.getWidth(),49);
         assertEquals(tire.getHeight(),40);
     }
+
+    @Test
+    public void shouldCreateABottleWithId(){
+        Bottle bottle=new Bottle(1);
+        System.out.println(bottle.getX());
+    }
 }

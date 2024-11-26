@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class Trash implements DataTransferObject {
-    protected int id;                           //identifiant unique au déchet
+    protected long id;                           //identifiant unique au déchet
 
     protected String name;                      //nom commun
 
@@ -33,6 +33,10 @@ public class Trash implements DataTransferObject {
     // constructeur par défault
     public Trash (){
         this(0,0);
+    }
+    public Trash (long id){
+        this(0,0);
+        this.id=id;
     }
     public void rendering (Graphics2D contexte){
         if(this.visible==1){
@@ -167,6 +171,6 @@ public class Trash implements DataTransferObject {
 
 
     public String toString (){
-        return this.name;
+        return (this.name);
     }
 }

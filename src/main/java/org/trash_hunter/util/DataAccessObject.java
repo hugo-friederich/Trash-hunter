@@ -20,5 +20,4 @@ public abstract class DataAccessObject<T extends DataTransferObject> {
     public abstract void addToBestScores(T dto);
     public abstract void clear();
 
-
 }

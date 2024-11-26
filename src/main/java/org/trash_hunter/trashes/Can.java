@@ -23,4 +23,8 @@ public class Can extends Trash {
         appearanceRangeYSup= 700-this.height;
     }
     public Can (){this(0,0);}
+    public Can (long id){
+        this(0,0);
+        this.id=id;
+    }
 }

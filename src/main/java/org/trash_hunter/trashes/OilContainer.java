@@ -23,4 +23,8 @@ public class OilContainer extends Trash {
         appearanceRangeYSup= 780-this.height;
     }
     public OilContainer(){this(0,0);}
+    public OilContainer (long id){
+        this(0,0);
+        this.id=id;
+    }
 }

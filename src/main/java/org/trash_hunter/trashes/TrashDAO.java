@@ -11,8 +11,8 @@ import java.util.List;
 
 public class TrashDAO extends DataAccessObject<Trash> {
     //Requêtes pour la table Diver
-    private static final String INSERT = "INSERT INTO Trashes (visible,name,x,y,nbPoints,appearanceRangeYInf,appearanceRangeYSup) VALUES (?, ?, ?, ?,?,?,?)";
-    private static final String GET_ONE = "SELECT visible,id,name,x,y,nbPoints,appearanceRangeYInf,appearanceRangeYSup FROM Trashes WHERE id = ?";
+    private static final String INSERT = "INSERT INTO Trashes (id,visible,name,x,y,nbPoints,appearanceRangeYInf,appearanceRangeYSup) VALUES (?,?, ?, ?, ?,?,?,?)";
+    private static final String GET_ONE = "SELECT id,visible,name,x,y,nbPoints,appearanceRangeYInf,appearanceRangeYSup FROM Trashes WHERE id = ?";
     private static final String UPDATE = "UPDATE Trashes SET visible=?,x=?,y=? WHERE id = ?";
     private static final String DELETE = "DELETE FROM Trashes WHERE id = ?";
     private static final String GET_ALL = "SELECT id,visible,name,x,y,nbPoints,appearanceRangeYinf,appearanceRangeYSup FROM Trashes";
@@ -29,6 +29,7 @@ public class TrashDAO extends DataAccessObject<Trash> {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 trash = new Trash();
+                trash.setId(resultSet.getInt("id"));
                 trash.setVisible(resultSet.getInt("visible"));
                 trash.setName(resultSet.getString("name"));
                 trash.setX(resultSet.getFloat("x"));
@@ -89,27 +90,19 @@ public class TrashDAO extends DataAccessObject<Trash> {
     @Override
     public void create(Trash newtrash) {
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setInt(1,newtrash.isVisible());
-            preparedStatement.setString(2, newtrash.getName());
-            preparedStatement.setDouble(3, newtrash.getX());
-            preparedStatement.setDouble(4, newtrash.getY());
-            preparedStatement.setInt(5, newtrash.getNbPoints());
-            preparedStatement.setInt(6, newtrash.getAppearanceRangeYInf());
-            preparedStatement.setInt(7, newtrash.getAppearanceRangeYSup());
+            preparedStatement.setLong(1,newtrash.getId());
+            preparedStatement.setInt(2,newtrash.isVisible());
+            preparedStatement.setString(3, newtrash.getName());
+            preparedStatement.setDouble(4, newtrash.getX());
+            preparedStatement.setDouble(5, newtrash.getY());
+            preparedStatement.setInt(6, newtrash.getNbPoints());
+            preparedStatement.setInt(7, newtrash.getAppearanceRangeYInf());
+            preparedStatement.setInt(8, newtrash.getAppearanceRangeYSup());
 
             // Exécute la mise à jour et obtient les clés générées
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Creating trash failed, no rows affected.");
-            }
-
-            // Récupère les clés générées
-            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    newtrash.setId(generatedKeys.getInt(1)); // Assigne l'ID généré au nouveau Diver
-                } else {
-                    throw new SQLException("Creating trash failed, no ID obtained.");
-                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

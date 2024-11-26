@@ -23,4 +23,8 @@ public class PlasticBag extends Trash {
         appearanceRangeYSup= 700-this.height;
     }
     public PlasticBag (){this(0,0);}
+    public PlasticBag (long id){
+        this(0,0);
+        this.id=id;
+    }
 }

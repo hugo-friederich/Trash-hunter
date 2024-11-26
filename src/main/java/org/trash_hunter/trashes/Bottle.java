@@ -23,6 +23,9 @@ public class Bottle extends Trash {
         appearanceRangeYSup= 700-this.height;
     }
     public Bottle (){this(0,0);}
-
+    public Bottle (long id){
+        this(0,0);
+        this.id=id;
+    }
 
 }

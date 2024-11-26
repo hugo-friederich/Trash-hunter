@@ -25,6 +25,9 @@ public class Boat extends Trash{
     }
     public Boat (){
         this(0,0);
-        
+    }
+    public Boat (long id){
+        this(0,0);
+        this.id=id;
     }
 }

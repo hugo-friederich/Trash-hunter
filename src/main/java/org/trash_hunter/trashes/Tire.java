@@ -23,4 +23,8 @@ public class Tire extends Trash{
         appearanceRangeYSup= 780-this.height;
     }
     public Tire (){this(0,0);}
+    public Tire (long id){
+        this(0,0);
+        this.id=id;
+    }
 }

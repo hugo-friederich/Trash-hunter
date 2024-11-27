@@ -218,7 +218,7 @@ public class Avatar implements DataTransferObject {
     }
 
     public String toString() {
-        return "Diver{" +
+        return "Avatar{" +
                 ", id=" + id +
                 ", x=" + x +
                 ", y=" + y +

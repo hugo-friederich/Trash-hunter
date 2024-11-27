@@ -52,13 +52,13 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     @Override
     public void keyPressed(KeyEvent evt) {
         if (evt.getKeyCode() == 87 ||evt.getKeyCode() == KeyEvent.VK_UP) {
-            this.game.getDiver().setUp(true);
+            this.game.getMyAvatar().setUp(true);
         } else if (evt.getKeyCode() == 83 || evt.getKeyCode()== KeyEvent.VK_DOWN) {
-            this.game.getDiver().setDown(true);
+            this.game.getMyAvatar().setDown(true);
         } else if (evt.getKeyCode() == 65|| evt.getKeyCode()== KeyEvent.VK_LEFT) {
-            this.game.getDiver().setLeft(true);
+            this.game.getMyAvatar().setLeft(true);
         } else if (evt.getKeyCode() == 68 || evt.getKeyCode()== KeyEvent.VK_RIGHT) {
-            this.game.getDiver().setRight(true);
+            this.game.getMyAvatar().setRight(true);
         } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {  // Ajout de la touche Échap
             int choix = JOptionPane.showConfirmDialog(this,
                     "Voulez-vous vraiment quitter le jeu ?",
@@ -67,8 +67,8 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
 
             if (choix == JOptionPane.YES_OPTION) {
                 //Action à venir effectuer avant la fermeture de la fenêtre
-                this.game.getDiverDAO().delete(this.game.getDiver().getId());
-                this.game.getDiverDAO().addToBestScores(this.game.getDiver());
+                this.game.getDiverDAO().delete(this.game.getMyAvatar().getId());
+                this.game.getDiverDAO().addToBestScores(this.game.getMyDiver());
                 DatabaseConnection.close();  // Arrête la conncetion à la base de donnée
                 this.dispose(); //Ferme la fenêtre
                 System.exit(0);
@@ -79,13 +79,13 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     @Override
     public void keyReleased(KeyEvent evt) {
         if (evt.getKeyCode() == 87 ||evt.getKeyCode() == KeyEvent.VK_UP) {
-            this.game.getDiver().setUp(false);
+            this.game.getMyAvatar().setUp(false);
         } else if (evt.getKeyCode() == 83 || evt.getKeyCode()== KeyEvent.VK_DOWN) {
-            this.game.getDiver().setDown(false);
+            this.game.getMyAvatar().setDown(false);
         } else if (evt.getKeyCode() == 65|| evt.getKeyCode()== KeyEvent.VK_LEFT) {
-            this.game.getDiver().setLeft(false);
+            this.game.getMyAvatar().setLeft(false);
         } else if (evt.getKeyCode() == 68 || evt.getKeyCode()== KeyEvent.VK_RIGHT) {
-            this.game.getDiver().setRight(false);
+            this.game.getMyAvatar().setRight(false);
         }
     }
 
@@ -113,8 +113,8 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     @Override
     public void windowClosing(WindowEvent e) {
         //Action à venir effectuer avant la fermeture de la fenêtre
-        this.game.getDiverDAO().delete(this.game.getDiver().getId());
-        this.game.getDiverDAO().addToBestScores(this.game.getDiver());
+        this.game.getDiverDAO().delete(this.game.getMyAvatar().getId());
+        this.game.getDiverDAO().addToBestScores(this.game.getMyDiver());
         DatabaseConnection.close();  // Arrête la conncetion à la base de donnée
         System.exit((0));
     }

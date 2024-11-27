@@ -28,6 +28,20 @@ public class Diver implements DataTransferObject {
     }
     public Diver (){this("Bob","Red");}
 
+    public Avatar convertDiverToAvatar(){
+        Avatar avatar = new Avatar();
+        avatar.setColor(this.color);
+        avatar.setPseudo(this.pseudo);
+        avatar.setScore(this.score);
+        avatar.setId(this.id);
+        avatar.setY(this.y);
+        avatar.setX(this.x);
+        avatar.setScore_max(this.score_max);
+        avatar.setGame_time(this.game_time);
+        avatar.setCreation_date(this.creation_date);
+        return(avatar);
+    }
+
     //Getters and setters
     public float getX() {
         return x;

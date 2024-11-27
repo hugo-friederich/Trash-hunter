@@ -13,7 +13,7 @@ public class TrashDAO extends DataAccessObject<Trash> {
     //Requêtes pour la table Diver
     private static final String INSERT = "INSERT INTO Trashes (id,visible,name,x,y,nbPoints,appearanceRangeYInf,appearanceRangeYSup) VALUES (?,?, ?, ?, ?,?,?,?)";
     private static final String GET_ONE = "SELECT id,visible,name,x,y,nbPoints,appearanceRangeYInf,appearanceRangeYSup FROM Trashes WHERE id = ?";
-    private static final String UPDATE = "UPDATE Trashes SET visible=?,x=?,y=? WHERE id = ?";
+    private static final String UPDATE = "UPDATE Trashes SET visible=?,x=?,y=?WHERE id = ?";
     private static final String DELETE = "DELETE FROM Trashes WHERE id = ?";
     private static final String GET_ALL = "SELECT id,visible,name,x,y,nbPoints,appearanceRangeYinf,appearanceRangeYSup FROM Trashes";
     private static final String TRUNCATE_TABLE = "TRUNCATE TABLE Trashes";
@@ -81,6 +81,8 @@ public class TrashDAO extends DataAccessObject<Trash> {
             preparedStatement.setInt(1,trashUpdated.isVisible());
             preparedStatement.setDouble(2, trashUpdated.getX());
             preparedStatement.setDouble(3, trashUpdated.getY());
+            preparedStatement.setLong(4,id);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);

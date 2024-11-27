@@ -1,3 +1,5 @@
+package util;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.trash_hunter.util.DatabaseConnection;

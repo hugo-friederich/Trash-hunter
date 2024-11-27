@@ -1,6 +1,8 @@
 package org.trash_hunter;
 
 import org.trash_hunter.trashes.*;
+import org.trash_hunter.user.Avatar;
+import org.trash_hunter.user.DiverDAO;
 import org.trash_hunter.util.DatabaseConnection;
 
 import javax.imageio.ImageIO;
@@ -19,10 +21,10 @@ import java.util.logging.Logger;
 
 public class Game {
     private BufferedImage backgroundImage;
-    final private Diver myDiver;
+    final private Avatar myAvatar;
     private DiverDAO diverDAO;
     private TrashDAO trashDAO;
-    private List <Diver> allDivers;
+    private List <Avatar> allAvatars;
     private List <Trash> localTrashset;
     private final Random randomNbr;
     private int nbTrashes;
@@ -39,9 +41,9 @@ public class Game {
         }
 
         //Creation du joueur ainsi que de l'instance lui permetant de communiquer à la BDD
-        this.myDiver = new Diver(pseudo,color);
+        this.myAvatar = new Avatar(pseudo,color);
         this.diverDAO = new DiverDAO(DatabaseConnection.getConnection());
-        this.diverDAO.create(myDiver);
+        this.diverDAO.create(myAvatar);
 
         //Initialisation des déchets
         this.nbTrashes = 30;
@@ -55,8 +57,8 @@ public class Game {
     }
     public void rendering(Graphics2D contexte){
         contexte.drawImage(this.backgroundImage,0,0,null);
-        contexte.drawString("Score : "+ this.myDiver.getScore(),10,20);
-        for (Diver otherDivers : allDivers){
+        contexte.drawString("Score : "+ this.myAvatar.getScore(),10,20);
+        for (Avatar otherDivers : allAvatars){
             otherDivers.rendering(contexte);
         }
         for (Trash trash : this.localTrashset) {
@@ -65,9 +67,9 @@ public class Game {
     }
     public void update() throws SQLException {
         //mise à jour du plongeur
-        this.myDiver.update();
-        this.diverDAO.update(this.myDiver,this.myDiver.getId());
-        this.allDivers = diverDAO.findAll();
+        this.myAvatar.update();
+        this.diverDAO.update(this.myAvatar,this.myAvatar.getId());
+        this.allAvatars = diverDAO.findAll();
 
         //mise à jour du déchet dont la collision est True
         updateAfterCollisionDiverTrash();
@@ -78,10 +80,14 @@ public class Game {
 
     //Gestion des ollisions
     public void checkCollisionWithPanel(){
-        if (myDiver.getX() > backgroundImage.getWidth() - myDiver.getWidth()) {myDiver.setX(0);}  // collision avec le bord droit de la scene
-        if (myDiver.getX() < 0) {myDiver.setX((float)backgroundImage.getWidth()-(float)myDiver.getWidth());}  // collision avec le bord gauche de la scene
-        if (myDiver.getY() > backgroundImage.getHeight() - myDiver.getHeight()) {myDiver.setY((float)backgroundImage.getHeight()-(float)myDiver.getWidth());}  // collision avec le bord bas de la scene
-        if (myDiver.getY() < 0) {myDiver.setY(0);}  // collision avec le bord haut de la scene
+        if (myAvatar.getX() > backgroundImage.getWidth() - myAvatar.getWidth()) {
+            myAvatar.setX(0);}  // collision avec le bord droit de la scene
+        if (myAvatar.getX() < 0) {
+            myAvatar.setX((float)backgroundImage.getWidth()-(float) myAvatar.getWidth());}  // collision avec le bord gauche de la scene
+        if (myAvatar.getY() > backgroundImage.getHeight() - myAvatar.getHeight()) {
+            myAvatar.setY((float)backgroundImage.getHeight()-(float) myAvatar.getWidth());}  // collision avec le bord bas de la scene
+        if (myAvatar.getY() < 0) {
+            myAvatar.setY(0);}  // collision avec le bord haut de la scene
     }
 
     /** Vérifie les collisions entre le plongeur et les déchets de la manière la plus simple.
@@ -95,23 +101,23 @@ public class Game {
     public void updateAfterCollisionDiverTrash() {
         for (int id = 0; id < localTrashset.size(); id++) {
             Trash trash = localTrashset.get(id);
-            if (isColliding(trash, myDiver)) {
-                this.myDiver.setScore(this.myDiver.getScore()+ localTrashset.get(id).getNbPoints());
-                this.myDiver.updateScoreHistory();
+            if (isColliding(trash, myAvatar)) {
+                this.myAvatar.setScore(this.myAvatar.getScore()+ localTrashset.get(id).getNbPoints());
+                this.myAvatar.updateScoreHistory();
                 trash.setVisible(0);
                 Trash updatedTrash = localTrashset.get(id);
                 updatedTrash.updatePosition();
                 localTrashset.set(id,updatedTrash);
-                trashDAO.update(localTrashset.get(id),id);
+                trashDAO.update(updatedTrash,id);
             }
         }
     }
 
-    private boolean isColliding(Trash trash, Diver diver) {
-        return trash.getX() < diver.getX() + diver.getWidth() &&
-                trash.getX() + trash.getWidth() > diver.getX() &&
-                trash.getY() < diver.getY() + diver.getHeight() &&
-                trash.getY() + trash.getHeight() > diver.getY();
+    private boolean isColliding(Trash trash, Avatar avatar) {
+        return trash.getX() < avatar.getX() + avatar.getWidth() &&
+                trash.getX() + trash.getWidth() > avatar.getX() &&
+                trash.getY() < avatar.getY() + avatar.getHeight() &&
+                trash.getY() + trash.getHeight() > avatar.getY();
     }
 
     /**
@@ -182,14 +188,14 @@ public class Game {
         }
     }
     //Getters and Setters
-    public Diver getDiver(){return this.myDiver;}
+    public Avatar getDiver(){return this.myAvatar;}
 
     public DiverDAO getDiverDAO() {
         return diverDAO;
     }
 
-    public List<Diver> getAllDivers() {
-        return allDivers;
+    public List<Avatar> getAllDivers() {
+        return allAvatars;
     }
 
     public List<Trash> getLocalTrashset() {

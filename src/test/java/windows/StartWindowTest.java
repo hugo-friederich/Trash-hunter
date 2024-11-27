@@ -1,3 +1,5 @@
+package windows;
+
 import org.junit.Test;
 import org.trash_hunter.windows.Start_window;
 

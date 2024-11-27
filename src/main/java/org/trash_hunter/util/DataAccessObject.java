@@ -1,5 +1,7 @@
 package org.trash_hunter.util;
 
+import org.trash_hunter.user.Diver;
+
 import java.sql.Connection;
 import java.util.List;
 

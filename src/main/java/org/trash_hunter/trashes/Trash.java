@@ -3,8 +3,11 @@ package org.trash_hunter.trashes;
 import org.trash_hunter.util.Couple;
 import org.trash_hunter.util.DataTransferObject;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.Objects;
 import java.util.Random;
 
 public class Trash implements DataTransferObject {

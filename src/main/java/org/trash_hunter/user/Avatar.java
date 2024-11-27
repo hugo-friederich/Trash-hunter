@@ -1,4 +1,4 @@
-package org.trash_hunter;
+package org.trash_hunter.user;
 
 import org.trash_hunter.util.DataTransferObject;
 
@@ -11,37 +11,36 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Diver implements DataTransferObject {
+public class Avatar implements DataTransferObject {
     private BufferedImage sprite;                                       //image du plongeur
     private float x, y;                                                 //coordonées
     private String pseudo;                                              //pseudo plongueur
     private int score;                                                  //score actuel
     private ArrayList<Integer> scoreHistory = new ArrayList<>();        //historique des scores
-    private int scoreMax;                                               //score maximum
+    private int score_max;                                               //score maximum
     private int width, height;                                          //largeur et hauteur image
     private int speed;                                                  //vitesse de déplacement (px/s)
     private boolean left, right, up, down;                              //données de déplacement
     private long id;                                                    //identifiant unique
     private String color;                                               //couleur sélectionné
-    private Date date;                                                  //date de création
+    private Date creation_date;                                                  //date de création
     private Time game_time;                                             //horaire création
-    public static String [] colorList;                                  //liste des couleurs du perso
 
-    public Diver (String pseudo,String color){
+    public Avatar(String pseudo, String color) {
         try {
             this.sprite = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("plongeur.png")));
         } catch (IOException e) {
             throw new RuntimeException("Erreur lors du chargement de l'image : " + e.getMessage(), e);
         }
         this.id = 0;    // l'identifiant est auto-incrémenté
-        this.x = 720;   // coordonées du "spawn" = (300,300)
+        this.x = 720;   // coordonées du "spawn" = (720,390)
         this.y = 390;
         this.speed = 15;
         this.pseudo = pseudo;
         score = 0;
-        scoreMax = 0;
+        score_max = 0;
         this.color = color;
-        this.date = new Date(0);
+        this.creation_date = new Date(0);
         this.game_time = new Time(0);
         this.left = false;
         this.right = false;
@@ -49,11 +48,10 @@ public class Diver implements DataTransferObject {
         this.down = false;
         this.width=50;
         this.height=50;
-        colorList = new String [] {"Red", "Blue","Green","Yellow","Orange"};
     }
 
     //Définition du constructeur par défaut (pseudo : Bob, color : blue)
-    public Diver (){
+    public Avatar() {
         this("Bob","blue");
     }
     public void update(){
@@ -63,7 +61,7 @@ public class Diver implements DataTransferObject {
         if (this.up) {y -= this.speed;}
     }
     public void updateScoreHistory(){
-        if (score>scoreMax){
+        if (score> score_max){
             scoreHistory.add(score);
         }
         if (scoreHistory.size()>15){
@@ -122,12 +120,12 @@ public class Diver implements DataTransferObject {
         this.scoreHistory = scoreHistory;
     }
 
-    public int getScoreMax() {
-        return scoreMax;
+    public int getScore_max() {
+        return score_max;
     }
 
-    public void setScoreMax(int scoreMax) {
-        this.scoreMax = scoreMax;
+    public void setScore_max(int score_max) {
+        this.score_max = score_max;
     }
 
     public int getWidth() {
@@ -198,12 +196,12 @@ public class Diver implements DataTransferObject {
         this.color = color;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreation_date() {
+        return creation_date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreation_date(Date creation_date) {
+        this.creation_date = creation_date;
     }
 
     public Time getGame_time() {
@@ -226,9 +224,9 @@ public class Diver implements DataTransferObject {
                 ", y=" + y +
                 ", pseudo='" + pseudo + '\'' +
                 ", score=" + score +
-                ", scoreMax=" + scoreMax +
+                ", scoreMax=" + score_max +
                 ", color='" + color + '\'' +
-                ", date=" + date +
+                ", date=" + creation_date +
                 ", game_time=" + game_time +
                 '}';
     }

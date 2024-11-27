@@ -1,4 +1,4 @@
-package org.trash_hunter;
+package org.trash_hunter.util;
 
 public class CollisionResult {
     public boolean collision;

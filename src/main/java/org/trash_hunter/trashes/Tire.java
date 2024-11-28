@@ -17,7 +17,7 @@ public class Tire extends Trash{
         this.width=49;
         this.height=40;
         nbPoints= 5;
-        name="tire";
+        name="Tire";
         repatriationTime = 5000;       //temps de récupération en ms
         appearanceRangeYInf = 780-this.height;
         appearanceRangeYSup= 780-this.height;

@@ -1,9 +1,6 @@
 import org.junit.Test;
 import org.trash_hunter.Game;
-import org.trash_hunter.GamePanel;
 import org.trash_hunter.trashes.Bottle;
-import org.trash_hunter.trashes.TrashDAO;
-import org.trash_hunter.util.DatabaseConnection;
 
 import java.sql.SQLException;
 
@@ -35,7 +32,6 @@ public class GameTest {
     @Test
     public void shouldInitializeTrashes() throws SQLException {
         Game game=new Game();
-        game.initLocalTrashes();
         System.out.println(game.getLocalTrashset());
         game.getDiverDAO().clear();
     }

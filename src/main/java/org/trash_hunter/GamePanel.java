@@ -68,7 +68,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
             if (choix == JOptionPane.YES_OPTION) {
                 //Action à venir effectuer avant la fermeture de la fenêtre
                 this.game.getDiverDAO().delete(this.game.getMyAvatar().getId());
-                this.game.getDiverDAO().addToBestScores(this.game.getMyDiver());
+                this.game.getDiverDAO().addToBestScores(this.game.getDiver());
                 DatabaseConnection.close();  // Arrête la conncetion à la base de donnée
                 this.dispose(); //Ferme la fenêtre
                 System.exit(0);
@@ -113,8 +113,8 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     @Override
     public void windowClosing(WindowEvent e) {
         //Action à venir effectuer avant la fermeture de la fenêtre
-        this.game.getDiverDAO().delete(this.game.getMyDiver().getId());
-        this.game.getDiverDAO().addToBestScores(this.game.getMyDiver());
+        this.game.getDiverDAO().delete(this.game.getDiver().getId());
+        this.game.getDiverDAO().addToBestScores(this.game.getDiver());
         DatabaseConnection.close();  // Arrête la conncetion à la base de donnée
         System.exit((0));
     }

@@ -92,7 +92,6 @@ public class DiverDAO extends DataAccessObject<Diver> {
         return divers;
     }
 
-    @Override
     public List<String> findAllPseudoFromBestScore() {
         List<String> divers = new ArrayList<>();
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(GET_ALL_PSEUDO_FROM_BEST_SCORE)) {
@@ -111,21 +110,13 @@ public class DiverDAO extends DataAccessObject<Diver> {
 
     @Override
     public void update(Diver updatedDiver, long id) {
-        Diver diverUpdated = new Diver();
-        diverUpdated.setId(id);
-        diverUpdated.setX(updatedDiver.getX());
-        diverUpdated.setY(updatedDiver.getY());
-        diverUpdated.setPseudo(updatedDiver.getPseudo());
-        diverUpdated.setScore(updatedDiver.getScore());
-        diverUpdated.setScore_max(updatedDiver.getScore_max());
-        diverUpdated.setColor(updatedDiver.getColor());
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(UPDATE)) {
-            preparedStatement.setFloat(1, diverUpdated.getX());
-            preparedStatement.setFloat(2, diverUpdated.getY());
-            preparedStatement.setString(3, diverUpdated.getPseudo());
-            preparedStatement.setInt(4, diverUpdated.getScore());
-            preparedStatement.setInt(5, diverUpdated.getScore_max());
-            preparedStatement.setString(6, diverUpdated.getColor());
+            preparedStatement.setFloat(1, updatedDiver.getX());
+            preparedStatement.setFloat(2, updatedDiver.getY());
+            preparedStatement.setString(3, updatedDiver.getPseudo());
+            preparedStatement.setInt(4, updatedDiver.getScore());
+            preparedStatement.setInt(5, updatedDiver.getScore_max());
+            preparedStatement.setString(6, updatedDiver.getColor());
             preparedStatement.setLong(7, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -184,7 +175,6 @@ public class DiverDAO extends DataAccessObject<Diver> {
         }
     }
 
-    @Override
     public void addToBestScores(Diver diver) {
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(INSERT_SCORE, PreparedStatement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setFloat(1, diver.getX());

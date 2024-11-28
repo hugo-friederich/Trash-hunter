@@ -19,7 +19,7 @@ public class Trash implements DataTransferObject {
     protected int width, height;                //largeur, hauteur
     protected int nbPoints;                     //nomnbre de points rapportés
     protected BufferedImage sprite;             //image du déchet
-    private int visible = 1;                    //déchet visible ou non
+    private int visible;                        //déchet visible ou non
     protected long creationTime;                //temps passé après création
     protected int repatriationTime;             //temps de récupération en ms
     protected int appearanceRangeXInf;          //valeur inf plage d'apparition sur x
@@ -32,6 +32,7 @@ public class Trash implements DataTransferObject {
         this.y=y;
         this.appearanceRangeXInf = 0;
         this.appearanceRangeXSup = 1440-width;
+        this.visible=1;
     }
     // constructeur par défault
     public Trash (){
@@ -46,17 +47,27 @@ public class Trash implements DataTransferObject {
             contexte.drawImage(this.sprite,(int)x,(int)y,null);
         }
     }
+    public TrashDB convertTrashToTrashDB(){
+        TrashDB trashDB = new TrashDB();
+        trashDB.setVisible(visible);
+        trashDB.setName(name);
+        trashDB.setId(id);
+        trashDB.setX(x);
+        trashDB.setY(y);
+        return(trashDB);
+    }
 
     /**
      * Permet de réinitialiser la position d'un déchet après qu'il ai été rendu invisible
      */
     public void updatePosition() {
-        //objet alléatoire
+        //objet aléatoire
+        visible=0;
         Random rdm = new Random();
         this.x = rdm.nextDouble(this.appearanceRangeXInf,this.appearanceRangeXSup+0.5);
         this.y = rdm.nextDouble(this.appearanceRangeYInf,this.appearanceRangeYSup+0.5);
         creationTime = System.currentTimeMillis();
-        visible = 1;
+        visible=1;
     }
     public void setVisible(int visible) {
         this.visible = visible;

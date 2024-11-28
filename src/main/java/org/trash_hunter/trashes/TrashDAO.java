@@ -9,59 +9,53 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrashDAO extends DataAccessObject<Trash> {
+public class TrashDAO extends DataAccessObject<TrashDB> {
     //Requêtes pour la table Diver
-    private static final String INSERT = "INSERT INTO Trashes (id,visible,name,x,y,nbPoints,appearanceRangeYInf,appearanceRangeYSup) VALUES (?,?, ?, ?, ?,?,?,?)";
-    private static final String GET_ONE = "SELECT id,visible,name,x,y,nbPoints,appearanceRangeYInf,appearanceRangeYSup FROM Trashes WHERE id = ?";
+    private static final String INSERT = "INSERT INTO Trashes (id,visible,name,x,y) VALUES (?,?, ?, ?, ?)";
+    private static final String GET_ONE = "SELECT id,visible,name,x,y FROM Trashes WHERE id = ?";
     private static final String UPDATE = "UPDATE Trashes SET visible=?,x=?,y=?WHERE id = ?";
     private static final String DELETE = "DELETE FROM Trashes WHERE id = ?";
-    private static final String GET_ALL = "SELECT id,visible,name,x,y,nbPoints,appearanceRangeYinf,appearanceRangeYSup FROM Trashes";
+    private static final String GET_ALL = "SELECT id,visible,name,x,y FROM Trashes";
+    private static final String GET_ALL_NAMES = "SELECT name FROM Trashes";
     private static final String TRUNCATE_TABLE = "TRUNCATE TABLE Trashes";
     public TrashDAO(Connection connection) {
         super(connection);
     }
 
     @Override
-    public Trash findById(long id) {
-        Trash trash = null;
+    public TrashDB findById(long id) {
+        TrashDB trashDB = null;
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(GET_ONE)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                trash = new Trash();
-                trash.setId(resultSet.getInt("id"));
-                trash.setVisible(resultSet.getInt("visible"));
-                trash.setName(resultSet.getString("name"));
-                trash.setX(resultSet.getFloat("x"));
-                trash.setY(resultSet.getFloat("y"));
-                trash.setNbPoints(resultSet.getInt("nbPoints"));
-                trash.setAppearanceRangeYInf(resultSet.getInt("appearanceRangeYInf"));
-                trash.setAppearanceRangeYSup(resultSet.getInt("appearanceRangeYSup"));
+                trashDB = new TrashDB();
+                trashDB.setId(resultSet.getLong("id"));
+                trashDB.setVisible(resultSet.getInt("visible"));
+                trashDB.setName(resultSet.getString("name"));
+                trashDB.setX(resultSet.getFloat("x"));
+                trashDB.setY(resultSet.getFloat("y"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        return trash;
+        return trashDB;
     }
 
     @Override
-    public List<Trash> findAll() {
-        List<Trash> trashset = new ArrayList<>();
+    public List<TrashDB> findAll() {
+        List<TrashDB> trashset = new ArrayList<>();
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(GET_ALL)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Trash trash = new Trash();
-                trash.setId(resultSet.getInt("id"));
-                trash.setVisible(resultSet.getInt("visible"));
-                trash.setName(resultSet.getString("name"));
-                trash.setX(resultSet.getFloat("x"));
-                trash.setY(resultSet.getFloat("y"));
-                trash.setNbPoints(resultSet.getInt("nbPoints"));
-                trash.setAppearanceRangeYInf(resultSet.getInt("appearanceRangeYInf"));
-                trash.setAppearanceRangeYSup(resultSet.getInt("appearanceRangeYSup"));
-
-                trashset.add(trash);
+                TrashDB trashDB = new TrashDB();
+                trashDB.setId(resultSet.getInt("id"));
+                trashDB.setVisible(resultSet.getInt("visible"));
+                trashDB.setName(resultSet.getString("name"));
+                trashDB.setX(resultSet.getFloat("x"));
+                trashDB.setY(resultSet.getFloat("y"));
+                trashset.add(trashDB);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -69,18 +63,27 @@ public class TrashDAO extends DataAccessObject<Trash> {
         }
         return trashset;
     }
-
-    @Override
-    public List<String> findAllPseudoFromBestScore() {
-        return(null);
+    public List<String> findAllNames (){
+        List<String> names = new ArrayList<>();
+        try (PreparedStatement preparedStatement = this.connection.prepareStatement(GET_ALL_NAMES)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                TrashDB trashDB = new TrashDB();
+                trashDB.setName(resultSet.getString("name"));
+                names.add(trashDB.getName());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return names;
     }
-
     @Override
-    public void update(Trash trashUpdated,long id) {
+    public void update(TrashDB trashDBUpdated,long id) {
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(UPDATE)) {
-            preparedStatement.setInt(1,trashUpdated.isVisible());
-            preparedStatement.setDouble(2, trashUpdated.getX());
-            preparedStatement.setDouble(3, trashUpdated.getY());
+            preparedStatement.setInt(1,trashDBUpdated.getVisible());
+            preparedStatement.setDouble(2, trashDBUpdated.getX());
+            preparedStatement.setDouble(3, trashDBUpdated.getY());
             preparedStatement.setLong(4,id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -90,16 +93,13 @@ public class TrashDAO extends DataAccessObject<Trash> {
     }
 
     @Override
-    public void create(Trash newtrash) {
+    public void create(TrashDB newtrashDB) {
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setLong(1,newtrash.getId());
-            preparedStatement.setInt(2,newtrash.isVisible());
-            preparedStatement.setString(3, newtrash.getName());
-            preparedStatement.setDouble(4, newtrash.getX());
-            preparedStatement.setDouble(5, newtrash.getY());
-            preparedStatement.setInt(6, newtrash.getNbPoints());
-            preparedStatement.setInt(7, newtrash.getAppearanceRangeYInf());
-            preparedStatement.setInt(8, newtrash.getAppearanceRangeYSup());
+            preparedStatement.setLong(1,newtrashDB.getId());
+            preparedStatement.setInt(2,newtrashDB.getVisible());
+            preparedStatement.setString(3, newtrashDB.getName());
+            preparedStatement.setDouble(4, newtrashDB.getX());
+            preparedStatement.setDouble(5, newtrashDB.getY());
 
             // Exécute la mise à jour et obtient les clés générées
             int affectedRows = preparedStatement.executeUpdate();
@@ -125,11 +125,6 @@ public class TrashDAO extends DataAccessObject<Trash> {
             throw new RuntimeException(e);
         }
     }
-
-    @Override
-    public void addToBestScores(Trash newTrash) {
-    }
-
     @Override
     public void clear() {
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(TRUNCATE_TABLE)) {

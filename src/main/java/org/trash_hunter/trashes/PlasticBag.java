@@ -17,7 +17,7 @@ public class PlasticBag extends Trash {
         this.width=40;
         this.height=40;
         nbPoints= 5;
-        name="Plastic Bag";
+        name="PlasticBag";
         repatriationTime = 2000;       //temps de récupération en ms
         appearanceRangeYInf = 300;
         appearanceRangeYSup= 700-this.height;

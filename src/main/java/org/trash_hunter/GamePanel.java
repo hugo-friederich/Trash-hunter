@@ -121,6 +121,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
 
     @Override
     public void windowClosed(WindowEvent e) {
+        this.game.getDiverDAO().delete(this.game.getDiver().getId());
     }
 
     @Override

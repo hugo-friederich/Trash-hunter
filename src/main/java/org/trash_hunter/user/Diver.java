@@ -28,6 +28,10 @@ public class Diver implements DataTransferObject {
     }
     public Diver (){this("Bob","Red");}
 
+    /**
+     * Convertit un Diver en Avatar pour pouvoir après l'afficher
+     * @return
+     */
     public Avatar convertDiverToAvatar(){
         Avatar avatar = new Avatar();
         avatar.setColor(this.color);

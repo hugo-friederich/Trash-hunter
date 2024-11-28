@@ -3,8 +3,8 @@ package org.trash_hunter.windows;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import org.trash_hunter.user.DiverDAO;
 import org.trash_hunter.GamePanel;
+import org.trash_hunter.user.DiverDAO;
 import org.trash_hunter.util.DatabaseConnection;
 
 import javax.imageio.ImageIO;

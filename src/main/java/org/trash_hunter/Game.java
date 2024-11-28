@@ -6,7 +6,8 @@ import org.trash_hunter.user.Diver;
 import org.trash_hunter.user.DiverDAO;
 import org.trash_hunter.util.DatabaseConnection;
 
-import java.awt.Graphics2D;
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -14,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-import javax.imageio.ImageIO;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +30,7 @@ public class Game {
     private static final int NB_TRASHES = 30;                           // Nombre de déchets à initialiser
 
 
-    public Game(String pseudo, String color) throws SQLException {
+    public Game(String pseudo, String color) throws SQLException{
         this.randomNbr = new Random();
         loadBackgroundImage();                                              // Chargement de l'image de fond
         this.diver = new Diver(pseudo, color);                              // Création du plongeur
@@ -46,7 +46,7 @@ public class Game {
         initLocalTrashes();                                                 // Initialise les déchets locaux
     }
 
-    public Game() throws SQLException {
+    public Game() throws SQLException{
         this("Bob", "Blue");
     }
 
@@ -113,11 +113,15 @@ public class Game {
     public void updateAfterCollisionDiverTrash() {
         for (int id = 0; id < localTrashset.size(); id++) {
             Trash trash = localTrashset.get(id);
-            if (isColliding(trash, myAvatar)) {
+            if (isColliding(trash, myAvatar) && trash.getVisible() == 1) {
                 myAvatar.setScore(myAvatar.getScore() + trash.getNbPoints());       // Mise à jour du score
                 myAvatar.updateScoreHistory();                                      // Mise à jour de l'historique des scores
-                trash.updatePosition();                                             // Mise à jour de la position du déchet
-                trashDAO.update(trash.convertTrashToTrashDB(), id);                 // Mise à jour dans la base de données
+                trash.setVisible(0);
+                trash.setCreationTime(System.currentTimeMillis());
+            }if(trash.getVisible()==0) {
+                trash.updatePosition();
+                trashDAO.update(trash.convertTrashToTrashDB(), id);              // Mise à jour dans la base de données
+
             }
         }
     }
@@ -139,7 +143,7 @@ public class Game {
     }
 
     // Initialisation des déchets
-    public void initTrashes() throws SQLException {
+    public void initTrashes() {
         this.trashDAO.clear();
         List<Trash> initialTrashset = new ArrayList<>();
 

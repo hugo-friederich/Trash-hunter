@@ -1,13 +1,9 @@
 package org.trash_hunter.trashes;
 
-import org.trash_hunter.util.Couple;
 import org.trash_hunter.util.DataTransferObject;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.Objects;
 import java.util.Random;
 
 public class Trash implements DataTransferObject {
@@ -21,7 +17,7 @@ public class Trash implements DataTransferObject {
     protected BufferedImage sprite;             //image du déchet
     private int visible;                        //déchet visible ou non
     protected long creationTime;                //temps passé après création
-    protected int repatriationTime;             //temps de récupération en ms
+    protected int respawnTime;             //temps de récupération en ms
     protected int appearanceRangeXInf;          //valeur inf plage d'apparition sur x
     protected int appearanceRangeXSup;          //valeur sup plage d'apparition sur x
     protected int appearanceRangeYInf;          //valeur inf plage d'apparition sur y
@@ -61,13 +57,15 @@ public class Trash implements DataTransferObject {
      * Permet de réinitialiser la position d'un déchet après qu'il ai été rendu invisible
      */
     public void updatePosition() {
-        //objet aléatoire
-        visible=0;
-        Random rdm = new Random();
-        this.x = rdm.nextDouble(this.appearanceRangeXInf,this.appearanceRangeXSup+0.5);
-        this.y = rdm.nextDouble(this.appearanceRangeYInf,this.appearanceRangeYSup+0.5);
-        creationTime = System.currentTimeMillis();
-        visible=1;
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - creationTime >= respawnTime) {
+            Random rdm = new Random();
+            this.x = rdm.nextDouble(this.appearanceRangeXInf, this.appearanceRangeXSup + 0.5);
+            this.y = rdm.nextDouble(this.appearanceRangeYInf, this.appearanceRangeYSup + 0.5);
+            creationTime = currentTime;
+            visible = 1;
+        }
+
     }
     public void setVisible(int visible) {
         this.visible = visible;
@@ -135,12 +133,12 @@ public class Trash implements DataTransferObject {
         this.creationTime = creationTime;
     }
 
-    public int getRepatriationTime() {
-        return repatriationTime;
+    public int getRespawnTime() {
+        return respawnTime;
     }
 
-    public void setRepatriationTime(int repatriationTime) {
-        this.repatriationTime = repatriationTime;
+    public void setRespawnTime(int respawnTime) {
+        this.respawnTime = respawnTime;
     }
 
     public long getId() {
@@ -151,38 +149,9 @@ public class Trash implements DataTransferObject {
         this.id = id;
     }
 
-    public int getAppearanceRangeYInf() {
-        return appearanceRangeYInf;
+    public int getVisible() {
+        return this.visible;
     }
-
-    public void setAppearanceRangeYInf(int appearanceRangeYInf) {
-        this.appearanceRangeYInf = appearanceRangeYInf;
-    }
-
-    public int getAppearanceRangeYSup() {
-        return appearanceRangeYSup;
-    }
-
-    public void setAppearanceRangeYSup(int appearanceRangeYSup) {
-        this.appearanceRangeYSup = appearanceRangeYSup;
-    }
-
-    public int getAppearanceRangeXInf() {
-        return appearanceRangeXInf;
-    }
-
-    public void setAppearanceRangeXInf(int appearanceRangeXInf) {
-        this.appearanceRangeXInf = appearanceRangeXInf;
-    }
-
-    public int getAppearanceRangeXSup() {
-        return appearanceRangeXSup;
-    }
-
-    public void setAppearanceRangeXSup(int appearanceRangeXSup) {
-        this.appearanceRangeXSup = appearanceRangeXSup;
-    }
-
 
     public String toString (){
         return (this.name);

@@ -17,7 +17,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     private Game game;
     private Timer timer;
 
-    public GamePanel(String pseudo,String color) throws SQLException {
+    public GamePanel(String pseudo, String color) throws SQLException{
         //init de la fenetre
         this.setSize(1440,780);
         this.setResizable(false);

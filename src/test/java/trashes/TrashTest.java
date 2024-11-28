@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 public class TrashTest {
 
     @Test
-    public void shouldResetTrashes (){
+    public void shouldResetTrashes () throws InterruptedException {
         Bottle bottle = new Bottle(100,100);
         bottle.updatePosition();
         assertTrue(bottle.getX()<1440 &&

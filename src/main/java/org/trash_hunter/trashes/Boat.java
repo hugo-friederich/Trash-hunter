@@ -1,7 +1,5 @@
 package org.trash_hunter.trashes;
 
-import org.trash_hunter.util.Couple;
-
 import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.util.Objects;
@@ -19,7 +17,7 @@ public class Boat extends Trash{
         this.height=80;
         nbPoints = 10;
         name = "Boat";
-        repatriationTime = 5000;        //temps de récupération en ms
+        respawnTime = 5000;        //temps de réaparition en ms
         appearanceRangeYInf = 780-this.height;
         appearanceRangeYSup= 780-this.height;
     }

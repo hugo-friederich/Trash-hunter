@@ -71,7 +71,7 @@ public class TrashDAO extends DataAccessObject<Trash> {
     }
 
     @Override
-    public List<String> findAllPseudo() {
+    public List<String> findAllPseudoFromBestScore() {
         return(null);
     }
 

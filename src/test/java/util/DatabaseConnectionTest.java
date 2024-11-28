@@ -14,10 +14,13 @@ public class DatabaseConnectionTest {
     private void initializeDatabaseConnection() throws SQLException {
         connection = DatabaseConnection.getConnection();
     }
+
     @Test
     public void shouldConnectToDatabase() throws SQLException {
         initializeDatabaseConnection();
     }
+
+
     @Test
     public void shouldCloseConnectionAfterUse() throws SQLException {
         initializeDatabaseConnection();
@@ -30,4 +33,6 @@ public class DatabaseConnectionTest {
         initializeDatabaseConnection();
         OutilsJDBC.afficherTable(connection, "Diver");
     }
+
+
 }

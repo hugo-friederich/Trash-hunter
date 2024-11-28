@@ -11,6 +11,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Objects;
 
+
 public class Avatar implements DataTransferObject {
     private BufferedImage sprite;                                       //image du plongeur
     private float x, y;                                                 //coordonées
@@ -53,6 +54,19 @@ public class Avatar implements DataTransferObject {
     //Définition du constructeur par défaut (pseudo : Bob, color : blue)
     public Avatar() {
         this("Bob","blue");
+    }
+    public Diver convertAvatarToDiver(){
+        Diver diver = new Diver();
+        diver.setColor(this.color);
+        diver.setPseudo(this.pseudo);
+        diver.setScore(this.score);
+        diver.setId(this.id);
+        diver.setY(this.y);
+        diver.setX(this.x);
+        diver.setScore_max(this.score_max);
+        diver.setGame_time(this.game_time);
+        diver.setCreation_date(this.creation_date);
+        return(diver);
     }
     public void update(){
         if (this.left) {x -= this.speed;}

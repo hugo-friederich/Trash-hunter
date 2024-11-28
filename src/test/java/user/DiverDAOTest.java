@@ -1,7 +1,6 @@
 package user;
 
 import org.junit.Test;
-import org.trash_hunter.user.Avatar;
 import org.trash_hunter.user.Diver;
 import org.trash_hunter.user.DiverDAO;
 import org.trash_hunter.util.DatabaseConnection;
@@ -21,7 +20,7 @@ public class DiverDAOTest {
         DiverDAO diverDAO = new DiverDAO(connection);
         Diver newDiver = new Diver("toto","red");
         diverDAO.create(newDiver);
-        //diverDAO.delete(newAvatar.getId());  //suppression pour éviter de surcharger la DB
+        diverDAO.delete(newDiver.getId());  //suppression pour éviter de surcharger la DB
     }
 
     //Doit créer un Diver puis le mettre à jour à l'aide d'un nouveau Diver
@@ -33,7 +32,7 @@ public class DiverDAOTest {
         diverDAO.create(newDiver);  //creation d'un nouveau diver
         Diver updatedDiver = new Diver("titi","blue");
         diverDAO.update(updatedDiver, newDiver.getId());
-        //diverDAO.delete(newDiver.getId()); //suppression pour éviter de surcharger la DB
+        diverDAO.delete(newDiver.getId()); //suppression pour éviter de surcharger la DB
     }
     // Doit créer un nouveau Diver et le supprimer juste après
     @Test
@@ -54,7 +53,13 @@ public class DiverDAOTest {
     public void shouldFindAllPseudo () throws SQLException{
         initializeDatabaseConnection();
         DiverDAO diverDAO=new DiverDAO(connection);
-        System.out.print(diverDAO.findAllPseudo());
+        System.out.print(diverDAO.findAllPseudoFromBestScore());
     }
 
+    @Test
+    public void shouldGetAllPseudoFromDiver () throws SQLException {
+        initializeDatabaseConnection();
+        DiverDAO diverDAO=new DiverDAO(connection);
+        System.out.println(diverDAO.findAllPseudoFromDiver());
+    }
 }

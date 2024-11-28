@@ -1,7 +1,5 @@
 package org.trash_hunter.util;
 
-import org.trash_hunter.user.Diver;
-
 import java.sql.Connection;
 import java.util.List;
 
@@ -15,7 +13,7 @@ public abstract class DataAccessObject<T extends DataTransferObject> {
     }
     public abstract  T findById(long id);
     public abstract List<T> findAll();
-    public abstract List <String> findAllPseudo();
+    public abstract List <String> findAllPseudoFromBestScore();
     public abstract void update(T dto,long id);
     public abstract void create(T dto);
     public abstract void delete(long id);

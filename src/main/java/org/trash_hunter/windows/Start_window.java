@@ -46,14 +46,15 @@ public class Start_window extends JFrame implements WindowListener {
         validateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                List<String> usernames = diverDAO.findAllPseudo();
+                List<String> usernames = diverDAO.findAllPseudoFromBestScore();
+                List<String> currentDivers = diverDAO.findAllPseudoFromDiver();
                 if (inputName.getText().isBlank()) {
                     JOptionPane.showMessageDialog(null,
                             "Rentrer un pseudo!",
                             "Attention",
                             JOptionPane.YES_NO_OPTION);
                 }
-                if (usernames.contains(inputName.getText())) {
+                if (usernames.contains(inputName.getText()) || currentDivers.contains(inputName.getText())) {
                     JOptionPane.showMessageDialog(null,
                             "Ce pseudo est déjà utilisé veuillez changer!",
                             "Attention",

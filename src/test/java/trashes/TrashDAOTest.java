@@ -31,6 +31,7 @@ public class TrashDAOTest {
         TrashDAO trashDAO = new TrashDAO(DatabaseConnection.getConnection());
         Game game = new Game();
         Assert.assertEquals(game.getLocalTrashset().toString(),trashDAO.findAll().toString());
+        game.getDiverDAO().clear();
     }
     @Test
     public void shouldUpdateATrash() throws SQLException {
@@ -48,11 +49,6 @@ public class TrashDAOTest {
     public void shouldSelectTrash() throws SQLException {
         TrashDAO trashDAO = new TrashDAO(DatabaseConnection.getConnection());
         trashDAO.create(new Bottle());
-        List <Trash> trashset = trashDAO.findAll();
-    }
-    public static void main (String[]args){
-        Diver diver = new Diver();
-        diver.setPseudo("hugo");
-        System.out.println(diver.toString());
+        List<Trash> trashset = trashDAO.findAll();
     }
 }

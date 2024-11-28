@@ -17,9 +17,10 @@ public class DiverDAO extends DataAccessObject<Diver> {
     private static final String UPDATE = "UPDATE Diver SET x = ?, y = ?, pseudo = ?, score = ?, score_max = ?, color = ? WHERE id = ?";
     private static final String DELETE = "DELETE FROM Diver WHERE id = ?";
     private static final String GET_ALL = "SELECT id, x, y, pseudo, score, score_max, creation_date, game_time, color FROM Diver";
+    private static final String GET_ALL_PSEUDO_FROM_DIVER= "SELECT pseudo FROM Diver";
 
     //Requêtes pour la table Best_scores
-    private static final String GET_ALL_PSEUDO = "SELECT pseudo FROM Best_scores";
+    private static final String GET_ALL_PSEUDO_FROM_BEST_SCORE = "SELECT pseudo FROM Best_scores";
     private static final String INSERT_SCORE = "INSERT INTO Best_scores (x, y, pseudo, score, score_max, color) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String TRUNCATE_TABLE = "TRUNCATE TABLE Diver";
     public DiverDAO(Connection connection) {
@@ -75,11 +76,26 @@ public class DiverDAO extends DataAccessObject<Diver> {
         }
         return divers;
     }
+    public List<String> findAllPseudoFromDiver(){
+        List<String> divers = new ArrayList<>();
+        try (PreparedStatement preparedStatement = this.connection.prepareStatement(GET_ALL_PSEUDO_FROM_DIVER)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Diver diver = new Diver();
+                diver.setPseudo(resultSet.getString("pseudo"));
+                divers.add(diver.getPseudo());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return divers;
+    }
 
     @Override
-    public List<String> findAllPseudo() {
+    public List<String> findAllPseudoFromBestScore() {
         List<String> divers = new ArrayList<>();
-        try (PreparedStatement preparedStatement = this.connection.prepareStatement(GET_ALL_PSEUDO)) {
+        try (PreparedStatement preparedStatement = this.connection.prepareStatement(GET_ALL_PSEUDO_FROM_BEST_SCORE)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Diver diver = new Diver();

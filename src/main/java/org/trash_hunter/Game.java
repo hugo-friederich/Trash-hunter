@@ -40,7 +40,7 @@ public class Game {
 
         // Initialisation des déchets si c'est le premier joueur
         this.trashDAO = new TrashDAO(DatabaseConnection.getConnection());
-        if (diverDAO.findAll().size() == 1) {
+        if (trashDAO.findAll().isEmpty()) {
             initTrashes();                                                  // Initialise les déchets pour le premier joueur
         }
         initLocalTrashes();                                                 // Initialise les déchets locaux

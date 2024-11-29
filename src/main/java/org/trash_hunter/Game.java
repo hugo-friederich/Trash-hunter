@@ -116,13 +116,15 @@ public class Game {
             if (isColliding(trash, myAvatar) && trash.getVisible() == 1) {
                 myAvatar.setScore(myAvatar.getScore() + trash.getNbPoints());       // Mise à jour du score
                 myAvatar.updateScoreHistory();                                      // Mise à jour de l'historique des scores
+
                 trash.setVisible(0);
                 trash.setCreationTime(System.currentTimeMillis());
                 trashDAO.update(trash.convertTrashToTrashDB(), id);
+                trash.updatePosition();
+                trashDAO.update(trash.convertTrashToTrashDB(), id);              // Mise à jour dans la base de données
             }if(trash.getVisible()==0) {
                 trash.updatePosition();
                 trashDAO.update(trash.convertTrashToTrashDB(), id);              // Mise à jour dans la base de données
-
             }
         }
     }

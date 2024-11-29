@@ -18,14 +18,15 @@ import java.util.List;
 
 public class TrashDAOTest {
     private Connection connection;
+    private TrashDAO trashDAO;
     private void initializeDatabaseConnection() throws SQLException {
         connection = DatabaseConnection.getConnection();
+        this.trashDAO= new TrashDAO(connection);
     }
     // Doit créer un Diver nommé Toto de couleur rouge dans la base de donnée
     @Test
     public void shouldDeleteTrash () throws SQLException{
         initializeDatabaseConnection();
-        TrashDAO trashDAO = new TrashDAO(connection);
         trashDAO.clear();
         TrashDB newtrashDB = new TrashDB();
         trashDAO.create(newtrashDB);
@@ -36,7 +37,6 @@ public class TrashDAOTest {
     @Test
     public void shouldUpdateTrash () throws SQLException{
         initializeDatabaseConnection();
-        TrashDAO trashDAO = new TrashDAO(connection);
         trashDAO.clear();
         TrashDB newTrashDB = new TrashDB();
         trashDAO.create(newTrashDB);  //creation d'un nouveau diver
@@ -48,7 +48,6 @@ public class TrashDAOTest {
     @Test
     public void shouldFindAll () throws SQLException{
         initializeDatabaseConnection();
-        TrashDAO trashDAO = new TrashDAO(connection);
         trashDAO.create(new TrashDB("bottle"));
         trashDAO.create(new TrashDB("can"));
         trashDAO.create(new TrashDB("boat"));
@@ -58,7 +57,11 @@ public class TrashDAOTest {
     @Test
     public void shouldFindAllName () throws SQLException{
         initializeDatabaseConnection();
-        TrashDAO trashDAO=new TrashDAO(connection);
         System.out.print(trashDAO.findAllNames());
+    }
+    @Test
+    public void shouldClearTrashes()throws  SQLException{
+        initializeDatabaseConnection();
+        trashDAO.clear();
     }
 }

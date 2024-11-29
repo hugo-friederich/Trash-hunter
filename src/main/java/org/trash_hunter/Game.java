@@ -83,8 +83,8 @@ public class Game {
         this.diverDAO.update(this.diver, this.diver.getId());   // Mise à jour du plongeur dans la base de données
 
         // Mise à jour des déchets après collision
+        updateLocalTrashes();
         updateAfterCollisionDiverTrash();
-        updateLocalTrashes();                                   // Acgtualise les déchets locaux par rapport à ceux de la BDD
         checkCollisionWithPanel();                              // Vérification des collisions avec les bords
     }
 
@@ -204,14 +204,35 @@ public class Game {
             long id = trash.getId();
             double x = trash.getX();
             double y = trash.getY();
+            int visible = trash.getVisible();
 
             // Vérification si la position a changé
-            if (!(x == localTrashset.get((int) id).getX()) || !(y == localTrashset.get((int) id).getY())) {
+            if (!(x == localTrashset.get((int) id).getX()) ||
+                    !(y == localTrashset.get((int) id).getY()) ||
+                    !(visible == localTrashset.get((int)id).getVisible())) {
+
                 Trash trashCopy = localTrashset.get((int) id);
                 trashCopy.setX(x); // Mise à jour de la position X
                 trashCopy.setY(y); // Mise à jour de la position Y
+                trashCopy.setVisible(visible); // Mise à jour de la visibilité
                 localTrashset.set((int) id, trashCopy); // Remplacement de l'ancien déchet par le nouveau
             }
+        }
+    }
+    public void updateLocalTrashe(int id) {
+        TrashDB dataBaseTrash = trashDAO.findById(id);    // Récupération du déchet a mettre à jour
+        Trash localTrash = localTrashset.get(id);         // Récupération du déchet local
+
+        double x = dataBaseTrash.getX();
+        double y = dataBaseTrash.getY();
+        int visible = dataBaseTrash.getVisible();
+
+        if (!(x == localTrash.getX() || !(y == localTrash.getY()) || !(visible == localTrash.getVisible()))) {
+            Trash trashCopy = localTrashset.get((int) id);
+            trashCopy.setX(x); // Mise à jour de la position X
+            trashCopy.setY(y); // Mise à jour de la position Y
+            trashCopy.setVisible(visible); // Mise à jour de la visibilité
+            localTrashset.set((int) id, trashCopy); // Remplacement de l'ancien déchet par le nouveau
         }
     }
 

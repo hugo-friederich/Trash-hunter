@@ -33,7 +33,7 @@ public class Diver implements DataTransferObject {
      * @return
      */
     public Avatar convertDiverToAvatar(){
-        Avatar avatar = new Avatar();
+        Avatar avatar = new Avatar(pseudo,color);
         avatar.setColor(this.color);
         avatar.setPseudo(this.pseudo);
         avatar.setScore(this.score);

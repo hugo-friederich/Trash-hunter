@@ -28,11 +28,6 @@ public class Avatar implements DataTransferObject {
     private Time game_time;                                             //horaire création
 
     public Avatar(String pseudo, String color) {
-        try {
-            this.sprite = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("plongeur.png")));
-        } catch (IOException e) {
-            throw new RuntimeException("Erreur lors du chargement de l'image : " + e.getMessage(), e);
-        }
         this.id = 0;    // l'identifiant est auto-incrémenté
         this.x = 720;   // coordonées du "spawn" = (720,390)
         this.y = 390;
@@ -47,8 +42,9 @@ public class Avatar implements DataTransferObject {
         this.right = false;
         this.up = false;
         this.down = false;
+        affectColorToAvatar(this.color);
         this.width=50;
-        this.height=50;
+        this.height=35;
     }
 
     //Définition du constructeur par défaut (pseudo : Bob, color : blue)
@@ -80,6 +76,26 @@ public class Avatar implements DataTransferObject {
         }
         if (scoreHistory.size()>15){
             scoreHistory.removeFirst();
+        }
+    }
+    public void affectColorToAvatar(String colorSelected){
+        String coloredSprite = "";
+        if (colorSelected.equals("Blue")){
+           coloredSprite="plongeur_bleu.png";
+        }
+        if (colorSelected.equals("Red")){
+            coloredSprite="plongeur_rouge.png";
+        }
+        if (colorSelected.equals("Yellow")){
+            coloredSprite="plongeur_jaune.png";
+        }
+        if (colorSelected.equals("Green")){
+            coloredSprite="plongeur_vert.png";
+        }
+        try {
+            this.sprite = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(coloredSprite)));
+        } catch (IOException e) {
+            throw new RuntimeException("Erreur lors du chargement de l'image : " + e.getMessage(), e);
         }
     }
     public void rendering (Graphics2D contexte){

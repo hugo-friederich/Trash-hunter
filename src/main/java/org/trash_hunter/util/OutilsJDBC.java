@@ -6,6 +6,8 @@
 package org.trash_hunter.util;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -65,5 +67,57 @@ public class OutilsJDBC {
             ex.printStackTrace();
         }
     }
+    static public String recupererResultSetEnString(ResultSet result) throws SQLException {
+        ResultSetMetaData metaData = result.getMetaData();
+        int columnsNumber = metaData.getColumnCount();
 
+        StringBuilder sb = new StringBuilder();
+        sb.append(" ");
+        for (int i = 1; i <= columnsNumber; i++) {
+            sb.append("+----------------------");
+        }
+        sb.append("+\n");
+        for (int i = 1; i <= columnsNumber; i++) {
+            sb.append(String.format(" | %-20.20s", metaData.getColumnName(i)));
+        }
+        sb.append(" | \n");
+        sb.append(" ");
+        for (int i = 1; i <= columnsNumber; i++) {
+            sb.append("+----------------------");
+        }
+        sb.append("+\n");
+
+        result.beforeFirst();
+        while (result.next()) {
+            for (int i = 1; i <= columnsNumber; i++) {
+                sb.append(String.format(" | %-20.20s", result.getObject(i)));
+            }
+            sb.append(" | \n");
+        }
+        result.beforeFirst();
+
+        sb.append(" ");
+        for (int i = 1; i <= columnsNumber; i++) {
+            sb.append("+----------------------");
+        }
+        sb.append("+\n");
+
+        return sb.toString(); // Retourne la chaîne construite
+    }
+    static public String showTableAsString(Connection connexion, String nomTable) {
+        String resultString = "";
+        try {
+            PreparedStatement requete = connexion.prepareStatement("SELECT pseudo,score,score_max,creation_date,color FROM " + nomTable + ";");
+            ResultSet resultat = requete.executeQuery();
+            resultString = recupererResultSetEnString(resultat);
+            requete.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return resultString; // Retourne la chaîne de résultats
+    }
+    public static List<Object[]> getDiversData(Connection connexion, String nomTable){
+        List<Object[]> divers = new ArrayList<>();
+        return(divers);
+    }
 }

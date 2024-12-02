@@ -1,12 +1,15 @@
 package org.trash_hunter;
 
 import org.trash_hunter.util.DatabaseConnection;
+import org.trash_hunter.util.OutilsJDBC;
 import org.trash_hunter.windows.Start_window;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 
@@ -16,6 +19,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     private JLabel jLabel1;
     private Game game;
     private Timer timer;
+    private JDialog diversDialog;
 
     public GamePanel(String pseudo, String color) throws SQLException{
         //init de la fenetre
@@ -48,9 +52,37 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     public static void main (String[]args) throws SQLException {
         Start_window startWindow = new Start_window();   //Le GamePanel se lance dans ActionPerformed de la classe Start_window
     }
+    private void showDiversTable() {
+        try {
+            // Connexion à la base de données
+            Connection connexion = DatabaseConnection.getConnection();
+            String nomTable = "Diver";
+
+            // Récupérer les résultats sous forme de chaîne
+            String resultString = OutilsJDBC.showTableAsString(connexion, nomTable);
+
+            // Créer un JTextArea pour afficher les résultats
+            JTextArea textArea = new JTextArea(resultString);
+            textArea.setEditable(false);
+            textArea.setLineWrap(true);
+            textArea.setWrapStyleWord(true);
+
+            // Créer le JDialog
+            diversDialog = new JDialog(this, "Joueurs actuels", Dialog.ModalityType.APPLICATION_MODAL);
+            diversDialog.setSize(600, 300);
+            diversDialog.setLocationRelativeTo(this);
+            diversDialog.add(new JScrollPane(textArea)); // Ajoute le JTextArea dans le JDialog
+            diversDialog.setVisible(true); // Affiche le JDialog
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erreur lors de la récupération des données : " + e.getMessage(),
+                    "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     @Override
-    public void keyPressed(KeyEvent evt) {
+    public void keyPressed (KeyEvent evt) {
         if (evt.getKeyCode() == 87 ||evt.getKeyCode() == KeyEvent.VK_UP) {
             this.game.getMyAvatar().setUp(true);
         } else if (evt.getKeyCode() == 83 || evt.getKeyCode()== KeyEvent.VK_DOWN) {
@@ -73,6 +105,10 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
                 this.dispose(); //Ferme la fenêtre
                 System.exit(0);
             }
+
+        }
+        else if (evt.getKeyCode() == KeyEvent.VK_R){    //Affiche le tableau des joueurs actuels lors de l'appui sur R
+            showDiversTable();
         }
     }
 
@@ -86,6 +122,8 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
             this.game.getMyAvatar().setLeft(false);
         } else if (evt.getKeyCode() == 68 || evt.getKeyCode()== KeyEvent.VK_RIGHT) {
             this.game.getMyAvatar().setRight(false);
+        } else if (evt.getKeyCode() == KeyEvent.VK_R){
+            diversDialog.dispose();
         }
     }
 

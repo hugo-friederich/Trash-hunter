@@ -2,11 +2,9 @@ package org.trash_hunter;
 
 import org.trash_hunter.user.DiverDAO;
 import org.trash_hunter.util.DatabaseConnection;
-import org.trash_hunter.util.OutilsJDBC;
 import org.trash_hunter.windows.Start_window;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -131,6 +129,20 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     @Override
     public void keyTyped(KeyEvent e) {}
 
+    public void stopTheGame(){
+        this.game.getDiverDAO().delete(this.game.getDiver().getId());
+        this.game.getDiverDAO().addToBestScores(this.game.getDiver());
+        System.exit(1);
+    }
+
+    public void gameIsOver(){
+        try {
+            Start_window startWindow = new Start_window();
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
@@ -141,7 +153,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
         this.game.rendering(contexte);
         this.jLabel1.repaint();
         if (this.game.isFinished()) {
-            this.timer.stop();
+            gameIsOver();
         }
     }
     @Override
@@ -151,16 +163,11 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
 
     @Override
     public void windowClosing(WindowEvent e) {
-        //Action à venir effectuer avant la fermeture de la fenêtre
-        this.game.getDiverDAO().delete(this.game.getDiver().getId());
-        this.game.getDiverDAO().addToBestScores(this.game.getDiver());
-        DatabaseConnection.close();  // Arrête la conncetion à la base de donnée
-        System.exit((0));
+        stopTheGame();
     }
 
     @Override
     public void windowClosed(WindowEvent e) {
-        this.game.getDiverDAO().delete(this.game.getDiver().getId());
     }
 
     @Override
@@ -182,6 +189,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     public void windowDeactivated(WindowEvent e) {
 
     }
+
 
     public Graphics2D getContexte() {
         return contexte;

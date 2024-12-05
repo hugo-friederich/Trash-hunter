@@ -15,7 +15,7 @@ public class DatabaseConnection {
         config.setUsername("etudiant");
         config.setPassword("YTDTvj9TR3CDYCmP");
         config.setMaximumPoolSize(6); // Nombre maximum de connexions dans le pool
-        config.setConnectionTimeout(30000); // Temps d'attente pour obtenir une connexion
+        config.setConnectionTimeout(250); // Temps d'attente pour obtenir une connexion
         config.setIdleTimeout(600000); // Temps d'inactivité avant qu'une connexion soit fermée
         dataSource = new HikariDataSource(config);
     }

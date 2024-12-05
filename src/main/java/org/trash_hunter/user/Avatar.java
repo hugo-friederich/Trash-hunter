@@ -70,10 +70,10 @@ public class Avatar implements DataTransferObject {
         return(diverDB);
     }
     public void update(){
-        if (this.left) {x -= this.speed;this.oxygen-=0.1;}
-        if (this.right) {x += this.speed;this.oxygen-=0.1;}
-        if (this.down) {y += this.speed;this.oxygen-=0.1;}
-        if (this.up) {y -= this.speed;this.oxygen-=0.1;}
+        if (this.left) {x -= this.speed;this.oxygen-=0.5;}
+        if (this.right) {x += this.speed;this.oxygen-=0.5;}
+        if (this.down) {y += this.speed;this.oxygen-=0.5;}
+        if (this.up) {y -= this.speed;this.oxygen-=0.5;}
     }
     public void rendering (Graphics2D contexte){
         contexte.drawImage(this.sprite,(int)x,(int)y,null);

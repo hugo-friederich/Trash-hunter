@@ -36,18 +36,8 @@ public class Start_window extends JFrame implements WindowListener {
 
 
     public Start_window() throws SQLException {
-        try {
-            // Essayer de créer la connexion à la base de données
-            diverDAO = new DiverDAO(DatabaseConnection.getConnection());
-        } catch (SQLException e) {
-            // Afficher un message d'erreur si la connexion échoue
-            JOptionPane.showMessageDialog(this,
-                    "Erreur de connexion à la base de données : " + e.getMessage(),
-                    "Erreur",
-                    JOptionPane.ERROR_MESSAGE);
-            // Optionnel : Fermer l'application si la connexion échoue
-            System.exit(1);
-        }
+
+        diverDAO = new DiverDAO(DatabaseConnection.getConnection());
         setContentPane(startPanel);
         setTitle("Trash Hunter");
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);

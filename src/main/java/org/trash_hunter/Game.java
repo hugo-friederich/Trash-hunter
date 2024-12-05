@@ -7,6 +7,7 @@ import org.trash_hunter.user.DiverDAO;
 import org.trash_hunter.util.DatabaseConnection;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -91,7 +92,12 @@ public class Game {
 
     // Méthode pour vérifier si le jeu est terminé
     public boolean isFinished() {
-        return false;                                           // Le jeu n'a pas de fin
+        boolean isFinished = false;
+        if ((int)this.myAvatar.getOxygen()==0){              // Le joueur perd quand il n'a plus doxygen
+            isFinished = true;
+            JOptionPane.showMessageDialog(null, "Vous vous êtes noyé !!","Game Over",JOptionPane.INFORMATION_MESSAGE);
+        }
+        return isFinished;
     }
 
 

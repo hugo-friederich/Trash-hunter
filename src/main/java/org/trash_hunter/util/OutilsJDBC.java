@@ -72,9 +72,10 @@ public class OutilsJDBC {
         int columnsNumber = metaData.getColumnCount();
 
         StringBuilder sb = new StringBuilder();
+
         sb.append(" ");
         for (int i = 1; i <= columnsNumber; i++) {
-            sb.append("+----------------------");
+            sb.append("+-------------");
         }
         sb.append("+\n");
         for (int i = 1; i <= columnsNumber; i++) {
@@ -83,7 +84,7 @@ public class OutilsJDBC {
         sb.append(" | \n");
         sb.append(" ");
         for (int i = 1; i <= columnsNumber; i++) {
-            sb.append("+----------------------");
+            sb.append("+-------------");
         }
         sb.append("+\n");
 
@@ -98,7 +99,7 @@ public class OutilsJDBC {
 
         sb.append(" ");
         for (int i = 1; i <= columnsNumber; i++) {
-            sb.append("+----------------------");
+            sb.append("+-------------");
         }
         sb.append("+\n");
 
@@ -107,7 +108,7 @@ public class OutilsJDBC {
     static public String showTableAsString(Connection connexion, String nomTable) {
         String resultString = "";
         try {
-            PreparedStatement requete = connexion.prepareStatement("SELECT pseudo,score,score_max,creation_date,color FROM " + nomTable + ";");
+            PreparedStatement requete = connexion.prepareStatement("SELECT * FROM " + nomTable + ";");
             ResultSet resultat = requete.executeQuery();
             resultString = recupererResultSetEnString(resultat);
             requete.close();

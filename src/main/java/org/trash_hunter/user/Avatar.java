@@ -13,18 +13,20 @@ import java.util.Objects;
 
 
 public class Avatar implements DataTransferObject {
+    private long id;                                                    //identifiant unique
     private BufferedImage sprite;                                       //image du plongeur
     private float x, y;                                                 //coordonées
     private String pseudo;                                              //pseudo plongueur
     private int score;                                                  //score actuel
     private ArrayList<Integer> scoreHistory = new ArrayList<>();        //historique des scores
-    private int score_max;                                               //score maximum
-    private int width, height;                                          //largeur et hauteur image
+    private int score_max;                                              //score maximum
     private int speed;                                                  //vitesse de déplacement (px/s)
+    private int life;                                                   //vie du plongeur
+    private double oxygen;                                              //oxygen du plongeur
+    private int width, height;                                          //largeur et hauteur image
     private boolean left, right, up, down;                              //données de déplacement
-    private long id;                                                    //identifiant unique
     private String color;                                               //couleur sélectionné
-    private Date creation_date;                                                  //date de création
+    private Date creation_date;                                         //date de création
     private Time game_time;                                             //horaire création
 
     public Avatar(String pseudo, String color) {
@@ -32,6 +34,8 @@ public class Avatar implements DataTransferObject {
         this.x = 720;   // coordonées du "spawn" = (720,390)
         this.y = 390;
         this.speed = 15;
+        this.life=3;    //nombre de vie au départ
+        this.oxygen=100;   //% d'oxygen
         this.pseudo = pseudo;
         score = 0;
         score_max = 0;
@@ -51,24 +55,28 @@ public class Avatar implements DataTransferObject {
     public Avatar() {
         this("Bob","blue");
     }
-    public Diver convertAvatarToDiver(){
-        Diver diver = new Diver();
-        diver.setColor(this.color);
-        diver.setPseudo(this.pseudo);
-        diver.setScore(this.score);
-        diver.setId(this.id);
-        diver.setY(this.y);
-        diver.setX(this.x);
-        diver.setScore_max(this.score_max);
-        diver.setGame_time(this.game_time);
-        diver.setCreation_date(this.creation_date);
-        return(diver);
+    public DiverDB convertAvatarToDiver(){
+        DiverDB diverDB = new DiverDB();
+        diverDB.setColor(this.color);
+        diverDB.setPseudo(this.pseudo);
+        diverDB.setScore(this.score);
+        diverDB.setId(this.id);
+        diverDB.setY(this.y);
+        diverDB.setX(this.x);
+        diverDB.setScore_max(this.score_max);
+        diverDB.setGame_time(this.game_time);
+        diverDB.setCreation_date(this.creation_date);
+        return(diverDB);
     }
     public void update(){
-        if (this.left) {x -= this.speed;}
-        if (this.right) {x += this.speed;}
-        if (this.down) {y += this.speed;}
-        if (this.up) {y -= this.speed;}
+        if (this.left) {x -= this.speed;this.oxygen-=0.1;}
+        if (this.right) {x += this.speed;this.oxygen-=0.1;}
+        if (this.down) {y += this.speed;this.oxygen-=0.1;}
+        if (this.up) {y -= this.speed;this.oxygen-=0.1;}
+    }
+    public void rendering (Graphics2D contexte){
+        contexte.drawImage(this.sprite,(int)x,(int)y,null);
+        drawOxygenBar(contexte);
     }
     public void updateScoreHistory(){
         if (score> score_max){
@@ -98,10 +106,26 @@ public class Avatar implements DataTransferObject {
             throw new RuntimeException("Erreur lors du chargement de l'image : " + e.getMessage(), e);
         }
     }
-    public void rendering (Graphics2D contexte){
-        contexte.drawImage(this.sprite,(int)x,(int)y,null);
-    }
+    private void drawOxygenBar(Graphics2D contexte) {
+        // Position de la barre d'oxygène
+        int barX = (int)x;
+        int barY = (int)y - 10;
 
+        // Dimensions de la barre d'oxygène
+        int barWidth = 40;
+        int barHeight = 3;
+
+        // Calculer la largeur de la barre d'oxygène
+        int oxygenWidth = (int)(barWidth * (this.oxygen/100.0));
+
+        // Dessiner le fond de la barre d'oxygène
+        contexte.setColor(Color.GRAY);
+        contexte.fillRect(barX, barY, barWidth, barHeight);
+
+        // Dessiner la barre d'oxygène
+        contexte.setColor(Color.GREEN); // Couleur de la barre d'oxygène
+        contexte.fillRect(barX, barY, oxygenWidth, barHeight);
+    }
     public BufferedImage getSprite() {
         return sprite;
     }
@@ -242,10 +266,27 @@ public class Avatar implements DataTransferObject {
         this.game_time = game_time;
     }
 
+    public int getLife() {
+        return life;
+    }
+
+    public void setLife(int life) {
+        this.life = life;
+    }
+
+    public double getOxygen() {
+        return oxygen;
+    }
+
+    public void setOxygen(double oxygen) {
+        this.oxygen = oxygen;
+    }
+
     @Override
     public long getId() {
         return this.id;
     }
+
 
     public String toString() {
         return "Avatar{" +

@@ -1,5 +1,6 @@
 package org.trash_hunter;
 
+import org.trash_hunter.user.DiverDAO;
 import org.trash_hunter.util.DatabaseConnection;
 import org.trash_hunter.util.OutilsJDBC;
 import org.trash_hunter.windows.Start_window;
@@ -55,11 +56,11 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     private void showDiversTable() {
         try {
             // Connexion à la base de données
-            Connection connexion = DatabaseConnection.getConnection();
-            String nomTable = "Diver";
+            Connection connection = DatabaseConnection.getConnection();
+            DiverDAO diverDAO = new DiverDAO(connection);
 
             // Récupérer les résultats sous forme de chaîne
-            String resultString = OutilsJDBC.showTableAsString(connexion, nomTable);
+            String resultString = diverDAO.showDiversAsString();
 
             // Créer un JTextArea pour afficher les résultats
             JTextArea textArea = new JTextArea(resultString);

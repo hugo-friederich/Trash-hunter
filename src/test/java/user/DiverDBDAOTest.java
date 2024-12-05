@@ -1,14 +1,14 @@
 package user;
 
 import org.junit.Test;
-import org.trash_hunter.user.Diver;
+import org.trash_hunter.user.DiverDB;
 import org.trash_hunter.user.DiverDAO;
 import org.trash_hunter.util.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class DiverDAOTest {
+public class DiverDBDAOTest {
     private Connection connection;
     private void initializeDatabaseConnection() throws SQLException {
         connection = DatabaseConnection.getConnection();
@@ -18,9 +18,9 @@ public class DiverDAOTest {
     public void shouldCreateDiver () throws SQLException{
         initializeDatabaseConnection();
         DiverDAO diverDAO = new DiverDAO(connection);
-        Diver newDiver = new Diver("toto","red");
-        diverDAO.create(newDiver);
-        diverDAO.delete(newDiver.getId());  //suppression pour éviter de surcharger la DB
+        DiverDB newDiverDB = new DiverDB("toto","red");
+        diverDAO.create(newDiverDB);
+        diverDAO.delete(newDiverDB.getId());  //suppression pour éviter de surcharger la DB
     }
 
     //Doit créer un Diver puis le mettre à jour à l'aide d'un nouveau Diver
@@ -28,20 +28,20 @@ public class DiverDAOTest {
     public void shouldUpdateDiver () throws SQLException{
         initializeDatabaseConnection();
         DiverDAO diverDAO = new DiverDAO(connection);
-        Diver newDiver = new Diver("toto","red");
-        diverDAO.create(newDiver);  //creation d'un nouveau diver
-        Diver updatedDiver = new Diver("titi","blue");
-        diverDAO.update(updatedDiver, newDiver.getId());
-        diverDAO.delete(newDiver.getId()); //suppression pour éviter de surcharger la DB
+        DiverDB newDiverDB = new DiverDB("toto","red");
+        diverDAO.create(newDiverDB);  //creation d'un nouveau diver
+        DiverDB updatedDiverDB = new DiverDB("titi","blue");
+        diverDAO.update(updatedDiverDB, newDiverDB.getId());
+        diverDAO.delete(newDiverDB.getId()); //suppression pour éviter de surcharger la DB
     }
     // Doit créer un nouveau Diver et le supprimer juste après
     @Test
     public void shouldDeleteDiver () throws SQLException {
         initializeDatabaseConnection();
         DiverDAO diverDAO = new DiverDAO(connection);
-        Diver newDiver = new Diver("toto", "red");
-        diverDAO.create(newDiver);  //creation d'un nouveau diver
-        diverDAO.delete(newDiver.getId());
+        DiverDB newDiverDB = new DiverDB("toto", "red");
+        diverDAO.create(newDiverDB);  //creation d'un nouveau diver
+        diverDAO.delete(newDiverDB.getId());
     }
     @Test
     public void shouldFindAll () throws SQLException{

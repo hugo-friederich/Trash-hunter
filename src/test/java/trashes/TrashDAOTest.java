@@ -1,20 +1,12 @@
 package trashes;
 
-import org.junit.Assert;
 import org.junit.Test;
-import org.trash_hunter.Game;
-import org.trash_hunter.trashes.Bottle;
-import org.trash_hunter.trashes.Trash;
 import org.trash_hunter.trashes.TrashDAO;
 import org.trash_hunter.trashes.TrashDB;
-import org.trash_hunter.user.Diver;
-import org.trash_hunter.user.DiverDAO;
 import org.trash_hunter.util.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TrashDAOTest {
     private Connection connection;

@@ -2,7 +2,7 @@ package org.trash_hunter;
 
 import org.trash_hunter.trashes.*;
 import org.trash_hunter.user.Avatar;
-import org.trash_hunter.user.Diver;
+import org.trash_hunter.user.DiverDB;
 import org.trash_hunter.user.DiverDAO;
 import org.trash_hunter.util.DatabaseConnection;
 
@@ -21,9 +21,9 @@ import java.util.logging.Logger;
 public class Game {
     private BufferedImage backgroundImage;                              // Image de fond du jeu
     private final Avatar myAvatar;                                      // Avatar du joueur
-    private Diver diver;                                                // Plongeur actuel
+    private DiverDB diverDB;                                            // Plongeur actuel
     private DiverDAO diverDAO;                                          // DAO pour les plongeurs
-    private List<Diver> allDivers;                                      // Liste de tous les plongeurs
+    private List<DiverDB> allDiverDB;                                   // Liste de tous les plongeurs
     private TrashDAO trashDAO;                                          // DAO pour les déchets
     private List<Trash> localTrashset;                                  // Liste des déchets locaux
     private final Random randomNbr;                                     // Générateur de nombres aléatoires
@@ -33,10 +33,10 @@ public class Game {
     public Game(String pseudo, String color) throws SQLException{
         this.randomNbr = new Random();
         loadBackgroundImage();                                              // Chargement de l'image de fond
-        this.diver = new Diver(pseudo, color);                              // Création du plongeur
+        this.diverDB = new DiverDB(pseudo, color);                          // Création du plongeur
         this.diverDAO = new DiverDAO(DatabaseConnection.getConnection());   // Connection à la table Diver
-        this.diverDAO.create(diver);                                        // Enregistrement du plongeur dans la base de données
-        this.myAvatar = diver.convertDiverToAvatar();                       // Conversion du plongeur en avatar
+        this.diverDAO.create(diverDB);                                      // Enregistrement du plongeur dans la base de données
+        this.myAvatar = diverDB.convertDiverToAvatar();                     // Conversion du plongeur en avatar
 
         // Initialisation des déchets si c'est le premier joueur
         this.trashDAO = new TrashDAO(DatabaseConnection.getConnection());
@@ -62,11 +62,15 @@ public class Game {
     public void rendering(Graphics2D contexte) {
         contexte.drawImage(this.backgroundImage, 0, 0, null);
         contexte.drawString("Score : " + this.myAvatar.getScore(), 10, 20);     // Affiche le score
+        contexte.drawString("Oxygen : "+ this.myAvatar.getOxygen(), 10,40);     // Afficher oxygen
+        myAvatar.rendering(contexte);
 
         // Rendu des avatars des autres plongeurs
-        for (Diver otherDivers : allDivers) {
-            Avatar avatar = otherDivers.convertDiverToAvatar();
-            avatar.rendering(contexte);
+        for (DiverDB otherDivers : allDiverDB) {
+            if (! (otherDivers.getId()==myAvatar.getId())) {
+                Avatar avatar = otherDivers.convertDiverToAvatar();
+                avatar.rendering(contexte);
+            }
         }
 
         // Rendu des déchets locaux
@@ -78,9 +82,9 @@ public class Game {
     // Méthode de mise à jour du jeu
     public void update() throws SQLException {
         this.myAvatar.update();                                 // Mise à jour de l'avatar
-        this.diver = myAvatar.convertAvatarToDiver();           // Conversion de l'avatar en plongeur
-        this.allDivers = diverDAO.findAll();                    // Récupération de tous les plongeurs
-        this.diverDAO.update(this.diver, this.diver.getId());   // Mise à jour du plongeur dans la base de données
+        this.diverDB = myAvatar.convertAvatarToDiver();           // Conversion de l'avatar en plongeur
+        this.allDiverDB = diverDAO.findAll();                    // Récupération de tous les plongeurs
+        this.diverDAO.update(this.diverDB, this.diverDB.getId());   // Mise à jour du plongeur dans la base de données
 
         // Mise à jour des déchets après collision
         updateLocalTrashes();
@@ -259,16 +263,16 @@ public class Game {
         return diverDAO;
     }
 
-    public List<Diver> getAllDivers() {
-        return allDivers;
+    public List<DiverDB> getAllDivers() {
+        return allDiverDB;
     }
 
-    public Diver getDiver() {
-        return diver;
+    public DiverDB getDiver() {
+        return diverDB;
     }
 
-    public void setDiver(Diver diver) {
-        this.diver = diver;
+    public void setDiver(DiverDB diverDB) {
+        this.diverDB = diverDB;
     }
 
     public BufferedImage getBackgroundImage() {
@@ -283,8 +287,8 @@ public class Game {
         this.diverDAO = diverDAO;
     }
 
-    public void setAllDivers(List<Diver> allDivers) {
-        this.allDivers = allDivers;
+    public void setAllDivers(List<DiverDB> allDiverDBS) {
+        this.allDiverDB = allDiverDBS;
     }
 
     public TrashDAO getTrashDAO() {

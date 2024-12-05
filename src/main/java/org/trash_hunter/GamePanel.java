@@ -135,6 +135,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
         System.exit(1);
     }
 
+    //A modifier pour que le jeu se relance -> probleme avec HikariPool request time
     public void gameIsOver(){
         try {
             Start_window startWindow = new Start_window();
@@ -153,7 +154,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
         this.game.rendering(contexte);
         this.jLabel1.repaint();
         if (this.game.isFinished()) {
-            gameIsOver();
+            stopTheGame();
         }
     }
     @Override

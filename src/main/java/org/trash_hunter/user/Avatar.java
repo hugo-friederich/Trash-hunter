@@ -30,11 +30,11 @@ public class Avatar implements DataTransferObject {
     private Time game_time;                                             //horaire création
 
     public Avatar(String pseudo, String color) {
-        this.id = 0;    // l'identifiant est auto-incrémenté
-        this.x = 720;   // coordonées du "spawn" = (720,390)
+        this.id = 0;       // l'identifiant est auto-incrémenté
+        this.x = 720;      // coordonées du "spawn" = (720,390)
         this.y = 390;
         this.speed = 15;
-        this.life=3;    //nombre de vie au départ
+        this.life=3;       //nombre de vie au départ
         this.oxygen=100;   //% d'oxygen
         this.pseudo = pseudo;
         score = 0;
@@ -66,6 +66,7 @@ public class Avatar implements DataTransferObject {
         diverDB.setScore_max(this.score_max);
         diverDB.setGame_time(this.game_time);
         diverDB.setCreation_date(this.creation_date);
+        diverDB.setOxygen(this.oxygen);
         return(diverDB);
     }
     public void update(){

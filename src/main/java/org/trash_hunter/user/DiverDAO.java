@@ -14,13 +14,13 @@ import static org.trash_hunter.util.OutilsJDBC.recupererResultSetEnString;
 public class DiverDAO extends DataAccessObject<DiverDB> {
 
     //Requêtes pour la table Diver
-    private static final String INSERT = "INSERT INTO Diver (x, y, pseudo, score, score_max, color) VALUES (?, ?, ?, ?, ?, ?)";
-    private static final String GET_ONE = "SELECT id, x, y, pseudo, score, score_max, creation_date, game_time, color FROM Diver WHERE id = ?";
-    private static final String UPDATE = "UPDATE Diver SET x = ?, y = ?, pseudo = ?, score = ?, score_max = ?, color = ? WHERE id = ?";
+    private static final String INSERT = "INSERT INTO Diver (x, y, pseudo, score, score_max, color,oxygen) VALUES (?, ?, ?, ?, ?, ?,?)";
+    private static final String GET_ONE = "SELECT id, x, y, pseudo, score, score_max, creation_date, game_time, color, oxygen FROM Diver WHERE id = ?";
+    private static final String UPDATE = "UPDATE Diver SET x = ?, y = ?, pseudo = ?, score = ?, score_max = ?, color = ?,oxygen =? WHERE id = ?";
     private static final String DELETE = "DELETE FROM Diver WHERE id = ?";
-    private static final String GET_ALL = "SELECT id, x, y, pseudo, score, score_max, creation_date, game_time, color FROM Diver";
+    private static final String GET_ALL = "SELECT id, x, y, pseudo, score, score_max, creation_date, game_time, color,oxygen FROM Diver";
     private static final String GET_ALL_PSEUDO_FROM_DIVER= "SELECT pseudo FROM Diver";
-    private static final String GET_ALL_DIVERS = "SELECT pseudo,score,score_max,creation_date,color FROM Diver";
+    private static final String GET_ALL_INFO = "SELECT pseudo,score,score_max,creation_date,color FROM Diver";
 
     //Requêtes pour la table Best_scores
     private static final String GET_ALL_PSEUDO_FROM_BEST_SCORE = "SELECT pseudo FROM Best_scores";
@@ -47,6 +47,7 @@ public class DiverDAO extends DataAccessObject<DiverDB> {
                 diverDB.setCreation_date(resultSet.getDate("creation_date"));
                 diverDB.setGame_time(resultSet.getTime("game_time"));
                 diverDB.setColor(resultSet.getString("color"));
+                diverDB.setOxygen(resultSet.getDouble("oxygen"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -71,6 +72,7 @@ public class DiverDAO extends DataAccessObject<DiverDB> {
                 diverDB.setCreation_date(resultSet.getDate("creation_date"));
                 diverDB.setGame_time(resultSet.getTime("game_time"));
                 diverDB.setColor(resultSet.getString("color"));
+                diverDB.setOxygen(resultSet.getDouble("oxygen"));
                 diverDBS.add(diverDB);
             }
         } catch (SQLException e) {
@@ -120,7 +122,8 @@ public class DiverDAO extends DataAccessObject<DiverDB> {
             preparedStatement.setInt(4, updatedDiverDB.getScore());
             preparedStatement.setInt(5, updatedDiverDB.getScore_max());
             preparedStatement.setString(6, updatedDiverDB.getColor());
-            preparedStatement.setLong(7, id);
+            preparedStatement.setDouble(7,updatedDiverDB.getOxygen());
+            preparedStatement.setLong(8, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -136,6 +139,7 @@ public class DiverDAO extends DataAccessObject<DiverDB> {
         newDiverDB.setScore(newDiverDB.getScore());
         newDiverDB.setScore_max(newDiverDB.getScore_max());
         newDiverDB.setColor(newDiverDB.getColor());
+        newDiverDB.setOxygen(newDiverDB.getOxygen());
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(INSERT, PreparedStatement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setFloat(1, newDiverDB.getX());
             preparedStatement.setFloat(2, newDiverDB.getY());
@@ -143,6 +147,7 @@ public class DiverDAO extends DataAccessObject<DiverDB> {
             preparedStatement.setInt(4, newDiverDB.getScore());
             preparedStatement.setInt(5, newDiverDB.getScore_max());
             preparedStatement.setString(6, newDiverDB.getColor());
+            preparedStatement.setDouble(7,newDiverDB.getOxygen());
 
             // Exécute la mise à jour et obtient les clés générées
             int affectedRows = preparedStatement.executeUpdate();
@@ -220,7 +225,7 @@ public class DiverDAO extends DataAccessObject<DiverDB> {
     public String showDiversAsString() {
         String resultString = "";
         try {
-            PreparedStatement requete = this.connection.prepareStatement(GET_ALL_DIVERS);
+            PreparedStatement requete = this.connection.prepareStatement(GET_ALL_INFO);
             ResultSet resultat = requete.executeQuery();
             resultString = recupererResultSetEnString(resultat);
             requete.close();

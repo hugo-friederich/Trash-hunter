@@ -14,6 +14,7 @@ public class DiverDB implements DataTransferObject {
     private Date creation_date;                                         //date de création
     private Time game_time;                                             //horaire création
     private String color;                                               //couleur sélectionné
+    private double oxygen;                                              //niveau d'oxygen
 
     public DiverDB(String pseudo, String color) {
         this.id = 0;                                                    // l'identifiant est auto-incrémenté
@@ -25,6 +26,7 @@ public class DiverDB implements DataTransferObject {
         this.creation_date = new Date(0);
         this.game_time = new Time(0);
         this.color = color;                                             //couleur donné par l'utilisateur
+        this.oxygen = 100.0;
     }
 
     public DiverDB() {
@@ -33,8 +35,6 @@ public class DiverDB implements DataTransferObject {
 
     /**
      * Convertit un Diver en Avatar pour pouvoir après l'afficher
-     *
-     * @return
      */
     public Avatar convertDiverToAvatar() {
         Avatar avatar = new Avatar(pseudo, color);
@@ -47,6 +47,7 @@ public class DiverDB implements DataTransferObject {
         avatar.setScore_max(this.score_max);
         avatar.setGame_time(this.game_time);
         avatar.setCreation_date(this.creation_date);
+        avatar.setOxygen(this.oxygen);
         return (avatar);
     }
 
@@ -114,6 +115,14 @@ public class DiverDB implements DataTransferObject {
 
     public void setGame_time(Time game_time) {
         this.game_time = game_time;
+    }
+
+    public double getOxygen() {
+        return oxygen;
+    }
+
+    public void setOxygen(double oxygen) {
+        this.oxygen = oxygen;
     }
 
     @Override

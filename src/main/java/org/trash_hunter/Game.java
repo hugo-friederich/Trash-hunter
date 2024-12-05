@@ -63,17 +63,14 @@ public class Game {
         contexte.drawImage(this.backgroundImage, 0, 0, null);
         contexte.drawString("Score : " + this.myAvatar.getScore(), 10, 20);     // Affiche le score
         contexte.drawString("Oxygen : "+ this.myAvatar.getOxygen(), 10,40);     // Afficher oxygen
-        myAvatar.rendering(contexte);
 
         // Rendu des avatars des autres plongeurs
         for (DiverDB otherDivers : allDiverDB) {
-            if (! (otherDivers.getId()==myAvatar.getId())) {
-                Avatar avatar = otherDivers.convertDiverToAvatar();
-                avatar.rendering(contexte);
-            }
+            Avatar avatar = otherDivers.convertDiverToAvatar();
+            avatar.rendering(contexte);
         }
 
-        // Rendu des déchets locaux
+        // Rendu des déchets
         for (Trash trash : this.localTrashset) {
             trash.rendering(contexte);
         }

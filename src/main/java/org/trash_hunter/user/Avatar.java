@@ -74,6 +74,11 @@ public class Avatar implements DataTransferObject {
         if (this.right) {x += this.speed;this.oxygen-=0.5;}
         if (this.down) {y += this.speed;this.oxygen-=0.5;}
         if (this.up) {y -= this.speed;this.oxygen-=0.5;}
+        if (this.y>=0 && this.y<10){
+            while(oxygen <= 100){
+                oxygen+=10;
+            }
+        }
     }
     public void rendering (Graphics2D contexte){
         contexte.drawImage(this.sprite,(int)x,(int)y,null);

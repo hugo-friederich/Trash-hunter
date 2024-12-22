@@ -48,7 +48,6 @@
 
     </dependencies>
     <build>
-        <!-- Ajout du plugin pour créer un JAR exécutable -->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -57,10 +56,98 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>gokan.ekinci.GamePanel</mainClass>
+                            <mainClass>org.trash_hunter.GamePanel</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>2.5.2</version>
+                <executions>
+                    <execution>
+                        <id>game-panel</id>
+                        <phase>package</phase>
+                        <goals><goal>launch4j</goal></goals>
+                        <configuration>
+                            <headerType>gui</headerType>
+                            <outfile>target/trash_hunter.exe</outfile>
+                            <jar>target/Trash_Hunter-${project.version}.jar</jar>
+                            <errTitle>TrashHunter</errTitle>
+                            <classPath>
+                                <mainClass>org.trash_hunter.GamePanel</mainClass>
+                                <addDependencies>true</addDependencies>
+                                <jarLocation>../lib/</jarLocation>
+                            </classPath>
+                            <jre>
+                                <minVersion>18.0</minVersion>
+                                <path>%PATH%</path>
+                            </jre>
+                            <versionInfo>
+                                <fileVersion>1.0.0.0</fileVersion>
+                                <fileDescription>Awesome Game</fileDescription>
+                                <copyright>All right reserved by Hugo</copyright>
+                                <productVersion>1.0.0.0</productVersion>
+                                <productName>Trash Hunter</productName>
+                                <internalName>trash_hunter</internalName>
+                                <originalFilename>trash-hunter.exe</originalFilename>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+                <version>2.1.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>assemble</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <repositoryLayout>flat</repositoryLayout>
+                    <repositoryName>lib</repositoryName>
+                    <programs>
+                        <program>
+                            <id>GamePanel</id>
+                            <mainClass>org.trash_hunter.GamePanel</mainClass>
+                        </program>
+                    </programs>
+                    <platforms>
+                        <platform>windows</platform>
+                        <platform>unix</platform>
+                    </platforms>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <id>bin-windows-x64</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <formats>
+                                <format>zip</format>
+                                <format>tar.gz</format>
+                            </formats>
+                            <descriptors>
+                                <descriptor>src/main/assembly/bin.xml</descriptor>
+                            </descriptors>
+                            <tarLongFileMode>gnu</tarLongFileMode>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -185,8 +185,8 @@ public class Game {
         if (myAvatar.getY() > backgroundImage.getHeight() - myAvatar.getHeight()) {
             myAvatar.setY(backgroundImage.getHeight() - myAvatar.getHeight());
         }
-        if (myAvatar.getY() < 0) {
-            myAvatar.setY(0);
+        if (myAvatar.getY() < 20) {
+            myAvatar.setY(20);
         }
     }
 

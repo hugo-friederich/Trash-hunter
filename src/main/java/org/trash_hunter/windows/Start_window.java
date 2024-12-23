@@ -39,6 +39,7 @@ public class Start_window extends JFrame implements WindowListener {
 
         diverDAO = new DiverDAO(DatabaseConnection.getConnection());
         setContentPane(startPanel);
+        startPanel.getRootPane().setDefaultButton(validateButton);
         setTitle("Trash Hunter");
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setSize(350, 400);                     //taille de la fenêtre

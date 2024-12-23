@@ -5,8 +5,11 @@ import org.trash_hunter.user.Avatar;
 import org.trash_hunter.user.DiverDB;
 import org.trash_hunter.user.DiverDAO;
 import org.trash_hunter.util.DatabaseConnection;
+import org.trash_hunter.util.SoundManager;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.FloatControl;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -45,6 +48,7 @@ public class Game {
             initTrashes();                                                  // Initialise les déchets pour le premier joueur
         }
         initLocalTrashes();                                                 // Initialise les déchets locaux
+        playAmbientMusic();                                                 // Lance la musique d'ambiance
     }
 
     public Game() throws SQLException{
@@ -108,6 +112,7 @@ public class Game {
             if (isColliding(trash, myAvatar) && trash.getVisible() == 1) {
                 myAvatar.setScore(myAvatar.getScore() + trash.getNbPoints());       // Mise à jour du score
                 myAvatar.updateScoreHistory();                                      // Mise à jour de l'historique des scores
+                makeTrashSound();
 
                 trash.setVisible(0);
                 trash.setCreationTime(System.currentTimeMillis());
@@ -256,6 +261,39 @@ public class Game {
             return (randomNumber == 1) ? new OilContainer(index) : new Boat(index);
         }
     }
+
+    //Sounds Effects
+    public void makeTrashSound() {
+        new Thread(new Runnable() {       // le nouveau Thread permet de produire le son en arrière plan en ne stoppant l'exécution
+            @Override
+            public void run() {
+                try {
+                    AudioFormat format = SoundManager.readWavFile("src/main/resources/sounds/trash_sound.wav");
+                    double[] echantillons = SoundManager.readWAVFileSample("src/main/resources/sounds/trash_sound.wav");
+                    SoundManager.playSound(echantillons, format.getSampleRate(),-15.0f);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    public void playAmbientMusic(){
+        new Thread(new Runnable() {       // le nouveau Thread permet de produire le son en arrière plan en ne stoppant l'exécution
+            @Override
+            public void run() {
+                try {
+                    AudioFormat format = SoundManager.readWavFile("src/main/resources/sounds/Ambient_music.wav");
+
+                    double[] echantillons = SoundManager.readWAVFileSample("src/main/resources/sounds/Ambient_music.wav");
+                    SoundManager.playSound(echantillons, format.getSampleRate(),-20.0f);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
 
     // Getters et Setters
     public Avatar getMyAvatar() {

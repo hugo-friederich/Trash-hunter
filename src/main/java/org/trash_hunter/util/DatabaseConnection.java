@@ -27,5 +27,7 @@ public class DatabaseConnection {
     public static void close() {
         dataSource.close();
     }
+    public static void initializeTables(){
+    }
 
 }

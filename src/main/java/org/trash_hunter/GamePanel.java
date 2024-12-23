@@ -19,6 +19,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     private Game game;
     private Timer timer;
     private JDialog diversDialog;
+    private boolean isRPressed = false; //
 
     public GamePanel(String pseudo, String color) throws SQLException{
         //init de la fenetre
@@ -66,7 +67,7 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
             textArea.setLineWrap(true);
             textArea.setWrapStyleWord(true);
 
-            // Créer le JDialog
+            // Création de la fenêtre de dialogue
             diversDialog = new JDialog(this, "Joueurs actuels", Dialog.ModalityType.APPLICATION_MODAL);
             diversDialog.setSize(600, 300);
             diversDialog.setLocationRelativeTo(this);
@@ -82,15 +83,16 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
 
     @Override
     public void keyPressed (KeyEvent evt) {
-        if (evt.getKeyCode() == 87 ||evt.getKeyCode() == KeyEvent.VK_UP) {
+        if (evt.getKeyCode() == KeyEvent.VK_Z ||evt.getKeyCode() == KeyEvent.VK_UP) {
             this.game.getMyAvatar().setUp(true);
-        } else if (evt.getKeyCode() == 83 || evt.getKeyCode()== KeyEvent.VK_DOWN) {
+        } else if (evt.getKeyCode() == KeyEvent.VK_S || evt.getKeyCode()== KeyEvent.VK_DOWN) {
             this.game.getMyAvatar().setDown(true);
-        } else if (evt.getKeyCode() == 65|| evt.getKeyCode()== KeyEvent.VK_LEFT) {
+        } else if (evt.getKeyCode() == KeyEvent.VK_Q|| evt.getKeyCode()== KeyEvent.VK_LEFT) {
             this.game.getMyAvatar().setLeft(true);
-        } else if (evt.getKeyCode() == 68 || evt.getKeyCode()== KeyEvent.VK_RIGHT) {
+        } else if (evt.getKeyCode() == KeyEvent.VK_D || evt.getKeyCode()== KeyEvent.VK_RIGHT) {
             this.game.getMyAvatar().setRight(true);
-        } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {  // Ajout de la touche Échap
+        }
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {  // Ajout de la touche Échap
             int choix = JOptionPane.showConfirmDialog(this,
                     "Voulez-vous vraiment quitter le jeu ?",
                     "Quitter le jeu",
@@ -106,22 +108,27 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
             }
 
         }
-        else if (evt.getKeyCode() == KeyEvent.VK_R){    //Affiche le tableau des joueurs actuels lors de l'appui sur R
-            showDiversTable();
+        if (evt.getKeyCode() == KeyEvent.VK_R) {    //Affiche le tableau des joueurs actuels lors de l'appui sur R
+            if (!isRPressed) { // Si R n'est pas déjà enfoncé
+                isRPressed = true; // R est enfoncé
+                showDiversTable(); // Afficher le tableau des scores actuel
+            }
         }
     }
 
     @Override
     public void keyReleased(KeyEvent evt) {
-        if (evt.getKeyCode() == 87 ||evt.getKeyCode() == KeyEvent.VK_UP) {
+        if (evt.getKeyCode() == KeyEvent.VK_Z ||evt.getKeyCode() == KeyEvent.VK_UP) {
             this.game.getMyAvatar().setUp(false);
-        } else if (evt.getKeyCode() == 83 || evt.getKeyCode()== KeyEvent.VK_DOWN) {
+        } else if (evt.getKeyCode() == KeyEvent.VK_S || evt.getKeyCode()== KeyEvent.VK_DOWN) {
             this.game.getMyAvatar().setDown(false);
-        } else if (evt.getKeyCode() == 65|| evt.getKeyCode()== KeyEvent.VK_LEFT) {
+        } else if (evt.getKeyCode() == KeyEvent.VK_Q || evt.getKeyCode()== KeyEvent.VK_LEFT) {
             this.game.getMyAvatar().setLeft(false);
-        } else if (evt.getKeyCode() == 68 || evt.getKeyCode()== KeyEvent.VK_RIGHT) {
+        } else if (evt.getKeyCode() == KeyEvent.VK_D || evt.getKeyCode()== KeyEvent.VK_RIGHT) {
             this.game.getMyAvatar().setRight(false);
-        } else if (evt.getKeyCode() == KeyEvent.VK_R){
+        }
+        if (evt.getKeyCode() == KeyEvent.VK_R) {
+            isRPressed = false; // Marquez R comme relâché
             diversDialog.dispose();
         }
     }

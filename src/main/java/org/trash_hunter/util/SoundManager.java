@@ -18,27 +18,36 @@ public class SoundManager {
             volumeControl.setValue(volume); // mis au volume voulu
 
             clip.start();
-            clip.drain();
             Thread.sleep(clip.getMicrosecondLength() / 1000);
         } catch (LineUnavailableException | InterruptedException | IOException ex) {
             Logger.getLogger(SoundManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public static AudioFormat readWavFile(String nomDuFichier) {
+    public static AudioFormat readWavFile(InputStream fichier) {
         AudioInputStream stream = null;
         try {
-            stream = AudioSystem.getAudioInputStream(new File(nomDuFichier));
+            stream = AudioSystem.getAudioInputStream(fichier);
+            return stream.getFormat();
         } catch (UnsupportedAudioFileException | IOException ex) {
             Logger.getLogger(SoundManager.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } finally {
+            try {
+                if(fichier != null){
+                    fichier.close();
+                }
+            } catch (IOException e) {
+                Logger.getLogger(SoundManager.class.getName()).log(Level.SEVERE, null, e);
+            }
         }
-        return stream.getFormat();
+
     }
-    public static double[] readWAVFileSample(String nomDuFichier) {
+    public static double[] readWAVFileSample(InputStream fichier) {
         byte[] byteArr = new byte[0];
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            AudioInputStream stream = AudioSystem.getAudioInputStream(new File(nomDuFichier));
+            AudioInputStream stream = AudioSystem.getAudioInputStream(fichier);
 
             if (stream.getFormat().getChannels()!=1) {
                 throw new UnsupportedAudioFileException("Le fichier audio ne doit comporter qu'un seul canal.");
@@ -57,6 +66,12 @@ public class SoundManager {
             byteArr = out.toByteArray();
         } catch (UnsupportedAudioFileException | IOException ex) {
             Logger.getLogger(SoundManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fichier.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         short[] shortArr = new short[byteArr.length/2]; // new a supprimer !!!

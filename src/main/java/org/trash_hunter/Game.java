@@ -267,13 +267,10 @@ public class Game {
         new Thread(new Runnable() {       // le nouveau Thread permet de produire le son en arrière plan en ne stoppant l'exécution
             @Override
             public void run() {
-                try {
-                    AudioFormat format = SoundManager.readWavFile("src/main/resources/sounds/trash_sound.wav");
-                    double[] echantillons = SoundManager.readWAVFileSample("src/main/resources/sounds/trash_sound.wav");
-                    SoundManager.playSound(echantillons, format.getSampleRate(),-15.0f);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                AudioFormat format = SoundManager.readWavFile(ClassLoader.getSystemResourceAsStream("sounds/trash_sound.wav"));
+                double[] echantillons = SoundManager.readWAVFileSample(ClassLoader.getSystemResourceAsStream("sounds/trash_sound.wav"));
+                assert format != null;
+                SoundManager.playSound(echantillons, format.getSampleRate(),-15.0f);
             }
         }).start();
     }
@@ -282,14 +279,10 @@ public class Game {
         new Thread(new Runnable() {       // le nouveau Thread permet de produire le son en arrière plan en ne stoppant l'exécution
             @Override
             public void run() {
-                try {
-                    AudioFormat format = SoundManager.readWavFile("src/main/resources/sounds/Ambient_music.wav");
-
-                    double[] echantillons = SoundManager.readWAVFileSample("src/main/resources/sounds/Ambient_music.wav");
-                    SoundManager.playSound(echantillons, format.getSampleRate(),-20.0f);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                AudioFormat format = SoundManager.readWavFile(ClassLoader.getSystemResourceAsStream("sounds/Ambient_music.wav"));
+                double[] echantillons = SoundManager.readWAVFileSample(ClassLoader.getSystemResourceAsStream("sounds/Ambient_music.wav"));
+                assert format != null;
+                SoundManager.playSound(echantillons, format.getSampleRate(),-15.0f);
             }
         }).start();
     }

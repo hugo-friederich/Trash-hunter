@@ -267,8 +267,8 @@ public class Game {
         new Thread(new Runnable() {       // le nouveau Thread permet de produire le son en arrière plan en ne stoppant l'exécution
             @Override
             public void run() {
-                AudioFormat format = SoundManager.readWavFile(ClassLoader.getSystemResourceAsStream("sounds/trash_sound.wav"));
-                double[] echantillons = SoundManager.readWAVFileSample(ClassLoader.getSystemResourceAsStream("sounds/trash_sound.wav"));
+                AudioFormat format = SoundManager.readWavFile("sounds/trash_sound.wav");
+                double[] echantillons = SoundManager.readWAVFileSample("sounds/trash_sound.wav");
                 assert format != null;
                 SoundManager.playSound(echantillons, format.getSampleRate(),-15.0f);
             }
@@ -279,8 +279,8 @@ public class Game {
         new Thread(new Runnable() {       // le nouveau Thread permet de produire le son en arrière plan en ne stoppant l'exécution
             @Override
             public void run() {
-                AudioFormat format = SoundManager.readWavFile(ClassLoader.getSystemResourceAsStream("sounds/Ambient_music.wav"));
-                double[] echantillons = SoundManager.readWAVFileSample(ClassLoader.getSystemResourceAsStream("sounds/Ambient_music.wav"));
+                AudioFormat format = SoundManager.readWavFile("sounds/Ambient_music.wav");
+                double[] echantillons = SoundManager.readWAVFileSample("sounds/Ambient_music.wav");
                 assert format != null;
                 SoundManager.playSound(echantillons, format.getSampleRate(),-15.0f);
             }

@@ -2,12 +2,25 @@ package org.trash_hunter.util;
 
 import javax.sound.sampled.*;
 import java.io.*;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SoundManager {
+
+    private static Logger LOGGER =Logger.getLogger(SoundManager.class.getName());
+    private static InputStream getResource(String resource) {
+        InputStream in;
+        try {
+            URL url =SoundManager.class.getClassLoader().getResource(resource);
+            LOGGER.info(url.toString());
+            return url.openStream();
+        } catch(IOException ex) {
+            return ClassLoader.getSystemResourceAsStream(resource);
+        }
+    }
 
     public static void playSound(double[] echantillons, double frequenceEchantillonnage,float volume) {
         try {
@@ -20,34 +33,37 @@ public class SoundManager {
             clip.start();
             Thread.sleep(clip.getMicrosecondLength() / 1000);
         } catch (LineUnavailableException | InterruptedException | IOException ex) {
-            Logger.getLogger(SoundManager.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
 
-    public static AudioFormat readWavFile(InputStream fichier) {
+    public static AudioFormat readWavFile(String fichier) {
         AudioInputStream stream = null;
         try {
-            stream = AudioSystem.getAudioInputStream(fichier);
+            InputStream bufferedIn = new BufferedInputStream(getResource(fichier));
+            stream = AudioSystem.getAudioInputStream(bufferedIn);
             return stream.getFormat();
         } catch (UnsupportedAudioFileException | IOException ex) {
             Logger.getLogger(SoundManager.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         } finally {
             try {
-                if(fichier != null){
-                    fichier.close();
+                if(stream != null){
+                    stream.close();
                 }
             } catch (IOException e) {
-                Logger.getLogger(SoundManager.class.getName()).log(Level.SEVERE, null, e);
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
             }
         }
 
     }
-    public static double[] readWAVFileSample(InputStream fichier) {
+    public static double[] readWAVFileSample(String fichier) {
         byte[] byteArr = new byte[0];
+        AudioInputStream stream = null;
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            AudioInputStream stream = AudioSystem.getAudioInputStream(fichier);
+            InputStream bufferedIn = new BufferedInputStream(getResource(fichier));
+            stream = AudioSystem.getAudioInputStream(bufferedIn);
 
             if (stream.getFormat().getChannels()!=1) {
                 throw new UnsupportedAudioFileException("Le fichier audio ne doit comporter qu'un seul canal.");
@@ -65,10 +81,11 @@ public class SoundManager {
             out.flush();
             byteArr = out.toByteArray();
         } catch (UnsupportedAudioFileException | IOException ex) {
-            Logger.getLogger(SoundManager.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
         } finally {
             try {
-                fichier.close();
+                if (stream != null)
+                stream.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

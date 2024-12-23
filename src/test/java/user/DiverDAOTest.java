@@ -8,7 +8,7 @@ import org.trash_hunter.util.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class DiverDBDAOTest {
+public class DiverDAOTest {
     private Connection connection;
     private void initializeDatabaseConnection() throws SQLException {
         connection = DatabaseConnection.getConnection();

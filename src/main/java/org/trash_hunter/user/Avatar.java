@@ -15,6 +15,7 @@ import java.util.Objects;
 public class Avatar implements DataTransferObject {
     private long id;                                                    //identifiant unique
     private BufferedImage sprite;                                       //image du plongeur
+    public BufferedImage left1,left2,left3,left4,right1,right2,right3,right4;  //images du plongeur animé
     private float x, y;                                                 //coordonées
     private String pseudo;                                              //pseudo plongueur
     private int score;                                                  //score actuel
@@ -28,8 +29,15 @@ public class Avatar implements DataTransferObject {
     private String color;                                               //couleur sélectionné
     private Date creation_date;                                         //date de création
     private Time game_time;                                             //horaire création
+    private String direction;
 
     public Avatar(String pseudo, String color) {
+
+        setDefaultValues();
+        affectColorToAvatar(color);
+    }
+
+    public void setDefaultValues(){
         this.id = 0;       // l'identifiant est auto-incrémenté
         this.x = 720;      // coordonées du "spawn" = (720,390)
         this.y = 390;
@@ -46,15 +54,15 @@ public class Avatar implements DataTransferObject {
         this.right = false;
         this.up = false;
         this.down = false;
-        affectColorToAvatar(this.color);
         this.width=50;
         this.height=35;
+        direction ="left";
     }
 
-    //Définition du constructeur par défaut (pseudo : Bob, color : blue)
-    public Avatar() {
-        this("Bob","blue");
-    }
+    /**
+     * Permet de convertir un Avatar en Diver et ainsi l'ajouter à la base de donnée
+     * @return
+     */
     public DiverDB convertAvatarToDiver(){
         DiverDB diverDB = new DiverDB();
         diverDB.setColor(this.color);
@@ -69,11 +77,38 @@ public class Avatar implements DataTransferObject {
         diverDB.setOxygen(this.oxygen);
         return(diverDB);
     }
+    public void getAnimatedDiverSprites(){
+        try{
+            left1= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("/animatedDiver/left1")));
+            left2= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("/animatedDiver/left2")));
+            left3= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("/animatedDiver/left3")));
+            left4= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("/animatedDiver/left4")));
+            right1= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("/animatedDiver/right1")));
+            right2= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("/animatedDiver/right2")));
+            right3= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("/animatedDiver/righ3")));
+            right4= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("/animatedDiver/right4")));
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
     public void update(){
-        if (this.left) {x -= this.speed;this.oxygen-=0.5;}
-        if (this.right) {x += this.speed;this.oxygen-=0.5;}
-        if (this.down) {y += this.speed;this.oxygen-=0.5;}
-        if (this.up) {y -= this.speed;this.oxygen-=0.5;}
+        if (this.left) {
+            x -= this.speed;this.oxygen-=0.5;
+            direction = "left";
+        }
+        if (this.right) {
+            x += this.speed;this.oxygen-=0.5;
+            direction = "right";
+        }
+        if (this.down) {
+            y += this.speed;this.oxygen-=0.5;
+            direction = "down";
+        }
+        if (this.up) {
+            y -= this.speed;this.oxygen-=0.5;
+            direction = "up";
+        }
         if (this.y>=0 && this.y<10){
             while(oxygen <= 100){
                 oxygen+=10;
@@ -81,7 +116,7 @@ public class Avatar implements DataTransferObject {
         }
     }
     public void rendering (Graphics2D contexte){
-        contexte.drawImage(this.sprite,(int)x,(int)y,null);
+        contexte.drawImage(this.sprite, (int) x, (int) y, null);
         drawOxygenBar(contexte);
     }
     public void updateScoreHistory(){
@@ -93,23 +128,34 @@ public class Avatar implements DataTransferObject {
         }
     }
     public void affectColorToAvatar(String colorSelected){
-        String coloredSprite = "";
-        if (colorSelected.equals("Blue")){
-           coloredSprite="plongeur_bleu.png";
-        }
-        if (colorSelected.equals("Red")){
-            coloredSprite="plongeur_rouge.png";
-        }
-        if (colorSelected.equals("Yellow")){
-            coloredSprite="plongeur_jaune.png";
-        }
-        if (colorSelected.equals("Green")){
-            coloredSprite="plongeur_vert.png";
-        }
-        try {
-            this.sprite = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(coloredSprite)));
-        } catch (IOException e) {
-            throw new RuntimeException("Erreur lors du chargement de l'image : " + e.getMessage(), e);
+        //Si la sélection est une couleur
+        if(!colorSelected.equals("Animated")) {
+            String coloredSprite = "";
+            if (colorSelected.equals("Blue")) {
+                coloredSprite = "plongeur_bleu.png";
+            }
+            if (colorSelected.equals("Red")) {
+                coloredSprite = "plongeur_rouge.png";
+            }
+            if (colorSelected.equals("Yellow")) {
+                coloredSprite = "plongeur_jaune.png";
+            }
+            if (colorSelected.equals("Green")) {
+                coloredSprite = "plongeur_vert.png";
+            }
+            try {
+                this.sprite = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(coloredSprite)));
+            } catch (IOException e) {
+                throw new RuntimeException("Erreur lors du chargement de l'image : " + e.getMessage(), e);
+            }
+        }else{
+            //Si l'utilisateur choisis la version animé
+            switch (direction){
+                case ("left"):
+                    sprite = left1;
+                case("right"):
+                    sprite = right1;
+            }
         }
     }
     private void drawOxygenBar(Graphics2D contexte) {

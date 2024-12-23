@@ -38,8 +38,8 @@ public class DiverDB implements DataTransferObject {
      */
     public Avatar convertDiverToAvatar() {
         Avatar avatar = new Avatar(pseudo, color);
-        avatar.setColor(this.color);
-        avatar.setPseudo(this.pseudo);
+        avatar.setPseudo(pseudo);
+        avatar.setColor(color);
         avatar.setScore(this.score);
         avatar.setId(this.id);
         avatar.setY(this.y);

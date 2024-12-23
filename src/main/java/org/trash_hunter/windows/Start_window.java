@@ -182,6 +182,7 @@ public class Start_window extends JFrame implements WindowListener {
         defaultComboBoxModel1.addElement("Blue");
         defaultComboBoxModel1.addElement("Green");
         defaultComboBoxModel1.addElement("Yellow");
+        defaultComboBoxModel1.addElement("Animated");
         comboBox1.setModel(defaultComboBoxModel1);
         startPanel.add(comboBox1, new GridConstraints(2, 1, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         exitButton = new JButton();

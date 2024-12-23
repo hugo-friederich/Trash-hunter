@@ -69,9 +69,9 @@ public class Game {
         contexte.drawString("Score : " + this.myAvatar.getScore(), 10, 20);     // Affiche le score
         contexte.drawString("Oxygen : "+ this.myAvatar.getOxygen(), 10,40);     // Afficher oxygen
 
-        // Rendu des avatars des autres plongeurs
-        for (DiverDB otherDivers : allDiverDB) {
-            Avatar avatar = otherDivers.convertDiverToAvatar();
+        // Rendu des plongeurs
+        for (DiverDB allDivers : allDiverDB) {
+            Avatar avatar = allDivers.convertDiverToAvatar();
             avatar.rendering(contexte);
         }
 

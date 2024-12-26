@@ -270,7 +270,7 @@ public class Game {
                 AudioFormat format = SoundManager.readWavFile("sounds/trash_sound.wav");
                 double[] echantillons = SoundManager.readWAVFileSample("sounds/trash_sound.wav");
                 assert format != null;
-                SoundManager.playSound(echantillons, format.getSampleRate(),-15.0f);
+                SoundManager.playSound(echantillons, format.getSampleRate(),-25.0f);
             }
         }).start();
     }

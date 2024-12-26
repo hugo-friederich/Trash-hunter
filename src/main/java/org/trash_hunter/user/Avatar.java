@@ -9,61 +9,74 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-
 public class Avatar implements DataTransferObject {
-    private long id;                                                    //identifiant unique
-    private BufferedImage sprite;                                       //image du plongeur
-    public BufferedImage left1,left2,left3,left4,right1,right2,right3,right4;  //images du plongeur animé
-    private float x, y;                                                 //coordonées
-    private String pseudo;                                              //pseudo plongueur
-    private int score;                                                  //score actuel
-    private ArrayList<Integer> scoreHistory = new ArrayList<>();        //historique des scores
-    private int score_max;                                              //score maximum
-    private int speed;                                                  //vitesse de déplacement (px/s)
-    private int life;                                                   //vie du plongeur
-    private double oxygen;                                              //oxygen du plongeur
-    private int width, height;                                          //largeur et hauteur image
-    private boolean left, right, up, down;                              //données de déplacement
-    private String color;                                               //couleur sélectionné
-    private Date creation_date;                                         //date de création
-    private Time game_time;                                             //horaire création
-    private String direction;
+    private long id;                                                    // Identifiant unique
+    private BufferedImage sprite;                                       // représentation du plongeur
+    private BufferedImage leftFrame1, leftFrame2, leftFrame3, leftFrame4, rightFrame1, rightFrame2, rightFrame3, rightFrame4;  // Images du plongeur animé
+    public int spriteCounter = 0;                                       // Permet de régler la vitesse d'animation
+    public int spriteNum = 1;                                           // Numéro du sprite
+    private float x, y;                                                 // Coordonnées
+    private String pseudo;                                              // Pseudo plongeur
+    private int score;                                                  // Score actuel
+    private List<Integer> scoreHistory = new ArrayList<>();            // Historique des scores
+    private int score_max;                                              // Score maximum
+    private int speed;                                                  // Vitesse de déplacement (px/s)
+    private int life;                                                   // Vie du plongeur
+    private double oxygen;                                              // Oxygène du plongeur
+    private int width, height;                                          // Largeur et hauteur image
+    private boolean left, right, up, down;                              // Données de déplacement
+    private String color;                                               // Couleur sélectionnée
+    private Date creation_date;                                         // Date de création
+    private Time game_time;                                             // Horaire création
+    //private Direction direction;                                        // Direction actuelle
 
     public Avatar(String pseudo, String color) {
-
+        this.pseudo = pseudo;
+        this.color = color;
         setDefaultValues();
+        loadSprites();
         affectColorToAvatar(color);
     }
 
-    public void setDefaultValues(){
-        this.id = 0;       // l'identifiant est auto-incrémenté
-        this.x = 720;      // coordonées du "spawn" = (720,390)
+    private void setDefaultValues() {
+        this.id = 0;       // L'identifiant est auto-incrémenté
+        this.x = 720;      // Coordonnées du "spawn" = (720,390)
         this.y = 390;
         this.speed = 15;
-        this.life=3;       //nombre de vie au départ
-        this.oxygen=100;   //% d'oxygen
-        this.pseudo = pseudo;
-        score = 0;
-        score_max = 0;
-        this.color = color;
+        this.life = 3;     // Nombre de vie au départ
+        this.oxygen = 100; // % d'oxygène
+        this.score = 0;
+        this.score_max = 0;
         this.creation_date = new Date(0);
         this.game_time = new Time(0);
         this.left = false;
         this.right = false;
         this.up = false;
         this.down = false;
-        this.width=50;
-        this.height=35;
-        direction ="left";
+        this.width = 50;
+        this.height = 35;
+        //this.direction = Direction.RIGHT; // Utilisation de l'énumération
     }
 
-    /**
-     * Permet de convertir un Avatar en Diver et ainsi l'ajouter à la base de donnée
-     * @return
-     */
-    public DiverDB convertAvatarToDiver(){
+    public void loadSprites() {
+        try {
+            leftFrame1 = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("animatedDiver/left1.png")));
+            leftFrame2 = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("animatedDiver/left2.png")));
+            leftFrame3 = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("animatedDiver/left3.png")));
+            leftFrame4 = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("animatedDiver/left4.png")));
+            rightFrame1 = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("animatedDiver/right1.png")));
+            rightFrame2 = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("animatedDiver/right2.png")));
+            rightFrame3 = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("animatedDiver/right3.png")));
+            rightFrame4 = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("animatedDiver/right4.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public DiverDB convertAvatarToDiver() {
         DiverDB diverDB = new DiverDB();
         diverDB.setColor(this.color);
         diverDB.setPseudo(this.pseudo);
@@ -75,107 +88,135 @@ public class Avatar implements DataTransferObject {
         diverDB.setGame_time(this.game_time);
         diverDB.setCreation_date(this.creation_date);
         diverDB.setOxygen(this.oxygen);
-        return(diverDB);
+        return diverDB;
     }
-    public void getAnimatedDiverSprites(){
-        try{
-            left1= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("/animatedDiver/left1")));
-            left2= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("/animatedDiver/left2")));
-            left3= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("/animatedDiver/left3")));
-            left4= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("/animatedDiver/left4")));
-            right1= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("/animatedDiver/right1")));
-            right2= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("/animatedDiver/right2")));
-            right3= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("/animatedDiver/righ3")));
-            right4= ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("/animatedDiver/right4")));
 
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-    }
-    public void update(){
-        if (this.left) {
-            x -= this.speed;this.oxygen-=0.5;
-            direction = "left";
-        }
-        if (this.right) {
-            x += this.speed;this.oxygen-=0.5;
-            direction = "right";
-        }
-        if (this.down) {
-            y += this.speed;this.oxygen-=0.5;
-            direction = "down";
-        }
-        if (this.up) {
-            y -= this.speed;this.oxygen-=0.5;
-            direction = "up";
-        }
-        if (this.y>=0 && this.y<10){
-            while(oxygen <= 100){
-                oxygen+=10;
+    public void update() {
+        if (left||right||up||down) {
+            if (this.left) {
+                sprite=leftFrame1;
+                x -= this.speed;
+                oxygen = Math.max(0, oxygen - 0.5); // Assurez-vous que l'oxygène ne descend pas en dessous de 0
+                //direction = Direction.LEFT;
+            }
+            if (this.right) {
+                sprite=rightFrame1;
+                x += this.speed;
+                oxygen = Math.max(0, oxygen - 0.5);
+                //direction = Direction.RIGHT;
+            }
+            if (this.down) {
+                y += this.speed;
+                oxygen = Math.max(0, oxygen - 0.5);
+                //direction = Direction.DOWN;
+            }
+            if (this.up) {
+                y -= this.speed;
+                oxygen = Math.max(0, oxygen - 0.5);
+                //direction = Direction.UP;
+            }
+            if (this.y >= 0 && this.y < 10) {
+                oxygen = Math.min(100, oxygen + 10); // Assurez-vous que l'oxygène ne dépasse pas 100
+            }
+            spriteCounter++;
+            if (spriteCounter > 10) {
+                if (spriteNum == 1) {
+                    spriteNum = 2;
+                } else if (spriteNum == 2) {
+                    spriteNum = 3;
+                } else if (spriteNum == 3) {
+                    spriteNum = 4;
+                } else if (spriteNum == 4) {
+                    spriteNum = 1;
+                }
+                spriteCounter = 0;
             }
         }
     }
-    public void rendering (Graphics2D contexte){
+    /*
+    private void updateSprite(){
+            Boolean direction
+            switch (direction) {
+                case LEFT:
+                    if(spriteNum==1) {
+                        sprite = leftFrame1;
+                    }
+                    if(spriteNum==2){
+                        sprite = leftFrame2;
+                    }
+                    if(spriteNum==3){
+                        sprite = leftFrame3;
+                    }
+                    if(spriteNum==4){
+                        sprite = leftFrame4;
+                    }
+                    break;
+                case RIGHT:
+                    if(spriteNum==1) {
+                        sprite = rightFrame1;
+                    }
+                    if(spriteNum==2){
+                        sprite = rightFrame2;
+                    }
+                    if(spriteNum==3){
+                        sprite = rightFrame3;
+                    }
+                    if(spriteNum==4){
+                        sprite = rightFrame4;
+                    }
+                    break;
+                case UP:
+                    break;
+                case DOWN:
+                    break;
+            }
+
+    }
+     */
+
+    public void rendering(Graphics2D contexte) {
         contexte.drawImage(this.sprite, (int) x, (int) y, null);
         drawOxygenBar(contexte);
     }
-    public void updateScoreHistory(){
-        if (score> score_max){
+
+    public void updateScoreHistory() {
+        if (score >score_max ) {
             scoreHistory.add(score);
         }
-        if (scoreHistory.size()>15){
-            scoreHistory.removeFirst();
+        if (scoreHistory.size() > 15) {
+            scoreHistory.remove(0); // Utilisez remove(0) pour retirer le premier élément
         }
     }
-    public void affectColorToAvatar(String colorSelected){
-        //Si la sélection est une couleur
-        if(!colorSelected.equals("Animated")) {
-            String coloredSprite = "";
-            if (colorSelected.equals("Blue")) {
-                coloredSprite = "plongeur_bleu.png";
-            }
-            if (colorSelected.equals("Red")) {
-                coloredSprite = "plongeur_rouge.png";
-            }
-            if (colorSelected.equals("Yellow")) {
-                coloredSprite = "plongeur_jaune.png";
-            }
-            if (colorSelected.equals("Green")) {
-                coloredSprite = "plongeur_vert.png";
-            }
+
+    public void affectColorToAvatar(String colorSelected) {
+        if (!colorSelected.equals("Animated")) {
+            String coloredSprite = switch (colorSelected) {
+                case "Blue" -> "plongeur_bleu.png";
+                case "Red" -> "plongeur_rouge.png";
+                case "Yellow" -> "plongeur_jaune.png";
+                case "Green" -> "plongeur_vert.png";
+                default -> null;
+            };
             try {
                 this.sprite = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(coloredSprite)));
             } catch (IOException e) {
                 throw new RuntimeException("Erreur lors du chargement de l'image : " + e.getMessage(), e);
             }
-        }else{
-            //Si l'utilisateur choisis la version animé
-            switch (direction){
-                case ("left"):
-                    sprite = left1;
-                case("right"):
-                    sprite = right1;
-            }
+        } else {
+            this.sprite = rightFrame1; // Par défaut, utilisez right1 pour l'animation
         }
     }
-    private void drawOxygenBar(Graphics2D contexte) {
-        // Position de la barre d'oxygène
-        int barX = (int)x;
-        int barY = (int)y - 10;
 
-        // Dimensions de la barre d'oxygène
+    private void drawOxygenBar(Graphics2D contexte) {
+        int barX = (int) x;
+        int barY = (int) y - 10;
         int barWidth = 40;
         int barHeight = 3;
+        int oxygenWidth = (int) (barWidth * (this.oxygen / 100.0));
 
-        // Calculer la largeur de la barre d'oxygène
-        int oxygenWidth = (int)(barWidth * (this.oxygen/100.0));
-
-        // Dessiner le fond de la barre d'oxygène
         contexte.setColor(Color.GRAY);
         contexte.fillRect(barX, barY, barWidth, barHeight);
-
-        // Dessiner la barre d'oxygène
-        contexte.setColor(Color.GREEN); // Couleur de la barre d'oxygène
+        contexte.setColor(Color.GREEN);
         contexte.fillRect(barX, barY, oxygenWidth, barHeight);
     }
     public BufferedImage getSprite() {
@@ -218,18 +259,13 @@ public class Avatar implements DataTransferObject {
         this.score = score;
     }
 
-    public ArrayList<Integer> getScoreHistory() {
+    public List<Integer> getScoreHistory() {
         return scoreHistory;
     }
 
     public void setScoreHistory(ArrayList<Integer> scoreHistory) {
         this.scoreHistory = scoreHistory;
     }
-
-    public int getScore_max() {
-        return score_max;
-    }
-
     public void setScore_max(int score_max) {
         this.score_max = score_max;
     }

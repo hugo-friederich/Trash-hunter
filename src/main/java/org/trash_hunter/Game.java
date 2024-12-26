@@ -40,16 +40,14 @@ public class Game {
         loadBackgroundImage();                                              // Chargement de l'image de fond
         this.diverDB = new DiverDB(pseudo, color);                          // Création du plongeur
         this.diverDAO = new DiverDAO(DatabaseConnection.getConnection());   // Connection à la table Diver
-        this.diverDAO.create(diverDB);                                      // Enregistrement du plongeur dans la base de données
-        this.myAvatar = diverDB.convertDiverToAvatar();                     // Conversion du plongeur en avatar pour l'afficher
-
-        // Initialisation des déchets si c'est le premier joueur
         this.localTrashset = new ArrayList<>();
         this.trashDAO = new TrashDAO(DatabaseConnection.getConnection());
-        if (trashDAO.findAll().isEmpty()) {
+        if (diverDAO.findAll().isEmpty()) {
             initTrashes();                                                  // Initialise les déchets pour le premier joueur
         }
         initLocalTrashes();                                                 // Initialise les déchets locaux
+        this.diverDAO.create(diverDB);                                      // Enregistrement du plongeur dans la base de données
+        this.myAvatar = diverDB.convertDiverToAvatar();                     // Conversion du plongeur en avatar pour l'afficher
         playAmbientMusic();                                                 // Lance la musique d'ambiance
     }
 

@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Objet permettant d'avoir la représentation de chaques joueurs
+ */
 public class Avatar implements DataTransferObject {
     private long id;                                                    // Identifiant unique
     private BufferedImage sprite;                                       // représentation du plongeur
@@ -31,7 +34,7 @@ public class Avatar implements DataTransferObject {
     private String color;                                               // Couleur sélectionnée
     private Date creation_date;                                         // Date de création
     private Time game_time;                                             // Horaire création
-    //private Direction direction;                                        // Direction actuelle
+
 
     public Avatar(String pseudo, String color) {
         this.pseudo = pseudo;

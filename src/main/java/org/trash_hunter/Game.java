@@ -35,15 +35,16 @@ public class Game {
     private static final int NB_TRASHES = 30;                           // Nombre de déchets à initialiser
 
 
-    public Game(String pseudo, String color) throws SQLException{
+    public Game(String pseudo, String color) throws SQLException {
         this.randomNbr = new Random();
         loadBackgroundImage();                                              // Chargement de l'image de fond
         this.diverDB = new DiverDB(pseudo, color);                          // Création du plongeur
         this.diverDAO = new DiverDAO(DatabaseConnection.getConnection());   // Connection à la table Diver
         this.diverDAO.create(diverDB);                                      // Enregistrement du plongeur dans la base de données
-        this.myAvatar = diverDB.convertDiverToAvatar();                     // Conversion du plongeur en avatar
+        this.myAvatar = diverDB.convertDiverToAvatar();                     // Conversion du plongeur en avatar pour l'afficher
 
         // Initialisation des déchets si c'est le premier joueur
+        this.localTrashset = new ArrayList<>();
         this.trashDAO = new TrashDAO(DatabaseConnection.getConnection());
         if (trashDAO.findAll().isEmpty()) {
             initTrashes();                                                  // Initialise les déchets pour le premier joueur
@@ -52,7 +53,7 @@ public class Game {
         playAmbientMusic();                                                 // Lance la musique d'ambiance
     }
 
-    public Game() throws SQLException{
+    public Game() throws SQLException {
         this("Bob", "Blue");
     }
 
@@ -68,11 +69,11 @@ public class Game {
     public void rendering(Graphics2D contexte) {
         contexte.drawImage(this.backgroundImage, 0, 0, null);
         contexte.drawString("Score : " + this.myAvatar.getScore(), 10, 20);     // Affiche le score
-        contexte.drawString("Oxygen : "+ this.myAvatar.getOxygen(), 10,40);     // Afficher oxygen
+        contexte.drawString("Oxygen : " + this.myAvatar.getOxygen(), 10, 40);     // Afficher oxygen
 
         // Rendu des plongeurs
-        for (DiverDB allDivers : allDiverDB) {
-            Avatar avatar = allDivers.convertDiverToAvatar();
+        for (DiverDB diver : allDiverDB) {
+            Avatar avatar = diver.convertDiverToAvatar();
             avatar.rendering(contexte);
         }
 
@@ -97,14 +98,12 @@ public class Game {
 
     // Méthode pour vérifier si le jeu est terminé
     public boolean isFinished() {
-        boolean isFinished = false;
-        if ((int)this.myAvatar.getOxygen()==0){              // Le joueur perd quand il n'a plus doxygen
-            isFinished = true;
-            JOptionPane.showMessageDialog(null, "Vous vous êtes noyé !!","Game Over",JOptionPane.INFORMATION_MESSAGE);
+        if (this.myAvatar.getOxygen() <= 0) {              // Le joueur perd quand il n'a plus d'oxygène
+            JOptionPane.showMessageDialog(null, "Vous vous êtes noyé !!", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+            return true;
         }
-        return isFinished;
+        return false;
     }
-
 
     // Mise à jour après collision entre le plongeur et les déchets
     public void updateAfterCollisionDiverTrash() {
@@ -133,48 +132,24 @@ public class Game {
 
         // Mise à jour des coordonnées des déchets locaux
         for (TrashDB trash : dataBaseTrashset) {
-            long id = trash.getId();
-            double x = trash.getX();
-            double y = trash.getY();
-            int visible = trash.getVisible();
-
-            // Vérification si la position a changé
-            if (!(x == localTrashset.get((int) id).getX()) ||
-                    !(y == localTrashset.get((int) id).getY()) ||
-                    !(visible == localTrashset.get((int)id).getVisible())) {
-
-                Trash trashCopy = localTrashset.get((int) id);
-                trashCopy.setX(x); // Mise à jour de la position X
-                trashCopy.setY(y); // Mise à jour de la position Y
-                trashCopy.setVisible(visible); // Mise à jour de la visibilité
-                localTrashset.set((int) id, trashCopy); // Remplacement de l'ancien déchet par le nouveau
+            int id = (int) trash.getId();
+            Trash localTrash = localTrashset.get(id);
+            if (localTrash != null) {
+                localTrash.setX(trash.getX()); // Mise à jour de la position X
+                localTrash.setY(trash.getY()); // Mise à jour de la position Y
+                localTrash.setVisible(trash.getVisible()); // Mise à jour de la visibilité
             }
-        }
-    }
-    public void updateLocalTrashe(int id) {
-        TrashDB dataBaseTrash = trashDAO.findById(id);    // Récupération du déchet a mettre à jour
-        Trash localTrash = localTrashset.get(id);         // Récupération du déchet local
-
-        double x = dataBaseTrash.getX();
-        double y = dataBaseTrash.getY();
-        int visible = dataBaseTrash.getVisible();
-
-        if (!(x == localTrash.getX() || !(y == localTrash.getY()) || !(visible == localTrash.getVisible()))) {
-            Trash trashCopy = localTrashset.get((int) id);
-            trashCopy.setX(x); // Mise à jour de la position X
-            trashCopy.setY(y); // Mise à jour de la position Y
-            trashCopy.setVisible(visible); // Mise à jour de la visibilité
-            localTrashset.set((int) id, trashCopy); // Remplacement de l'ancien déchet par le nouveau
         }
     }
 
     // Vérification de la collision entre un déchet et l'avatar
     private boolean isColliding(Trash trash, Avatar avatar) {
         return trash.getX() < avatar.getX() + avatar.getWidth() &&
-               trash.getX() + trash.getWidth() > avatar.getX() &&
-               trash.getY() < avatar.getY() + avatar.getHeight() &&
-               trash.getY() + trash.getHeight() > avatar.getY();
+                trash.getX() + trash.getWidth() > avatar.getX() &&
+                trash.getY() < avatar.getY() + avatar.getHeight() &&
+                trash.getY() + trash.getHeight() > avatar.getY();
     }
+
     // Vérification des collisions avec les bords de l'écran
     public void checkCollisionWithPanel() {
         if (myAvatar.getX() > backgroundImage.getWidth() - myAvatar.getWidth()) {
@@ -186,17 +161,9 @@ public class Game {
         if (myAvatar.getY() > backgroundImage.getHeight() - myAvatar.getHeight()) {
             myAvatar.setY(backgroundImage.getHeight() - myAvatar.getHeight());
         }
-        if (myAvatar.getY() <25) {
+        if (myAvatar.getY() < 25) {
             myAvatar.setY(25);
         }
-    }
-
-    // Vérification de collision entre deux déchets
-    public static boolean checkCollisionBetweenTrashes(Trash trash1, Trash trash2) {
-        return (trash2.getX() <= trash1.getX() + trash1.getWidth() + 10 &&
-                trash1.getX() <= trash2.getX() + trash2.getWidth() + 10 &&
-                trash1.getY() <= trash2.getY() + trash2.getHeight() + 10 &&
-                trash2.getY() <= trash1.getY() + trash1.getHeight() + 10);
     }
 
     // Initialisation des déchets
@@ -228,26 +195,27 @@ public class Game {
         for (TrashDB trash : dataBaseTrashset) {
             double x = trash.getX();
             double y = trash.getY();
-            switch (trash.getName()){
-                case "Boat" :
-                    localTrashset.add(new Boat(x,y));
-                    break;
-                case "Bottle":
-                    localTrashset.add(new Bottle(x,y));
-                    break;
-                case "Can":
-                    localTrashset.add(new Can(x,y));
-                    break;
-                case "OilContainer":
-                    localTrashset.add(new OilContainer(x,y));
-                    break;
-                case "PlasticBag":
-                    localTrashset.add(new PlasticBag(x,y));
-                    break;
-                case "Tire":
-                    localTrashset.add(new Tire(x,y));
-                    break;
-            }
+            localTrashset.add(createTrashFromDB(trash, x, y));
+        }
+    }
+
+    // Création d'un déchet à partir des données de la base
+    private Trash createTrashFromDB(TrashDB trashDB, double x, double y) {
+        switch (trashDB.getName()) {
+            case "Boat":
+                return new Boat(x, y);
+            case "Bottle":
+                return new Bottle(x, y);
+            case "Can":
+                return new Can(x, y);
+            case "OilContainer":
+                return new OilContainer(x, y);
+            case "PlasticBag":
+                return new PlasticBag(x, y);
+            case "Tire":
+                return new Tire(x, y);
+            default:
+                return null; // Gérer les cas non prévus
         }
     }
 
@@ -263,31 +231,24 @@ public class Game {
         }
     }
 
-    //Sounds Effects
+    // Sons
     public void makeTrashSound() {
-        new Thread(new Runnable() {       // le nouveau Thread permet de produire le son en arrière plan en ne stoppant l'exécution
-            @Override
-            public void run() {
-                AudioFormat format = SoundManager.readWavFile("sounds/trash_sound.wav");
-                double[] echantillons = SoundManager.readWAVFileSample("sounds/trash_sound.wav");
-                assert format != null;
-                SoundManager.playSound(echantillons, format.getSampleRate(),-25.0f);
-            }
+        new Thread(() -> {
+            AudioFormat format = SoundManager.readWavFile("sounds/trash_sound.wav");
+            double[] echantillons = SoundManager.readWAVFileSample("sounds/trash_sound.wav");
+            assert format != null;
+            SoundManager.playSound(echantillons, format.getSampleRate(), -25.0f);
         }).start();
     }
 
-    public void playAmbientMusic(){
-        new Thread(new Runnable() {       // le nouveau Thread permet de produire le son en arrière plan en ne stoppant l'exécution
-            @Override
-            public void run() {
-                AudioFormat format = SoundManager.readWavFile("sounds/Ambient_music.wav");
-                double[] echantillons = SoundManager.readWAVFileSample("sounds/Ambient_music.wav");
-                assert format != null;
-                SoundManager.playSound(echantillons, format.getSampleRate(),-15.0f);
-            }
+    public void playAmbientMusic() {
+        new Thread(() -> {
+            AudioFormat format = SoundManager.readWavFile("sounds/Ambient_music.wav");
+            double[] echantillons = SoundManager.readWAVFileSample("sounds/Ambient_music.wav");
+            assert format != null;
+            SoundManager.playSound(echantillons, format.getSampleRate(), -15.0f);
         }).start();
     }
-
 
     // Getters et Setters
     public Avatar getMyAvatar() {

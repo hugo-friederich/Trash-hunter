@@ -5,6 +5,9 @@ import org.trash_hunter.util.DataTransferObject;
 import java.sql.Date;
 import java.sql.Time;
 
+/**
+ * Objet contenant les informations essentielles de chaques plongeurs
+ */
 public class DiverDB implements DataTransferObject {
     private long id;                                              //identifiant unique
     private float x, y;                                                 //coordonées

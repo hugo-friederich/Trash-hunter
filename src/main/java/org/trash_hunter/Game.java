@@ -27,7 +27,8 @@ public class Game {
     private final Avatar myAvatar;                                      // Avatar du joueur
     private DiverDB diverDB;                                            // Plongeur actuel
     private DiverDAO diverDAO;                                          // DAO pour les plongeurs
-    private List<DiverDB> allDiverDB;                                   // Liste de tous les plongeurs
+    private List<DiverDB> allDiverDB;                                   // Liste de tous les plongeurs de la BDD
+    private List<Avatar> allAvatar;                                     // Liste de tous les avatars des joueurs
     private TrashDAO trashDAO;                                          // DAO pour les déchets
     private List<Trash> localTrashset;                                  // Liste des déchets locaux
     private final Random randomNbr;                                     // Générateur de nombres aléatoires
@@ -185,8 +186,8 @@ public class Game {
         if (myAvatar.getY() > backgroundImage.getHeight() - myAvatar.getHeight()) {
             myAvatar.setY(backgroundImage.getHeight() - myAvatar.getHeight());
         }
-        if (myAvatar.getY() < 20) {
-            myAvatar.setY(20);
+        if (myAvatar.getY() <25) {
+            myAvatar.setY(25);
         }
     }
 

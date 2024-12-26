@@ -94,13 +94,13 @@ public class Avatar implements DataTransferObject {
     public void update() {
         if (left||right||up||down) {
             if (this.left) {
-                sprite=leftFrame1;
+                this.sprite=leftFrame1;
                 x -= this.speed;
-                oxygen = Math.max(0, oxygen - 0.5); // Assurez-vous que l'oxygène ne descend pas en dessous de 0
+                oxygen = Math.max(0, oxygen - 0.5);
                 //direction = Direction.LEFT;
             }
             if (this.right) {
-                sprite=rightFrame1;
+                this.sprite=rightFrame1;
                 x += this.speed;
                 oxygen = Math.max(0, oxygen - 0.5);
                 //direction = Direction.RIGHT;
@@ -115,9 +115,10 @@ public class Avatar implements DataTransferObject {
                 oxygen = Math.max(0, oxygen - 0.5);
                 //direction = Direction.UP;
             }
-            if (this.y >= 0 && this.y < 10) {
-                oxygen = Math.min(100, oxygen + 10); // Assurez-vous que l'oxygène ne dépasse pas 100
+            if (this.y >= 0 && this.y < 25) {
+                oxygen = Math.min(100, oxygen + 10);       //recharger l'oxygen jusqu'à 100%
             }
+            /*
             spriteCounter++;
             if (spriteCounter > 10) {
                 if (spriteNum == 1) {
@@ -131,6 +132,8 @@ public class Avatar implements DataTransferObject {
                 }
                 spriteCounter = 0;
             }
+
+             */
         }
     }
     /*

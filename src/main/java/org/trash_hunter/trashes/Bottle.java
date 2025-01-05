@@ -17,7 +17,7 @@ public class Bottle extends Trash {
         nbPoints= 1;
         name ="Bottle";
         respawnTime = 1;           //temps de réaparition quasi instantané
-        appearanceRangeYInf = 0;
+        appearanceRangeYInf = 80;
         appearanceRangeYSup= 700-this.height;
     }
     public Bottle (){this(0,0);}

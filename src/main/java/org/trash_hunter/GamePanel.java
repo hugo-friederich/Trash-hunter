@@ -137,8 +137,11 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     public void keyTyped(KeyEvent e) {}
 
     public void stopTheGame(){
-        this.game.getDiverDAO().delete(this.game.getDiver().getId());
-        this.game.getDiverDAO().addToBestScores(this.game.getDiver());
+        this.game.getDiverDAO().delete(this.game.getDiver().getId());       //supprime le joueur de la table diver local
+        this.game.getDiverDAO().addToBestScores(this.game.getDiver());      //ajoute le joueur à la table des meilleurs scores
+        if (this.game.getDiverDAO().findAll().isEmpty()){                   //efface les déchets pour le dernier joueur partant du serveur
+            this.game.getTrashDAO().clear();
+        }
         System.exit(1);
     }
 

@@ -1,25 +1,17 @@
-package org.trash_hunter.trashes;
+package org.trash_hunter.mobs;
 
 import org.trash_hunter.util.DataTransferObject;
 
-public class TrashDB implements DataTransferObject {
+public class MobDB implements DataTransferObject {
     protected long id;                          //identifiant unique au déchet
     private int visible;                        //déchet visible ou non
     private String name;
 
     protected double x,y;                       //coordonnées
-    public TrashDB(String name){
-        this.name=name;
-        this.x=0;
-        this.y=0;
-        this.visible=1;
+    public MobDB(){
+        this.id=0;
     }
-    public TrashDB(){
-        this("trash");
-    }
-    public void setVisible(int visible) {
-        this.visible = visible;
-    }
+
 
     // Getters and setters
     public String getName() {
@@ -55,7 +47,7 @@ public class TrashDB implements DataTransferObject {
     }
 
     public String toString (){
-        return (this.name +", position = ("+x+","+y+"), "+"etat = "+visible);
+        return (this.name +", position = ("+x+","+y+")");
     }
     @Override
     public long getId() {

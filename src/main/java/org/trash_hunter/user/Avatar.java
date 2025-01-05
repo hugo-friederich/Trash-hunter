@@ -40,7 +40,7 @@ public class Avatar implements DataTransferObject {
         this.pseudo = pseudo;
         this.color = color;
         setDefaultValues();
-        loadSprites();
+        loadSpritesForAnimation();
         affectColorToAvatar(color);
     }
 
@@ -48,7 +48,7 @@ public class Avatar implements DataTransferObject {
         this.id = 0;       // L'identifiant est auto-incrémenté
         this.x = 720;      // Coordonnées du "spawn" = (720,390)
         this.y = 390;
-        this.speed = 15;
+        this.speed = 30;
         this.life = 3;     // Nombre de vie au départ
         this.oxygen = 100; // % d'oxygène
         this.score = 0;
@@ -64,7 +64,7 @@ public class Avatar implements DataTransferObject {
         //this.direction = Direction.RIGHT; // Utilisation de l'énumération
     }
 
-    public void loadSprites() {
+    public void loadSpritesForAnimation() {
         try {
             leftFrame1 = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("animatedDiver/left1.png")));
             leftFrame2 = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("animatedDiver/left2.png")));
@@ -100,28 +100,24 @@ public class Avatar implements DataTransferObject {
                 this.sprite=leftFrame1;
                 x -= this.speed;
                 oxygen = Math.max(0, oxygen - 0.5);
-                //direction = Direction.LEFT;
             }
             if (this.right) {
                 this.sprite=rightFrame1;
                 x += this.speed;
                 oxygen = Math.max(0, oxygen - 0.5);
-                //direction = Direction.RIGHT;
             }
             if (this.down) {
                 y += this.speed;
                 oxygen = Math.max(0, oxygen - 0.5);
-                //direction = Direction.DOWN;
             }
             if (this.up) {
                 y -= this.speed;
                 oxygen = Math.max(0, oxygen - 0.5);
-                //direction = Direction.UP;
             }
             if (this.y >= 0 && this.y < 25) {
                 oxygen = Math.min(100, oxygen + 10);       //recharger l'oxygen jusqu'à 100%
             }
-            /*
+
             spriteCounter++;
             if (spriteCounter > 10) {
                 if (spriteNum == 1) {
@@ -135,50 +131,40 @@ public class Avatar implements DataTransferObject {
                 }
                 spriteCounter = 0;
             }
-
-             */
         }
     }
-    /*
-    private void updateSprite(){
-            Boolean direction
-            switch (direction) {
-                case LEFT:
-                    if(spriteNum==1) {
-                        sprite = leftFrame1;
-                    }
-                    if(spriteNum==2){
-                        sprite = leftFrame2;
-                    }
-                    if(spriteNum==3){
-                        sprite = leftFrame3;
-                    }
-                    if(spriteNum==4){
-                        sprite = leftFrame4;
-                    }
-                    break;
-                case RIGHT:
-                    if(spriteNum==1) {
-                        sprite = rightFrame1;
-                    }
-                    if(spriteNum==2){
-                        sprite = rightFrame2;
-                    }
-                    if(spriteNum==3){
-                        sprite = rightFrame3;
-                    }
-                    if(spriteNum==4){
-                        sprite = rightFrame4;
-                    }
-                    break;
-                case UP:
-                    break;
-                case DOWN:
-                    break;
-            }
 
+    private void updateSprite(){
+        if (isLeft()) {
+            if (spriteNum == 1) {
+                sprite = leftFrame1;
+            }
+            if (spriteNum == 2) {
+                sprite = leftFrame2;
+            }
+            if (spriteNum == 3) {
+                sprite = leftFrame3;
+            }
+            if (spriteNum == 4) {
+                sprite = leftFrame4;
+            }
+        }
+        if (isRight()) {
+            if (spriteNum == 1) {
+                sprite = rightFrame1;
+            }
+            if (spriteNum == 2) {
+                sprite = rightFrame2;
+            }
+            if (spriteNum == 3) {
+                sprite = rightFrame3;
+            }
+            if (spriteNum == 4) {
+                sprite = rightFrame4;
+            }
+        }
     }
-     */
+
 
     public void rendering(Graphics2D contexte) {
         contexte.drawImage(this.sprite, (int) x, (int) y, null);

@@ -7,6 +7,6 @@ public class AvatarTest {
     @Test
     public void shouldLoadSprites(){
         Avatar avatar= new Avatar("Bob","Animated");
-        avatar.loadSprites();
+        avatar.loadSpritesForAnimation();
     }
 }

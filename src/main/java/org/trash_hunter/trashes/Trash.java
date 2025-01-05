@@ -1,12 +1,13 @@
 package org.trash_hunter.trashes;
 
+import org.trash_hunter.util.Collidable;
 import org.trash_hunter.util.DataTransferObject;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-public class Trash implements DataTransferObject {
+public class Trash implements DataTransferObject, Collidable {
     protected long id;                           //identifiant unique au déchet
 
     protected String name;                      //nom commun
@@ -75,8 +76,6 @@ public class Trash implements DataTransferObject {
     }
 
     // Getters and setters
-
-
     public String getName() {
         return name;
     }

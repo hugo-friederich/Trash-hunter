@@ -17,7 +17,7 @@ public class Can extends Trash {
         nbPoints= 1;
         name="Can";
         respawnTime = 1;          // réaparition quasi instantanée
-        appearanceRangeYInf = 0;
+        appearanceRangeYInf = 80;
         appearanceRangeYSup= 700-this.height;
     }
     public Can (){this(0,0);}

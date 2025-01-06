@@ -9,7 +9,7 @@ import java.sql.Time;
  * Objet contenant les informations essentielles de chaques plongeurs
  */
 public class DiverDB implements DataTransferObject {
-    private long id;                                              //identifiant unique
+    private int id;                                              //identifiant unique
     private float x, y;                                                 //coordonées
     private String pseudo;                                              //pseudo plongueur
     private int score;                                                  //score actuel
@@ -129,11 +129,11 @@ public class DiverDB implements DataTransferObject {
     }
 
     @Override
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

@@ -24,7 +24,7 @@ public class Boat extends Trash{
     public Boat (){
         this(0,0);
     }
-    public Boat (long id){
+    public Boat (int id){
         this(0,0);
         this.id=id;
     }

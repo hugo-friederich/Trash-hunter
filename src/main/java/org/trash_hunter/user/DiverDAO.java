@@ -31,14 +31,14 @@ public class DiverDAO extends DataAccessObject<DiverDB> {
     }
 
     @Override
-    public DiverDB findById(long id) {
+    public DiverDB findById(int id) {
         DiverDB diverDB = null;
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(GET_ONE)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 diverDB = new DiverDB();
-                diverDB.setId(resultSet.getLong("id"));
+                diverDB.setId(resultSet.getInt("id"));
                 diverDB.setX(resultSet.getFloat("x"));
                 diverDB.setY(resultSet.getFloat("y"));
                 diverDB.setPseudo(resultSet.getString("pseudo"));
@@ -63,7 +63,7 @@ public class DiverDAO extends DataAccessObject<DiverDB> {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 DiverDB diverDB = new DiverDB();
-                diverDB.setId(resultSet.getLong("id"));
+                diverDB.setId(resultSet.getInt("id"));
                 diverDB.setX(resultSet.getFloat("x"));
                 diverDB.setY(resultSet.getFloat("y"));
                 diverDB.setPseudo(resultSet.getString("pseudo"));
@@ -114,7 +114,7 @@ public class DiverDAO extends DataAccessObject<DiverDB> {
     }
 
     @Override
-    public void update(DiverDB updatedDiverDB, long id) {
+    public void update(DiverDB updatedDiverDB, int id) {
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(UPDATE)) {
             preparedStatement.setFloat(1, updatedDiverDB.getX());
             preparedStatement.setFloat(2, updatedDiverDB.getY());
@@ -123,7 +123,7 @@ public class DiverDAO extends DataAccessObject<DiverDB> {
             preparedStatement.setInt(5, updatedDiverDB.getScore_max());
             preparedStatement.setString(6, updatedDiverDB.getColor());
             preparedStatement.setDouble(7,updatedDiverDB.getOxygen());
-            preparedStatement.setLong(8, id);
+            preparedStatement.setInt(8, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -158,7 +158,7 @@ public class DiverDAO extends DataAccessObject<DiverDB> {
             // Récupère les clés générées
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    newDiverDB.setId(generatedKeys.getLong(1)); // Assigne l'ID généré au nouveau Diver
+                    newDiverDB.setId(generatedKeys.getInt(1)); // Assigne l'ID généré au nouveau Diver
                 } else {
                     throw new SQLException("Creating diver failed, no ID obtained.");
                 }
@@ -170,7 +170,7 @@ public class DiverDAO extends DataAccessObject<DiverDB> {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(int id) {
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(DELETE)) {
             preparedStatement.setLong(1, id);
             int affectedRows = preparedStatement.executeUpdate();
@@ -201,7 +201,7 @@ public class DiverDAO extends DataAccessObject<DiverDB> {
             // Récupère les clés générées
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    diverDB.setId(generatedKeys.getLong(1)); // Assigne l'ID généré au nouveau Diver
+                    diverDB.setId(generatedKeys.getInt(1)); // Assigne l'ID généré au nouveau Diver
                 } else {
                     throw new SQLException("Add diver to best scores failed");
                 }

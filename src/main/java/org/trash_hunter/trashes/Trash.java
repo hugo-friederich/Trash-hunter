@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class Trash implements DataTransferObject, Collidable {
-    protected long id;                           //identifiant unique au déchet
+    protected int id;                           //identifiant unique au déchet
 
     protected String name;                      //nom commun
 
@@ -35,7 +35,7 @@ public class Trash implements DataTransferObject, Collidable {
     public Trash (){
         this(0,0);
     }
-    public Trash (long id){
+    public Trash (int id){
         this(0,0);
         this.id=id;
     }
@@ -140,7 +140,7 @@ public class Trash implements DataTransferObject, Collidable {
         this.respawnTime = respawnTime;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 

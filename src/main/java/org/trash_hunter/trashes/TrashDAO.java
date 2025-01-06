@@ -23,14 +23,14 @@ public class TrashDAO extends DataAccessObject<TrashDB> {
     }
 
     @Override
-    public TrashDB findById(long id) {
+    public TrashDB findById(int id) {
         TrashDB trashDB = null;
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(GET_ONE)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 trashDB = new TrashDB();
-                trashDB.setId(resultSet.getLong("id"));
+                trashDB.setId(resultSet.getInt("id"));
                 trashDB.setVisible(resultSet.getInt("visible"));
                 trashDB.setName(resultSet.getString("name"));
                 trashDB.setX(resultSet.getFloat("x"));
@@ -79,12 +79,12 @@ public class TrashDAO extends DataAccessObject<TrashDB> {
         return names;
     }
     @Override
-    public void update(TrashDB trashDBUpdated, long id) {
+    public void update(TrashDB trashDBUpdated, int id) {
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(UPDATE)) {
             preparedStatement.setInt(1,trashDBUpdated.getVisible());
             preparedStatement.setDouble(2, trashDBUpdated.getX());
             preparedStatement.setDouble(3, trashDBUpdated.getY());
-            preparedStatement.setLong(4,id);
+            preparedStatement.setInt(4,id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -113,9 +113,9 @@ public class TrashDAO extends DataAccessObject<TrashDB> {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(int id) {
         try (PreparedStatement preparedStatement = this.connection.prepareStatement(DELETE)) {
-            preparedStatement.setLong(1, id);
+            preparedStatement.setInt(1, id);
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0) {
                 throw new SQLException("Deleting trash failed, no rows affected.");

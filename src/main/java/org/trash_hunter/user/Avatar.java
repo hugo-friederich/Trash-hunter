@@ -16,7 +16,7 @@ import java.util.Objects;
  * Objet permettant d'avoir la représentation de chaques joueurs
  */
 public class Avatar implements DataTransferObject {
-    private long id;                                                    // Identifiant unique
+    private int id;                                                    // Identifiant unique
     private BufferedImage sprite;                                       // représentation du plongeur
     private BufferedImage leftFrame1, leftFrame2, leftFrame3, leftFrame4, rightFrame1, rightFrame2, rightFrame3, rightFrame4;  // Images du plongeur animé
     public int spriteCounter = 0;                                       // Permet de régler la vitesse d'animation
@@ -318,7 +318,7 @@ public class Avatar implements DataTransferObject {
         this.down = down;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -363,7 +363,7 @@ public class Avatar implements DataTransferObject {
     }
 
     @Override
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 

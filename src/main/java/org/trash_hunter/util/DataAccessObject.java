@@ -11,11 +11,11 @@ public abstract class DataAccessObject<T extends DataTransferObject> {
         super();
         this.connection=connection;
     }
-    public abstract  T findById(long id);
+    public abstract  T findById(int id);
     public abstract List<T> findAll();
-    public abstract void update(T dto,long id);
+    public abstract void update(T dto,int id);
     public abstract void create(T dto);
-    public abstract void delete(long id);
+    public abstract void delete(int id);
     public abstract void clear();
 
 }

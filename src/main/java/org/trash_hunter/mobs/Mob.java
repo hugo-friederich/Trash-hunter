@@ -22,9 +22,10 @@ public abstract class Mob implements Collidable {
     protected int speed;                        //Vitesse de déplacement
     protected Direction direction;              //Direction de déplacement (left or right)
 
-    public Mob(double x, double y){
+    public Mob(int id,double x, double y,Direction dir){
         this.x=x;
         this.y=y;
+        this.direction=dir;
     }
     public void rendering (Graphics2D contexte) {
         contexte.drawImage(this.sprite, (int) x, (int) y, null);
@@ -36,7 +37,16 @@ public abstract class Mob implements Collidable {
         mobDB.setId(id);
         mobDB.setX(x);
         mobDB.setY(y);
+        mobDB.setDir(direction);
         return(mobDB);
+    }
+    public static Mob convertMobDBToMob(MobDB mobDB) {
+        switch (mobDB.getName()) {
+            case "Shark":
+                return new Shark(mobDB.getId(), mobDB.getX(), mobDB.getDir());
+            default:
+                return null;
+        }
     }
     public abstract void update();
 

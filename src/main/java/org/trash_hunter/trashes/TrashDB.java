@@ -3,7 +3,7 @@ package org.trash_hunter.trashes;
 import org.trash_hunter.util.DataTransferObject;
 
 public class TrashDB implements DataTransferObject {
-    protected long id;                          //identifiant unique au déchet
+    protected int id;                          //identifiant unique au déchet
     private int visible;                        //déchet visible ou non
     private String name;
 
@@ -46,7 +46,7 @@ public class TrashDB implements DataTransferObject {
         this.y = y;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -58,7 +58,7 @@ public class TrashDB implements DataTransferObject {
         return (this.name +", position = ("+x+","+y+"), "+"etat = "+visible);
     }
     @Override
-    public long getId() {
+    public int getId() {
         return this.id;
     }
 }

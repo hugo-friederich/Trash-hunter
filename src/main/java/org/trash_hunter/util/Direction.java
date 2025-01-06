@@ -1,6 +1,5 @@
 package org.trash_hunter.util;
 
 public enum Direction {
-    LEFT,
-    RIGHT
+    LEFT, RIGHT, UP, DOWN
 }

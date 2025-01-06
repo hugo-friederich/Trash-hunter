@@ -28,16 +28,18 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.trash_hunter.mobs.Mob.convertMobDBToMob;
+
 public class Game {
     private BufferedImage backgroundImage;                              // Image de fond du jeu
     private final Avatar myAvatar;                                      // Avatar du joueur
     private DiverDB diverDB;                                            // Plongeur actuel
     private DiverDAO diverDAO;                                          // DAO pour les plongeurs
     private List<DiverDB> allDiverDB;                                   // Liste de tous les plongeurs de la BDD
-    private List<Avatar> allAvatar;                                     // Liste de tous les avatars des joueurs
     private TrashDAO trashDAO;                                          // DAO pour les déchets
     private List<Trash> localTrashset;                                  // Liste des déchets locaux
     private List<Mob> localMobs;                                        // Liste des monstres locaux
+    private List<MobDB> allMobs;                                        // Liste des monstres de la BDD
     private MobDAO mobDAO;                                              // DAO por les mobs
     private final Random randomNbr;                                     // Générateur de nombres aléatoires
     private static final int NB_TRASHES = 30;                           // Nombre de déchets à initialiser
@@ -48,29 +50,33 @@ public class Game {
         this.randomNbr = new Random();
         loadBackgroundImage();                                              // Chargement de l'image de fond
 
+        //connection aux différentes tables
+        this.mobDAO = new MobDAO(connection);                               // Connection à la table Mob
+        this.diverDAO = new DiverDAO(connection);                           // Connection à la table Diver
+        this.trashDAO = new TrashDAO(connection);                           // Connection à la table Trash
+
+        //initialisation des mobs
+        if(diverDAO.findAll().isEmpty()) {
+            mobDAO.clear();
+            Shark shark = new Shark(0,1380,Direction.LEFT);          // Nouveau requin à droite de la fenêtre
+            this.mobDAO.create(shark.convertMobToMobDB());                  // Creation du requin dans la BDD
+        }
+        initLocalMobs();                                                    // Initialise les mobs locaux
+        localMobs= new ArrayList<>();
+
         //initialisation du plongeur
         this.diverDB = new DiverDB(pseudo, color);                          // Création du plongeur
-        this.diverDAO = new DiverDAO(connection);                           // Connection à la table Diver
         this.diverDAO.create(diverDB);                                      // Enregistrement du plongeur dans la base de données
         this.myAvatar = diverDB.convertDiverToAvatar();                     // Conversion du plongeur en avatar pour l'afficher
 
         //initiaslisation des déchets
         this.localTrashset = new ArrayList<>();
-        this.trashDAO = new TrashDAO(connection);
         if (trashDAO.findAll().isEmpty()) {
             initTrashes();                                                  // Initialise les déchets si il n'y en a pas déjà
         }
         initLocalTrashes();                                                 // Initialise les déchets locaux
 
-        //initialise les mobs
-        this.mobDAO = new MobDAO(connection);                               // Connestion à la table Mob
-        //mobDAO.clear();
-        if(mobDAO.findAll().isEmpty()) {
-            Shark shark = new Shark(1380);                                       // Nouveau requin à droite de la fenêtre
-            MobDB mobDB = shark.convertMobToMobDB();
-            this.mobDAO.create(mobDB);                                          // Creation du requin dans la DB
-        }
-        initLocalMobs();
+        //jouer la musique d'ambiance
         playAmbientMusic();                                                 // Lance la musique d'ambiance
     }
 
@@ -101,7 +107,9 @@ public class Game {
         }
 
         // Rendu des monstres
-        for (Mob mob : this.localMobs){
+        for (MobDB mobdb : this.allMobs){
+            Mob mob = convertMobDBToMob(mobdb);
+            assert mob != null;
             mob.rendering(contexte);
         }
     }
@@ -120,10 +128,22 @@ public class Game {
         checkCollisionDiverPanel();                              // Vérification des collisions de l'avatar avec les bords
 
         // Mise à jour des monstres
-        updateLocalMobs();
-        ubdateMobTable();
-        updateAfterCollisionDiverMob();
-        checkCollisionMobPanel();
+        this.allMobs = mobDAO.findAll();                        // Récupération des mobs de la BDD
+        for (MobDB mobdb : allMobs){
+            Mob mob = convertMobDBToMob(mobdb);
+            assert mob != null;
+            //Mise à jour
+            mob.update();
+            // Vérifier collision avec les bords
+            if (mob.getX()<=10){
+                mob.setDirection(Direction.RIGHT);
+            }
+            if (mob.getX()>=1380){
+                mob.setDirection(Direction.LEFT);
+            }
+            mobdb = mob.convertMobToMobDB();
+            this.mobDAO.update(mobdb, mobdb.getId());
+        }
     }
 
 
@@ -139,6 +159,60 @@ public class Game {
         }
 
         return false;
+    }
+// Méthodes relatifs à la gestion des déchets
+
+    // Initialisation des déchets
+    public void initTrashes() {
+        this.trashDAO.clear();
+        List<Trash> initialTrashset = new ArrayList<>();
+
+        // Création de déchets aléatoires
+        for (int i = 0; i < NB_TRASHES; i++) {
+            Trash trash = createRandomTrash(i);
+            if (trash != null) {
+                trash.updatePosition();             // Mise à jour de la position du déchet
+                initialTrashset.add(trash);         // Ajout du déchet à la liste
+            }
+        }
+
+        // Enregistrement des déchets initiaux dans la base de données
+        for (Trash trash : initialTrashset) {
+            trashDAO.create(trash.convertTrashToTrashDB());
+        }
+    }
+
+    // Initialisation des déchets locaux à partir de la base de données
+    public void initLocalTrashes() {
+        List<TrashDB> dataBaseTrashset = trashDAO.findAll();            // Récupération des déchets de la base de données
+        localTrashset = new ArrayList<>();                              // Liste pour les déchets locaux
+
+        // Création des objets Trash en fonction des données de la base
+        for (TrashDB trash : dataBaseTrashset) {
+            double x = trash.getX();
+            double y = trash.getY();
+            localTrashset.add(createTrashFromDB(trash, x, y));
+        }
+    }
+
+    // Création d'un déchet à partir des données de la base
+    private Trash createTrashFromDB(TrashDB trashDB, double x, double y) {
+        switch (trashDB.getName()) {
+            case "Boat":
+                return new Boat(x, y);
+            case "Bottle":
+                return new Bottle(x, y);
+            case "Can":
+                return new Can(x, y);
+            case "OilContainer":
+                return new OilContainer(x, y);
+            case "PlasticBag":
+                return new PlasticBag(x, y);
+            case "Tire":
+                return new Tire(x, y);
+            default:
+                return null;
+        }
     }
 
     // Mise à jour après collision entre le plongeur et les déchets
@@ -161,18 +235,6 @@ public class Game {
             }
         }
     }
-    // Mise à jour après collision entre le plongeur et les monstres
-    public void updateAfterCollisionDiverMob() {
-        for (int id = 0; id < localMobs.size(); id++) {
-            Mob mob = localMobs.get(id);
-            if (isColliding(mob, myAvatar)) {
-                myAvatar.setScore(myAvatar.getScore() - mob.getNbPoints());       // Mise à jour du score
-                myAvatar.setLife(myAvatar.getLife()-mob.getNbLife());             // Mise à jour de la vie du joueur
-                myAvatar.updateScoreHistory();                                    // Mise à jour de l'historique des scores
-                makeTrashSound();
-            }
-        }
-    }
 
     // Mise à jour des déchets locaux en fonction des données de la base
     public void updateLocalTrashes() {
@@ -189,29 +251,52 @@ public class Game {
             }
         }
     }
+    // Initialisation des monstres locaux à partir de la base de données
+    public void initLocalMobs() {
+        List<MobDB> mobList = mobDAO.findAll();                     // Récupération des monstres de la base de données
+        localMobs = new ArrayList<>();                              // Crée la liste pour les monstres locaux
+
+        // Création des objets Mob en fonction des données de la base de donnée
+        for (MobDB mobDB : mobList) {
+            localMobs.add(createMobFromDB(mobDB));
+        }
+    }
+// Méthodes relatifs à la gestion des monstres
 
     // Mise à jour des monstres locaux
     public void updateLocalMobs(){
         List<MobDB> dbMobs = mobDAO.findAll();    // Récupération des mobs de la DB
         //Mise à jour des coordonées des monstres
         for (MobDB mob : dbMobs){
-            int id = (int) mob.getId();
             Mob localMob = this.localMobs.stream()
-                    .filter(m -> m.getId() == id)
+                    .filter(m -> m.getId() == mob.getId())
                     .findFirst()
                     .orElse(null);
-            localMob.update();
             if (localMob != null) {
+                localMob.update();
                 localMob.setX(mob.getX()); // Mise à jour de la position X
                 localMob.setY(mob.getY()); // Mise à jour de la position Y
+                localMob.setDirection(mob.getDir()); // Mise à jour de la direction
             }
         }
     }
+    // Mise à jour de la base de donnée
     private void ubdateMobTable() {
-        for(int id=0;id<localMobs.size();id++) {
+        for(int i=0;i<allMobs.size();i++) {
+            MobDB mobDB = allMobs.get(i);
+            this.mobDAO.update(mobDB,i);
+        }
+    }
+    // Mise à jour après collision entre le plongeur et les monstres
+    public void updateAfterCollisionDiverMob() {
+        for (int id = 0; id < localMobs.size(); id++) {
             Mob mob = localMobs.get(id);
-            mob.update();
-            this.mobDAO.update(mob.convertMobToMobDB(),id);
+            if (isColliding(mob, myAvatar)) {
+                myAvatar.setScore(myAvatar.getScore() - mob.getNbPoints());       // Mise à jour du score
+                myAvatar.setLife(myAvatar.getLife()-mob.getNbLife());             // Mise à jour de la vie du joueur
+                myAvatar.updateScoreHistory();                                    // Mise à jour de l'historique des scores
+                makeTrashSound();
+            }
         }
     }
 
@@ -248,76 +333,11 @@ public class Game {
             }
         }
     }
-
-    // Initialisation des déchets
-    public void initTrashes() {
-        this.trashDAO.clear();
-        List<Trash> initialTrashset = new ArrayList<>();
-
-        // Création de déchets aléatoires
-        for (int i = 0; i < NB_TRASHES; i++) {
-            Trash trash = createRandomTrash(i);
-            if (trash != null) {
-                trash.updatePosition();             // Mise à jour de la position du déchet
-                initialTrashset.add(trash);         // Ajout du déchet à la liste
-            }
-        }
-
-        // Enregistrement des déchets initiaux dans la base de données
-        for (Trash trash : initialTrashset) {
-            trashDAO.create(trash.convertTrashToTrashDB());
-        }
-    }
-
-    // Initialisation des déchets locaux à partir de la base de données
-    public void initLocalTrashes() {
-        List<TrashDB> dataBaseTrashset = trashDAO.findAll();            // Récupération des déchets de la base de données
-        localTrashset = new ArrayList<>();                              // Liste pour les déchets locaux
-
-        // Création des objets Trash en fonction des données de la base
-        for (TrashDB trash : dataBaseTrashset) {
-            double x = trash.getX();
-            double y = trash.getY();
-            localTrashset.add(createTrashFromDB(trash, x, y));
-        }
-    }
-    // Initialisation des monstres locaux à partir de la base de données
-    public void initLocalMobs() {
-        List<MobDB> mobList = mobDAO.findAll();            // Récupération des déchets de la base de données
-        localMobs = new ArrayList<>();                              // Liste pour les monstres locaux
-
-        // Création des objets Trash en fonction des données de la base
-        for (MobDB mobDB : mobList) {
-            double x = mobDB.getX();
-            double y = mobDB.getY();
-            localMobs.add(createMobFromDB(mobDB,x,y));
-        }
-    }
-
-    // Création d'un déchet à partir des données de la base
-    private Trash createTrashFromDB(TrashDB trashDB, double x, double y) {
-        switch (trashDB.getName()) {
-            case "Boat":
-                return new Boat(x, y);
-            case "Bottle":
-                return new Bottle(x, y);
-            case "Can":
-                return new Can(x, y);
-            case "OilContainer":
-                return new OilContainer(x, y);
-            case "PlasticBag":
-                return new PlasticBag(x, y);
-            case "Tire":
-                return new Tire(x, y);
-            default:
-                return null;
-        }
-    }
     // Création d'un mob à partir des données de la base
-    private Mob createMobFromDB(MobDB mobDB, double x,double y) {
+    private Mob createMobFromDB(MobDB mobDB) {
         switch (mobDB.getName()) {
             case "Shark":
-                return new Shark(x);
+                return new Shark(mobDB.getId(),mobDB.getX(),mobDB.getDir());
             default:
                 return null;
         }

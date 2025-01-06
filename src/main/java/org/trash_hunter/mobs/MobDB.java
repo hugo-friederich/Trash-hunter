@@ -1,13 +1,16 @@
 package org.trash_hunter.mobs;
 
 import org.trash_hunter.util.DataTransferObject;
+import org.trash_hunter.util.Direction;
 
 public class MobDB implements DataTransferObject {
     protected long id;                          //identifiant unique au déchet
-    private int visible;                        //déchet visible ou non
     private String name;
 
     protected double x,y;                       //coordonnées
+    protected Direction dir;
+
+    // Constructor
     public MobDB(){
         this.id=0;
     }
@@ -40,10 +43,6 @@ public class MobDB implements DataTransferObject {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public int getVisible() {
-        return visible;
     }
 
     public String toString (){

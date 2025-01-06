@@ -15,7 +15,7 @@ public class Shark extends Mob {
         this.id=id;
         this.name ="Shark";
         this.direction = Direction.LEFT;
-        this.speed = 10;
+        this.speed = 5;
         try {
             this.leftShark = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("shark_left.png")));
             this.rightShark = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("shark_right.png")));

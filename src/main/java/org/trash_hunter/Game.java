@@ -61,8 +61,6 @@ public class Game {
             Shark shark = new Shark(0,1380,Direction.LEFT);          // Nouveau requin à droite de la fenêtre
             this.mobDAO.create(shark.convertMobToMobDB());                  // Creation du requin dans la BDD
         }
-        initLocalMobs();                                                    // Initialise les mobs locaux
-        localMobs= new ArrayList<>();
 
         //initialisation du plongeur
         this.diverDB = new DiverDB(pseudo, color);                          // Création du plongeur
@@ -128,23 +126,9 @@ public class Game {
         checkCollisionDiverPanel();                              // Vérification des collisions de l'avatar avec les bords
 
         // Mise à jour des monstres
-        this.allMobs = mobDAO.findAll();                        // Récupération des mobs de la BDD
-        for (MobDB mobdb : allMobs){
-            Mob mob = convertMobDBToMob(mobdb);
-            assert mob != null;
-            //Mise à jour
-            mob.update();
-            // Vérifier collision avec les bords
-            if (mob.getX()<=10){
-                mob.setDirection(Direction.RIGHT);
-            }
-            if (mob.getX()>=1380){
-                mob.setDirection(Direction.LEFT);
-            }
-            mobdb = mob.convertMobToMobDB();
-            this.mobDAO.update(mobdb, mobdb.getId());
-        }
+        updateMobs();
     }
+
 
 
     // Méthode pour vérifier si le jeu est terminé
@@ -160,6 +144,33 @@ public class Game {
 
         return false;
     }
+
+//Méthodes relatifs à la gestion des monstres
+    private void updateMobs() {
+        this.allMobs = mobDAO.findAll();                        // Récupération des mobs de la BDD
+        for (MobDB mobdb : allMobs){
+            Mob mob = convertMobDBToMob(mobdb);
+            assert mob != null;
+            //Mise à jour
+            mob.update();
+            // Vérifier collision avec les bords
+            if (mob.getX()<=10){
+                //mob.setDirection(Direction.RIGHT);
+                mob.setX(1380);
+            }
+            if (mob.getX()>=1380){
+                mob.setDirection(Direction.LEFT);
+            }
+            if(isColliding(mob,myAvatar)){
+                myAvatar.setLife(myAvatar.getLife()-mob.getNbLife());
+                myAvatar.setScore(myAvatar.getScore()-mob.getNbPoints());
+                myAvatar.setY(myAvatar.getY()-50);
+            }
+            mobdb = mob.convertMobToMobDB();
+            this.mobDAO.update(mobdb, mobdb.getId());
+        }
+    }
+
 // Méthodes relatifs à la gestion des déchets
 
     // Initialisation des déchets
@@ -251,56 +262,7 @@ public class Game {
             }
         }
     }
-    // Initialisation des monstres locaux à partir de la base de données
-    public void initLocalMobs() {
-        List<MobDB> mobList = mobDAO.findAll();                     // Récupération des monstres de la base de données
-        localMobs = new ArrayList<>();                              // Crée la liste pour les monstres locaux
-
-        // Création des objets Mob en fonction des données de la base de donnée
-        for (MobDB mobDB : mobList) {
-            localMobs.add(createMobFromDB(mobDB));
-        }
-    }
-// Méthodes relatifs à la gestion des monstres
-
-    // Mise à jour des monstres locaux
-    public void updateLocalMobs(){
-        List<MobDB> dbMobs = mobDAO.findAll();    // Récupération des mobs de la DB
-        //Mise à jour des coordonées des monstres
-        for (MobDB mob : dbMobs){
-            Mob localMob = this.localMobs.stream()
-                    .filter(m -> m.getId() == mob.getId())
-                    .findFirst()
-                    .orElse(null);
-            if (localMob != null) {
-                localMob.update();
-                localMob.setX(mob.getX()); // Mise à jour de la position X
-                localMob.setY(mob.getY()); // Mise à jour de la position Y
-                localMob.setDirection(mob.getDir()); // Mise à jour de la direction
-            }
-        }
-    }
-    // Mise à jour de la base de donnée
-    private void ubdateMobTable() {
-        for(int i=0;i<allMobs.size();i++) {
-            MobDB mobDB = allMobs.get(i);
-            this.mobDAO.update(mobDB,i);
-        }
-    }
-    // Mise à jour après collision entre le plongeur et les monstres
-    public void updateAfterCollisionDiverMob() {
-        for (int id = 0; id < localMobs.size(); id++) {
-            Mob mob = localMobs.get(id);
-            if (isColliding(mob, myAvatar)) {
-                myAvatar.setScore(myAvatar.getScore() - mob.getNbPoints());       // Mise à jour du score
-                myAvatar.setLife(myAvatar.getLife()-mob.getNbLife());             // Mise à jour de la vie du joueur
-                myAvatar.updateScoreHistory();                                    // Mise à jour de l'historique des scores
-                makeTrashSound();
-            }
-        }
-    }
-
-    // Vérification de la collision entre un déchet et l'avatar
+    // Vérification de la collision entre un objet et l'avatar
     private boolean isColliding(Collidable collidable, Avatar avatar) {
         return collidable.getX() < avatar.getX() + avatar.getWidth() &&
                 collidable.getX() + collidable.getWidth() > avatar.getX() &&
@@ -308,6 +270,17 @@ public class Game {
                 collidable.getY() + collidable.getHeight() > avatar.getY();
     }
 
+    // Création d'un déchet aléatoire en fonction de l'index
+    private Trash createRandomTrash(int index) {
+        int randomNumber = randomNbr.nextInt(1, 3); // Choisit un nombre entre 1 et 2 aléatoirement
+        if (index <= 15) {
+            return (randomNumber == 1) ? new Bottle(index) : new Can(index);
+        } else if (index <= 25) {
+            return (randomNumber == 1) ? new PlasticBag(index) : new Tire(index);
+        } else {
+            return (randomNumber == 1) ? new OilContainer(index) : new Boat(index);
+        }
+    }
     // Vérification des collisions avec les bords de l'écran
     public void checkCollisionDiverPanel() {
         if (myAvatar.getX() > backgroundImage.getWidth() - myAvatar.getWidth()) {
@@ -321,37 +294,6 @@ public class Game {
         }
         if (myAvatar.getY() < 25) {
             myAvatar.setY(25);
-        }
-    }
-    public void checkCollisionMobPanel(){
-        for(Mob mob : localMobs){
-            if (mob.getX()<=0){
-                mob.setDirection(Direction.RIGHT);
-            }
-            if (mob.getX()>=1380){
-                mob.setDirection(Direction.LEFT);
-            }
-        }
-    }
-    // Création d'un mob à partir des données de la base
-    private Mob createMobFromDB(MobDB mobDB) {
-        switch (mobDB.getName()) {
-            case "Shark":
-                return new Shark(mobDB.getId(),mobDB.getX(),mobDB.getDir());
-            default:
-                return null;
-        }
-    }
-
-    // Création d'un déchet aléatoire en fonction de l'index
-    private Trash createRandomTrash(int index) {
-        int randomNumber = randomNbr.nextInt(1, 3); // Choisit un nombre entre 1 et 2 aléatoirement
-        if (index <= 15) {
-            return (randomNumber == 1) ? new Bottle(index) : new Can(index);
-        } else if (index <= 25) {
-            return (randomNumber == 1) ? new PlasticBag(index) : new Tire(index);
-        } else {
-            return (randomNumber == 1) ? new OilContainer(index) : new Boat(index);
         }
     }
 

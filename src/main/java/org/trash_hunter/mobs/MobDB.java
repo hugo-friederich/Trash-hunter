@@ -1,10 +1,11 @@
 package org.trash_hunter.mobs;
 
 import org.trash_hunter.user.Avatar;
+import org.trash_hunter.util.Collidable;
 import org.trash_hunter.util.DataTransferObject;
 import org.trash_hunter.util.Direction;
 
-public class MobDB implements DataTransferObject {
+public class MobDB implements DataTransferObject{
     protected int id;                          //identifiant unique au déchet
     private String name;
 
@@ -16,15 +17,6 @@ public class MobDB implements DataTransferObject {
         this.id=0;
     }
 
-    public Shark convertMobDBtoShark() {
-        Shark shark = new Shark(0,0,Direction.LEFT);
-        shark.setId(this.id);
-        shark.setY(this.y);
-        shark.setX(this.x);
-        shark.setName(this.name);
-        shark.setDirection(this.dir);
-        return (shark);
-    }
     // Getters and setters
     public String getName() {
         return name;
@@ -45,7 +37,6 @@ public class MobDB implements DataTransferObject {
     public double getY() {
         return y;
     }
-
     public void setY(double y) {
         this.y = y;
     }

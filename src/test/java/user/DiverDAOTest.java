@@ -32,7 +32,7 @@ public class DiverDAOTest {
         diverDAO.create(newDiverDB);  //creation d'un nouveau diver
         DiverDB updatedDiverDB = new DiverDB("titi","blue");
         diverDAO.update(updatedDiverDB, newDiverDB.getId());
-        diverDAO.delete(newDiverDB.getId()); //suppression pour éviter de surcharger la DB
+        //diverDAO.delete(newDiverDB.getId()); //suppression pour éviter de surcharger la DB
     }
     // Doit créer un nouveau Diver et le supprimer juste après
     @Test

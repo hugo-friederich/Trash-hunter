@@ -59,9 +59,8 @@ public class Avatar implements DataTransferObject {
         this.right = false;
         this.up = false;
         this.down = false;
-        this.width = 50;
-        this.height = 35;
-        //this.direction = Direction.RIGHT; // Utilisation de l'énumération
+        this.width=41;
+        this.height=31;
     }
 
     public void loadSpritesForAnimation() {
@@ -163,6 +162,8 @@ public class Avatar implements DataTransferObject {
                 sprite = rightFrame4;
             }
         }
+        this.width = sprite.getWidth();
+        this.height = sprite.getHeight();
     }
 
 
@@ -195,7 +196,7 @@ public class Avatar implements DataTransferObject {
                 throw new RuntimeException("Erreur lors du chargement de l'image : " + e.getMessage(), e);
             }
         } else {
-            this.sprite = rightFrame1; // Par défaut, utilisez right1 pour l'animation
+            this.sprite = rightFrame1; // Par défaut, utilisez right1 pour l'animation;
         }
     }
 

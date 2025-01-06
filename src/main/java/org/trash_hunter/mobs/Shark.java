@@ -14,8 +14,7 @@ public class Shark extends Mob {
         super(id,x,600,dir);               // Le requin est a une profondeur fixe -> seul x évolue
         this.id=id;
         this.name ="Shark";
-        this.direction = Direction.LEFT;
-        this.speed = 5;
+        this.speed = 10;
         try {
             this.leftShark = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("shark_left.png")));
             this.rightShark = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("shark_right.png")));

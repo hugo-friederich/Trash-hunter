@@ -108,6 +108,15 @@ public class MobDAO extends DataAccessObject<MobDB> {
             if (affectedRows == 0) {
                 throw new SQLException("Creating mob failed, no rows affected.");
             }
+
+            // Récupère les clés générées
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    newmobDB.setId(generatedKeys.getInt(1)); // Assigne l'ID généré au nouveau Diver
+                } else {
+                    throw new SQLException("Creating mob failed, no ID obtained.");
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);

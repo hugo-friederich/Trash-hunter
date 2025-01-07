@@ -151,12 +151,11 @@ public class Game {
         for (MobDB mobdb : allMobs){
             Mob mob = convertMobDBToMob(mobdb);
             assert mob != null;
-            //Mise à jour
-            mob.update();
+
             // Vérifier collision avec les bords
             if (mob.getX()<=10){
-                //mob.setDirection(Direction.RIGHT);
-                mob.setX(1380);
+                mob.setDirection(Direction.RIGHT);
+                //mob.setX(1380);
             }
             if (mob.getX()>=1380){
                 mob.setDirection(Direction.LEFT);
@@ -166,6 +165,8 @@ public class Game {
                 myAvatar.setScore(myAvatar.getScore()-mob.getNbPoints());
                 myAvatar.setY(myAvatar.getY()-50);
             }
+            //Mise à jour
+            mob.update();
             mobdb = mob.convertMobToMobDB();
             this.mobDAO.update(mobdb, mobdb.getId());
         }

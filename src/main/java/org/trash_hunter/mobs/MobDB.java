@@ -15,6 +15,8 @@ public class MobDB implements DataTransferObject{
     // Constructor
     public MobDB(){
         this.id=0;
+        this.name="";
+        this.dir=Direction.LEFT;
     }
 
     // Getters and setters

@@ -22,8 +22,11 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
     private boolean isRPressed = false; //
 
     public GamePanel(String pseudo, String color) throws SQLException{
+        //Creation du jeu
+        this.game = new Game(pseudo,color);
+
         //init de la fenetre
-        this.setSize(1440,780);
+        this.setSize(game.getBackgroundImage().getWidth(),game.getBackgroundImage().getHeight());
         this.setResizable(false);
         this.setTitle("Trash Hunter");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -38,11 +41,8 @@ public class GamePanel extends JFrame implements KeyListener, ActionListener, Wi
         this.jLabel1.setIcon(new ImageIcon(backgroundImage));
         this.contexte = this.backgroundImage.createGraphics();
 
-        //Creation du jeu
-        this.game = new Game(pseudo,color);
-
-        //Creation  du Timer qui appelle this.actionPerformed() tous les 40 ms
-        this.timer=new Timer(20,this);
+        //Creation  du Timer qui appelle this.actionPerformed() tous les 5 ms
+        this.timer=new Timer(5,this);
         this.timer.start();
 
         //Ajout du listener

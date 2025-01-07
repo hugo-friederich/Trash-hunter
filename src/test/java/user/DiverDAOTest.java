@@ -1,5 +1,6 @@
 package user;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.trash_hunter.user.DiverDB;
 import org.trash_hunter.user.DiverDAO;
@@ -32,8 +33,10 @@ public class DiverDAOTest {
         diverDAO.create(newDiverDB);  //creation d'un nouveau diver
         DiverDB updatedDiverDB = new DiverDB("titi","blue");
         diverDAO.update(updatedDiverDB, newDiverDB.getId());
-        //diverDAO.delete(newDiverDB.getId()); //suppression pour éviter de surcharger la DB
+        Assert.assertEquals(diverDAO.findById(newDiverDB.getId()).getPseudo(),"titi");
+        diverDAO.delete(newDiverDB.getId()); //suppression pour éviter de surcharger la DB
     }
+
     // Doit créer un nouveau Diver et le supprimer juste après
     @Test
     public void shouldDeleteDiver () throws SQLException {

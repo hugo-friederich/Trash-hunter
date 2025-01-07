@@ -116,8 +116,8 @@ public class Game {
     public void update() throws SQLException {
         // Mise à jour de l'avatar
         this.myAvatar.update();                                 // Mise à jour de l'avatar
-        this.diverDB = myAvatar.convertAvatarToDiver();           // Conversion de l'avatar en plongeur
-        this.allDiverDB = diverDAO.findAll();                    // Récupération de tous les plongeurs
+        this.diverDB = myAvatar.convertAvatarToDiver();           // Conversion de l'avatar en diverDB
+        this.allDiverDB = diverDAO.findAll();                    // Récupération de tous les diverDB
         this.diverDAO.update(this.diverDB, this.diverDB.getId());   // Mise à jour du plongeur dans la base de données
 
         // Mise à jour des déchets après collision
@@ -290,11 +290,11 @@ public class Game {
         if (myAvatar.getX() < 0) {
             myAvatar.setX(backgroundImage.getWidth() - myAvatar.getWidth());
         }
-        if (myAvatar.getY() > backgroundImage.getHeight() - myAvatar.getHeight()) {
-            myAvatar.setY(backgroundImage.getHeight() - myAvatar.getHeight());
+        if (myAvatar.getY() > backgroundImage.getHeight() - myAvatar.getHeight()-30) {
+            myAvatar.setY(backgroundImage.getHeight() - myAvatar.getHeight()-30);
         }
-        if (myAvatar.getY() < 25) {
-            myAvatar.setY(25);
+        if (myAvatar.getY() < 30) {
+            myAvatar.setY(30);
         }
     }
 

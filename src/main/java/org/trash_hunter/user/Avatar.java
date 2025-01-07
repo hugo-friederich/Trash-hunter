@@ -48,7 +48,7 @@ public class Avatar implements DataTransferObject {
         this.id = 0;       // L'identifiant est auto-incrémenté
         this.x = 720;      // Coordonnées du "spawn" = (720,390)
         this.y = 390;
-        this.speed = 15;
+        this.speed = 20;
         this.life = 3;     // Nombre de vie au départ
         this.oxygen = 100; // % d'oxygène
         this.score = 0;

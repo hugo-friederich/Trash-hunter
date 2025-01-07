@@ -125,6 +125,7 @@ public class DiverDAO extends DataAccessObject<DiverDB> {
             preparedStatement.setDouble(7,updatedDiverDB.getOxygen());
             preparedStatement.setInt(8, id);
             preparedStatement.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);

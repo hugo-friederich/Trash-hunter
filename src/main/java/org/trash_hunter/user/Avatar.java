@@ -131,6 +131,12 @@ public class Avatar implements DataTransferObject {
                 spriteCounter = 0;
             }
         }
+        updateScoreMax();
+    }
+    public void updateScoreMax(){
+        if(score>score_max){
+            score_max = score;
+        }
     }
 
     private void updateSprite(){

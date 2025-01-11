@@ -16,6 +16,6 @@
 	
 	Cette commande va alors créer dans le dossier target le Jar ainsi qu'un dossier Trash_Hunter-1.0-SNAPSHOT contenant les différents fichiers exécutables dans le bin.
 	
-	Si Maven n'est pas installé, un exemplaire le plus récent de ce package Trash_Hunter-1.0-SNAPSHOT est déjà présent dans le projet compressé.
+	Si Maven n'est pas installé, un exemplaire le plus récent de ce package Trash_Hunter-1.0-SNAPSHOT est présent dans un dossier séparé du projet.
 	
 	Bon jeu !
